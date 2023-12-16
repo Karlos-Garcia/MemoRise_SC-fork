@@ -1,4 +1,4 @@
-package com.example.memorise
+package com.example.memorise.ui
 
 import android.annotation.SuppressLint
 import android.os.Build
