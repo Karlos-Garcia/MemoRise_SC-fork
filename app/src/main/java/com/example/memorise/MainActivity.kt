@@ -69,6 +69,7 @@ class MainActivity : ComponentActivity() {
 //                CornellNote()
 //                basicNote()
                 mainScreen(items = getNavigationItems())
+//                settingScreen()
             }
         }
     }
