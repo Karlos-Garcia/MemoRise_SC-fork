@@ -1,10 +1,9 @@
-package com.example.memorise.ui
+package com.example.memorise.ui.screens
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -19,7 +18,7 @@ import androidx.compose.ui.Modifier
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun QuadrantNote() {
+fun settingScreen() {
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
@@ -29,7 +28,7 @@ fun QuadrantNote() {
             topBar = {
                 TopAppBar(
                     title = {
-                        Text(text = "Cornell Note")
+                        Text(text = "Settings")
                     },
                     navigationIcon = {
                         IconButton(onClick = { /*TODO*/ }) {
@@ -39,15 +38,6 @@ fun QuadrantNote() {
                             )
                         }
                     },
-                    actions = {
-                        IconButton(onClick = { /*TODO*/ }) {
-                            Icon(
-                                imageVector = Icons.Default.Search,
-                                contentDescription = "Search"
-                            )
-                        }
-                        homeMoreVert()
-                    }
                 )
             }
         ){
