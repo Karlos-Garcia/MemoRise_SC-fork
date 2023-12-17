@@ -55,6 +55,7 @@ data class NavigationItem(
     val selectedIcon: ImageVector,
     val unselectedIcon: ImageVector,
     val badgeCount: Int? = null,
+    val route: (NavController) -> Unit
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -65,7 +66,7 @@ fun mainScreen(
 ) {
     //can put the nav links per selection?
     //this items variable calls the values within the getNavigationItems() function
-    val items = getNavigationItems()
+    val items = getNavigationItems(navController = navController)
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
@@ -96,7 +97,7 @@ fun mainScreen(
                             },
                             selected = index == selectedItemIndex,
                             onClick = {
-                                //navController.navigate(item.route)
+                                item.route(navController)
                                 selectedItemIndex = index
                                 scope.launch {
                                     drawerState.close()
@@ -271,26 +272,28 @@ fun mainScreen(
 }
 
 //function that calls on the list of navigation items and calls them to the main activity
-fun getNavigationItems(): List<NavigationItem> {
+fun getNavigationItems(
+    navController: NavController
+): List<NavigationItem> {
     return listOf(
         NavigationItem(
             title = "notes",
             selectedIcon = Icons.Filled.Create,
             unselectedIcon = Icons.Outlined.Create,
-//            route = {navController.navigate(Screens.MainScreen.route)}
+            route = {navController.navigate(Screens.MainScreen.route)}
 
         ),
         NavigationItem(
             title = "Settings",
             selectedIcon = Icons.Filled.Settings,
             unselectedIcon = Icons.Outlined.Settings,
-//            route = {navController.navigate(Screens.SettingScreen.route)}
+            route = {navController.navigate(Screens.SettingScreen.route)}
         ),
         NavigationItem(
             title = "About Us",
             selectedIcon = Icons.Filled.Info,
             unselectedIcon = Icons.Outlined.Info,
-//            route = {navController.navigate(Screens.AboutUsScreen.route)}
+            route = {navController.navigate(Screens.AboutUsScreen.route)}
 //            badgeCount = 69
         )
     )

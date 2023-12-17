@@ -27,14 +27,14 @@ fun Navigation() {
         ) {
             mainScreen(
                 navController = navController,
-                items = getNavigationItems(),
+                items = getNavigationItems(navController),
             )
         }
         composable(
             route = Screens.SettingScreen.route,
         ) {
             settingScreen(
-
+                navController = navController
             )
         }
         composable(
