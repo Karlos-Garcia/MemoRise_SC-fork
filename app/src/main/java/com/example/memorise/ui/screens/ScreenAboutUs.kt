@@ -63,10 +63,7 @@ fun aboutUsScreen(
         }
     }
 }
-@Preview(
-    showSystemUi = true,
-    showBackground = true
-)
+
 @Composable
 fun aboutUs(
     modifier: Modifier = Modifier
@@ -94,6 +91,8 @@ fun aboutUs(
             textAlign = TextAlign
                 .Start
         )
+        Text("apple")
+        Text("apple")
     }
 
 
