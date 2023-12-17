@@ -10,8 +10,11 @@ import com.example.memorise.ui.screens.CornellNote
 import com.example.memorise.ui.screens.QuadrantNote
 import com.example.memorise.ui.screens.aboutUsScreen
 import com.example.memorise.ui.screens.basicNote
+import com.example.memorise.ui.screens.chartingNote
 import com.example.memorise.ui.screens.getNavigationItems
 import com.example.memorise.ui.screens.mainScreen
+import com.example.memorise.ui.screens.noteSelectScreen
+import com.example.memorise.ui.screens.outlineNote
 import com.example.memorise.ui.screens.settingScreen
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -45,6 +48,11 @@ fun Navigation() {
             )
         }
         composable(
+            route = Screens.NoteSelectScreen.route
+        ) {
+            noteSelectScreen(navController = navController)
+        }
+        composable(
             route = Screens.BasicNoteScreen.route,
         ) {
             basicNote(
@@ -54,7 +62,7 @@ fun Navigation() {
         composable(
             route = Screens.ChartingNoteScreen.route,
         ) {
-            basicNote(
+            chartingNote(
                 navController = navController
             )
         }
@@ -68,7 +76,7 @@ fun Navigation() {
         composable(
             route = Screens.OutlineNoteScreen.route,
         ) {
-            basicNote(
+            outlineNote(
                 navController = navController
             )
         }

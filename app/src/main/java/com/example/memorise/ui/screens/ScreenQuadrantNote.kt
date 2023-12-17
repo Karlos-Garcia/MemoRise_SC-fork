@@ -100,17 +100,18 @@ fun quadrantTextFields(
         Row(
             modifier = Modifier
         ) {
-            Column {
+            Column() {
                 TextField(
                     label= {Text(text = "Title")},
                     value = topLeftTitle,
                     onValueChange = {topLeftTitle = it},
                     modifier = Modifier
-                        .fillMaxWidth(0.5f)
                         .padding(
                             bottom = 4.dp,
                             end = 2.dp
                         )
+                        .fillMaxWidth(0.5f)
+
                 )
                 TextField(
                     label= {Text(text = "Content")},
@@ -127,7 +128,7 @@ fun quadrantTextFields(
 //                        .fillMaxHeight(0.45f)
                 )
             }
-            Column {
+            Column() {
                 TextField(
                     label= {Text(text = "Title")},
                     value = topRightTitle,
@@ -150,7 +151,7 @@ fun quadrantTextFields(
             }
         }
         Row {
-            Column {
+            Column() {
                 TextField(
                     label= {Text(text = "Title")},
                     value = bottomLeftTitle,
@@ -174,7 +175,7 @@ fun quadrantTextFields(
                         .height(340.dp)
                 )
             }
-            Column {
+            Column() {
                 TextField(
                     label= {Text(text = "Title")},
                     value = bottomRightTitle,

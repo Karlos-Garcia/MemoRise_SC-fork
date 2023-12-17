@@ -46,6 +46,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.memorise.ui.Screens
 import kotlinx.coroutines.launch
@@ -89,9 +90,18 @@ fun mainScreen(
         ModalNavigationDrawer(
             drawerContent = {
                 ModalDrawerSheet {
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(20.dp))
+                    Text(text = "MemoRise",
+                        modifier = Modifier
+                            .padding(
+                            start = 60.dp,
+                                bottom = 20.dp
+                            ),
+                        fontSize = 20.sp
+                    )
                     items.forEachIndexed { index, item ->
                         NavigationDrawerItem(
+
                             label = {
                                 Text(text = item.title)
                             },
@@ -118,6 +128,9 @@ fun mainScreen(
                             },
                             modifier = Modifier
                                 .padding(NavigationDrawerItemDefaults.ItemPadding)
+//                                .padding(
+//                                    bottom = 12.dp
+//                                )
                         )
                     }
                 }
@@ -191,83 +204,84 @@ fun mainScreen(
                     }
                 }
             }
-        }
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(24.dp)
-        ) {
-            IconButton(onClick = {showButtonList = !showButtonList},
+            Box(
                 modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .size(60.dp)
+                    .fillMaxSize()
+                    .padding(24.dp)
             ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = "Add",
+                IconButton(onClick = {showButtonList = !showButtonList},
                     modifier = Modifier
-                        .size(40.dp)
-                )
-                DropdownMenu(
-                    expanded = showButtonList,
-                    onDismissRequest = {showButtonList = false},
+                        .align(Alignment.BottomEnd)
+                        .size(60.dp)
                 ) {
-                    DropdownMenuItem(
-                        text = { Text("Add new note") },
-                        onClick = {AddNewNotes = !AddNewNotes}
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = "Add",
+                        modifier = Modifier
+                            .size(40.dp)
                     )
-                    Box(modifier = Modifier
-                        .fillMaxWidth()
-                        ,
+                    DropdownMenu(
+                        expanded = showButtonList,
+                        onDismissRequest = {showButtonList = false},
                     ) {
-                        DropdownMenu(
-                            expanded = AddNewNotes,
-                            onDismissRequest = {AddNewNotes = false},
+                        DropdownMenuItem(
+                            text = { Text("Add new note") },
+                            onClick = {AddNewNotes = !AddNewNotes}
                         )
-                        {
-                            DropdownMenuItem(
-                                text = { Text("Basic Note") },
-                                onClick = {
-                                    navController.navigate(Screens.BasicNoteScreen.route)
-                                }
+                        Box(modifier = Modifier
+                            .fillMaxWidth()
+                            ,
+                        ) {
+                            DropdownMenu(
+                                expanded = AddNewNotes,
+                                onDismissRequest = {AddNewNotes = false},
                             )
-                            DropdownMenuItem(
-                                text = { Text("Cornell Note Method") },
-                                onClick = {
-                                    navController.navigate(Screens.CornellNoteScreen.route)
-                                }
-                            )
-                            DropdownMenuItem(
-                                text = { Text("Outline Note Method") },
-                                onClick = {
-                                    navController.navigate(Screens.OutlineNoteScreen.route)
-                                }
-                            )
-                            DropdownMenuItem(
-                                text = { Text("Charting Note Method") },
-                                onClick = {
-                                    navController.navigate((Screens.ChartingNoteScreen.route))
-                                }
-                            )
-                            DropdownMenuItem(
-                                text = { Text("Quadrant Note Method") },
-                                onClick = {
-                                    navController.navigate(Screens.QuadrantNoteScreen.route)
-                                }
-                            )
+                            {
+                                DropdownMenuItem(
+                                    text = { Text("Basic Note") },
+                                    onClick = {
+                                        navController.navigate(Screens.BasicNoteScreen.route)
+                                    }
+                                )
+                                DropdownMenuItem(
+                                    text = { Text("Cornell Note Method") },
+                                    onClick = {
+                                        navController.navigate(Screens.CornellNoteScreen.route)
+                                    }
+                                )
+                                DropdownMenuItem(
+                                    text = { Text("Outline Note Method") },
+                                    onClick = {
+                                        navController.navigate(Screens.OutlineNoteScreen.route)
+                                    }
+                                )
+                                DropdownMenuItem(
+                                    text = { Text("Charting Note Method") },
+                                    onClick = {
+                                        navController.navigate((Screens.ChartingNoteScreen.route))
+                                    }
+                                )
+                                DropdownMenuItem(
+                                    text = { Text("Quadrant Note Method") },
+                                    onClick = {
+                                        navController.navigate(Screens.QuadrantNoteScreen.route)
+                                    }
+                                )
+                            }
                         }
+                        DropdownMenuItem(
+                            text = { Text("Add new image") },
+                            onClick = { /*TODO*/ }
+                        )
+                        DropdownMenuItem(
+                            text = { Text("Add new folder") },
+                            onClick = { /*TODO*/ }
+                        )
                     }
-                    DropdownMenuItem(
-                        text = { Text("Add new image") },
-                        onClick = { /*TODO*/ }
-                    )
-                    DropdownMenuItem(
-                        text = { Text("Add new folder") },
-                        onClick = { /*TODO*/ }
-                    )
                 }
             }
         }
+
     }
 }
 

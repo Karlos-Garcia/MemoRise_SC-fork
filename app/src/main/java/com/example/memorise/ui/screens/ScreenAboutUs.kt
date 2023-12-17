@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -67,32 +68,43 @@ fun aboutUsScreen(
 @Composable
 fun aboutUs(
     modifier: Modifier = Modifier
-
 ) {
-
     Column(
         modifier = modifier
             .padding(
-                start = 32.dp,
-                end = 32.dp,
+                start = 24.dp,
+                end = 24.dp,
                 top = 72.dp,
                 bottom = 72.dp
             )
             .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.Start,
 
     ) {
-        Text("MemoRise is an application developed " +
-                "by Karlos Louis Angelo Garcia and Archie Bayani to " +
-                "improve the Cavite State University students improve " +
-                "their note taking methods",
-            fontSize= 24.sp,
+        Text("MemoRise is a mobile application that implements different note-taking methods to improve students' note-taking",
+            fontSize= 20.sp,
             textAlign = TextAlign
                 .Start
         )
-        Text("apple")
-        Text("apple")
+        Spacer(modifier = Modifier
+            .padding(top = 120.dp))
+
+        Text("Developers:",
+            fontSize= 20.sp,
+            textAlign = TextAlign
+                .Start,
+        )
+        Text("Karlos Louis Angelo A. Garcia",
+            fontSize= 20.sp,
+            textAlign = TextAlign
+                .Start
+        )
+        Text("Archie Jay L. Bayani",
+            fontSize= 20.sp,
+            textAlign = TextAlign
+                .Start
+        )
     }
 
 

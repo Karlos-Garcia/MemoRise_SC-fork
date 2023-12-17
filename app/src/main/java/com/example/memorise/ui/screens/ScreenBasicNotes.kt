@@ -92,7 +92,7 @@ fun basicTextFields(modifier: Modifier = Modifier) {
         TextField(
             label= {Text(text = "Content")},
             value = basicNoteInput,
-            onValueChange = { basicTitleInput = it },
+            onValueChange = { basicNoteInput = it },
             modifier = modifier
                 .fillMaxSize()
                 .padding(
