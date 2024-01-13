@@ -1,4 +1,4 @@
-package com.example.memorise.ui.screens
+package com.example.memorise.ui.screens.noteScreens
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,11 +17,12 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.example.memorise.ui.Screens
 
+
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun chartingNote(
-    navController: NavController
+    navController: NavController,
 ) {
 
     Surface(

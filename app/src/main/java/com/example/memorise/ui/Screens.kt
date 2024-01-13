@@ -10,6 +10,8 @@ sealed class Screens(val route: String) {
     object ChartingNoteScreen : Screens(route="ChartingNote_screen")
     object OutlineNoteScreen : Screens(route="OutlineNote_screen")
     object QuadrantNoteScreen : Screens(route="QuadrantNote_screen")
+    object NoteSelectionScreen : Screens(route="NoteSelection_Screen")
+    object LadderNoteScreen : Screens(route="LadderNote_Screen")
 
 
 }

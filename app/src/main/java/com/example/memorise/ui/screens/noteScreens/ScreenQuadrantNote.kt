@@ -1,15 +1,12 @@
-package com.example.memorise.ui.screens
+package com.example.memorise.ui.screens.noteScreens
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -64,14 +61,14 @@ fun QuadrantNote(
                 )
             }
         ){
-            quadrantTextFields()
+            QuadrantTextFields()
         }
     }
 }
 @Preview
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun quadrantTextFields(
+fun QuadrantTextFields(
 
 ) {
 
@@ -102,6 +99,7 @@ fun quadrantTextFields(
         ) {
             Column() {
                 TextField(
+                    singleLine = true,
                     label= {Text(text = "Title")},
                     value = topLeftTitle,
                     onValueChange = {topLeftTitle = it},
@@ -130,6 +128,7 @@ fun quadrantTextFields(
             }
             Column() {
                 TextField(
+                    singleLine = true,
                     label= {Text(text = "Title")},
                     value = topRightTitle,
                     onValueChange = {topRightTitle = it},
@@ -153,6 +152,7 @@ fun quadrantTextFields(
         Row {
             Column() {
                 TextField(
+                    singleLine = true,
                     label= {Text(text = "Title")},
                     value = bottomLeftTitle,
                     onValueChange = {bottomLeftTitle = it},
@@ -177,6 +177,7 @@ fun quadrantTextFields(
             }
             Column() {
                 TextField(
+                    singleLine = true,
                     label= {Text(text = "Title")},
                     value = bottomRightTitle,
                     onValueChange = {bottomRightTitle = it},

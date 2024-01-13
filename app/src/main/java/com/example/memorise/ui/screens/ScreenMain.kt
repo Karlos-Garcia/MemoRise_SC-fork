@@ -61,7 +61,7 @@ data class NavigationItem(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun mainScreen(
+fun MainScreen(
     navController: NavController,
     items: List<NavigationItem>,
 ) {
@@ -226,48 +226,49 @@ fun mainScreen(
                     ) {
                         DropdownMenuItem(
                             text = { Text("Add new note") },
-                            onClick = {AddNewNotes = !AddNewNotes}
+                            onClick = {navController.navigate(Screens.NoteSelectionScreen.route)}
+//                            onClick = {AddNewNotes = !AddNewNotes}
                         )
                         Box(modifier = Modifier
                             .fillMaxWidth()
                             ,
                         ) {
-                            DropdownMenu(
-                                expanded = AddNewNotes,
-                                onDismissRequest = {AddNewNotes = false},
-                            )
-                            {
-                                DropdownMenuItem(
-                                    text = { Text("Basic Note") },
-                                    onClick = {
-                                        navController.navigate(Screens.BasicNoteScreen.route)
-                                    }
-                                )
-                                DropdownMenuItem(
-                                    text = { Text("Cornell Note Method") },
-                                    onClick = {
-                                        navController.navigate(Screens.CornellNoteScreen.route)
-                                    }
-                                )
-                                DropdownMenuItem(
-                                    text = { Text("Outline Note Method") },
-                                    onClick = {
-                                        navController.navigate(Screens.OutlineNoteScreen.route)
-                                    }
-                                )
-                                DropdownMenuItem(
-                                    text = { Text("Charting Note Method") },
-                                    onClick = {
-                                        navController.navigate((Screens.ChartingNoteScreen.route))
-                                    }
-                                )
-                                DropdownMenuItem(
-                                    text = { Text("Quadrant Note Method") },
-                                    onClick = {
-                                        navController.navigate(Screens.QuadrantNoteScreen.route)
-                                    }
-                                )
-                            }
+//                            DropdownMenu(
+//                                expanded = AddNewNotes,
+//                                onDismissRequest = {AddNewNotes = false},
+//                            )
+//                            {
+//                                DropdownMenuItem(
+//                                    text = { Text("Basic Note") },
+//                                    onClick = {
+//                                        navController.navigate(Screens.BasicNoteScreen.route)
+//                                    }
+//                                )
+//                                DropdownMenuItem(
+//                                    text = { Text("Cornell Note Method") },
+//                                    onClick = {
+//                                        navController.navigate(Screens.CornellNoteScreen.route)
+//                                    }
+//                                )
+//                                DropdownMenuItem(
+//                                    text = { Text("Outline Note Method") },
+//                                    onClick = {
+//                                        navController.navigate(Screens.OutlineNoteScreen.route)
+//                                    }
+//                                )
+//                                DropdownMenuItem(
+//                                    text = { Text("Charting Note Method") },
+//                                    onClick = {
+//                                        navController.navigate((Screens.ChartingNoteScreen.route))
+//                                    }
+//                                )
+//                                DropdownMenuItem(
+//                                    text = { Text("Quadrant Note Method") },
+//                                    onClick = {
+//                                        navController.navigate(Screens.QuadrantNoteScreen.route)
+//                                    }
+//                                )
+//                            }
                         }
                         DropdownMenuItem(
                             text = { Text("Add new image") },
@@ -312,6 +313,7 @@ fun getNavigationItems(
         )
     )
 }
+
 
 //this function gets a list for the vertical menu within the main screen, the three dots with the sort by, view by, and categories
 //@Composable

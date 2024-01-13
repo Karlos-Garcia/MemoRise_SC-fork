@@ -1,4 +1,4 @@
-package com.example.memorise.ui.screens
+package com.example.memorise.ui.screens.noteScreens
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
@@ -6,17 +6,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -26,41 +18,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.memorise.ui.Screens
+import androidx.navigation.compose.rememberNavController
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun basicNote(
     navController: NavController
 ) {
+    val navController = rememberNavController()
 
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background
+    Topappbar (
+        navController = navController,
+        name = "Basic Note"
     ) {
-        Scaffold(
-            modifier = Modifier,
-            topBar = {
-                TopAppBar(
-                    title = {
-                        Text(text = "Basic Notes")
-                    },
-                    navigationIcon = {
-                        IconButton(onClick = {
-                            navController.navigate(Screens.MainScreen.route)
-                        }) {
-                            Icon(
-                                imageVector = Icons.Default.ArrowBack,
-                                contentDescription = "Back"
-                            )
-                        }
-                    },
-                )
-            }
-        ){
-            basicTextFields()
-        }
+        basicTextFields()
     }
 }
 
@@ -105,3 +76,39 @@ fun basicTextFields(modifier: Modifier = Modifier) {
         )
     }
 }
+
+//@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+//@OptIn(ExperimentalMaterial3Api::class)
+//@Composable
+//fun basicNote(
+//    navController: NavController
+//) {
+//
+//    Surface(
+//        modifier = Modifier.fillMaxSize(),
+//        color = MaterialTheme.colorScheme.background
+//    ) {
+//        Scaffold(
+//            modifier = Modifier,
+//            topBar = {
+//                TopAppBar(
+//                    title = {
+//                        Text(text = "Basic Notes")
+//                    },
+//                    navigationIcon = {
+//                        IconButton(onClick = {
+//                            navController.navigate(Screens.MainScreen.route)
+//                        }) {
+//                            Icon(
+//                                imageVector = Icons.Default.ArrowBack,
+//                                contentDescription = "Back"
+//                            )
+//                        }
+//                    },
+//                )
+//            }
+//        ){
+//            basicTextFields()
+//        }
+//    }
+//}

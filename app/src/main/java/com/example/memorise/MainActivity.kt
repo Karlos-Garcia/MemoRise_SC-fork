@@ -6,9 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.navigation.NavController
 import com.example.memorise.ui.Navigation
-import com.example.memorise.ui.screens.QuadrantNote
 import com.example.memorise.ui.theme.MemoRiseTheme
 
 @OptIn(ExperimentalMaterial3Api::class)

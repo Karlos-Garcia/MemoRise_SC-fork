@@ -1,4 +1,4 @@
-package com.example.memorise.ui.screens
+package com.example.memorise.ui.screens.noteScreens
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,8 +20,10 @@ import com.example.memorise.ui.Screens
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun outlineNote(
-    navController: NavController
+fun Topappbar(
+    navController: NavController,
+    name: String,
+    content: @Composable () -> Unit
 ) {
 
     Surface(
@@ -33,7 +35,7 @@ fun outlineNote(
             topBar = {
                 TopAppBar(
                     title = {
-                        Text(text = "Outline Note")
+                        Text(name)
                     },
                     navigationIcon = {
                         IconButton(onClick = {
@@ -48,7 +50,7 @@ fun outlineNote(
                 )
             }
         ){
-
+            content()
         }
     }
 }

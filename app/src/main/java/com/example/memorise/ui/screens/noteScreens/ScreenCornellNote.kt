@@ -1,25 +1,16 @@
-package com.example.memorise.ui.screens
+package com.example.memorise.ui.screens.noteScreens
 
 import android.annotation.SuppressLint
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -27,50 +18,27 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.memorise.ui.Screens
+import androidx.navigation.compose.rememberNavController
 
-@RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CornellNote(
     navController: NavController
 ) {
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background
+    val navController = rememberNavController()
+
+    Topappbar (
+        navController = navController,
+        name = "Cornell Note"
     ) {
-        Scaffold(
-            modifier = Modifier,
-            topBar = {
-                TopAppBar(
-                    title = {
-                        Text(text = "Cornell Note")
-                    },
-                    navigationIcon = {
-                        IconButton(onClick = {
-                            navController.navigate(Screens.MainScreen.route)
-                        }) {
-                            Icon(
-                                imageVector = Icons.Default.ArrowBack,
-                                contentDescription = "Back"
-                            )
-                        }
-                    },
-                )
-            }
-        ){
-            cornellTextFields()
-        }
+        cornellTextFields()
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
-@Preview
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun cornellTextFields(modifier: Modifier = Modifier) {
@@ -93,6 +61,7 @@ fun cornellTextFields(modifier: Modifier = Modifier) {
         )
         .fillMaxSize()) {
         TextField(
+            singleLine = true,
             label = {Text(text = "Title", style = labelStyle)},
             modifier = modifier
                 .fillMaxWidth()
@@ -172,3 +141,38 @@ fun cornellTextFields(modifier: Modifier = Modifier) {
         )
     }
 }
+
+//@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+//@OptIn(ExperimentalMaterial3Api::class)
+//@Composable
+//fun CornellNote(
+//    navController: NavController
+//) {
+//    Surface(
+//        modifier = Modifier.fillMaxSize(),
+//        color = MaterialTheme.colorScheme.background
+//    ) {
+//        Scaffold(
+//            modifier = Modifier,
+//            topBar = {
+//                TopAppBar(
+//                    title = {
+//                        Text(text = "Cornell Note")
+//                    },
+//                    navigationIcon = {
+//                        IconButton(onClick = {
+//                            navController.navigate(Screens.MainScreen.route)
+//                        }) {
+//                            Icon(
+//                                imageVector = Icons.Default.ArrowBack,
+//                                contentDescription = "Back"
+//                            )
+//                        }
+//                    },
+//                )
+//            }
+//        ){
+//            cornellTextFields()
+//        }
+//    }
+//}
