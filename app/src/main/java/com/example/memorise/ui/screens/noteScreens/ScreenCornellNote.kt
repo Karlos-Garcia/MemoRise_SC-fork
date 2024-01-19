@@ -22,9 +22,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.memorise.ui.screens.Topappbar
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CornellNote(
     navController: NavController
@@ -141,38 +141,3 @@ fun cornellTextFields(modifier: Modifier = Modifier) {
         )
     }
 }
-
-//@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-//@OptIn(ExperimentalMaterial3Api::class)
-//@Composable
-//fun CornellNote(
-//    navController: NavController
-//) {
-//    Surface(
-//        modifier = Modifier.fillMaxSize(),
-//        color = MaterialTheme.colorScheme.background
-//    ) {
-//        Scaffold(
-//            modifier = Modifier,
-//            topBar = {
-//                TopAppBar(
-//                    title = {
-//                        Text(text = "Cornell Note")
-//                    },
-//                    navigationIcon = {
-//                        IconButton(onClick = {
-//                            navController.navigate(Screens.MainScreen.route)
-//                        }) {
-//                            Icon(
-//                                imageVector = Icons.Default.ArrowBack,
-//                                contentDescription = "Back"
-//                            )
-//                        }
-//                    },
-//                )
-//            }
-//        ){
-//            cornellTextFields()
-//        }
-//    }
-//}

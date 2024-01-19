@@ -1,4 +1,4 @@
-package com.example.memorise.ui
+package com.example.memorise.feature_note.presentation.ScreenNavigations
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -6,16 +6,17 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.memorise.ui.screens.MainScreen
+import com.example.memorise.feature_note.domain.use_case.NoteUseCases
+import com.example.memorise.feature_note.presentation.add_edit_notes.AddEditNoteViewModel
+import com.example.memorise.feature_note.presentation.notes.MainScreen
+import com.example.memorise.feature_note.presentation.notes.components.getNavigationItems
 import com.example.memorise.ui.screens.noteScreens.CornellNote
 import com.example.memorise.ui.screens.noteScreens.QuadrantNote
 import com.example.memorise.ui.screens.SelectionScreen
 import com.example.memorise.ui.screens.aboutUsScreen
 import com.example.memorise.ui.screens.noteScreens.basicNote
 import com.example.memorise.ui.screens.noteScreens.chartingNote
-import com.example.memorise.ui.screens.getNavigationItems
 import com.example.memorise.ui.screens.noteScreens.LadderNote
-import com.example.memorise.ui.screens.noteSelectScreen
 import com.example.memorise.ui.screens.noteScreens.outlineNote
 import com.example.memorise.ui.screens.settingScreen
 
@@ -48,11 +49,6 @@ fun Navigation() {
             aboutUsScreen(
                 navController = navController
             )
-        }
-        composable(
-            route = Screens.NoteSelectScreen.route
-        ) {
-            noteSelectScreen(navController = navController)
         }
         composable(
             route = Screens.BasicNoteScreen.route,
@@ -93,7 +89,7 @@ fun Navigation() {
             route = Screens.NoteSelectionScreen.route,
         ) {
             SelectionScreen(
-                navController = navController
+                navController = navController,
             )
         }
         composable(

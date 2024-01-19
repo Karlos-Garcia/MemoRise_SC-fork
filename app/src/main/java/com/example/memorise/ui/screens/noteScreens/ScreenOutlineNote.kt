@@ -19,9 +19,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.memorise.ui.screens.Topappbar
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun outlineNote(
     navController: NavController
@@ -112,39 +112,3 @@ fun outlineNote() {
         }
     }
 }
-
-//@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-//@OptIn(ExperimentalMaterial3Api::class)
-//@Composable
-//fun outlineNote(
-//    navController: NavController
-//) {
-//
-//    Surface(
-//        modifier = Modifier.fillMaxSize(),
-//        color = MaterialTheme.colorScheme.background
-//    ) {
-//        Scaffold(
-//            modifier = Modifier,
-//            topBar = {
-//                TopAppBar(
-//                    title = {
-//                        Text(text = "Outline Note")
-//                    },
-//                    navigationIcon = {
-//                        IconButton(onClick = {
-//                            navController.navigate(Screens.MainScreen.route)
-//                        }) {
-//                            Icon(
-//                                imageVector = Icons.Default.ArrowBack,
-//                                contentDescription = "Back"
-//                            )
-//                        }
-//                    },
-//                )
-//            }
-//        ){
-//            outlineNote()
-//        }
-//    }
-//}

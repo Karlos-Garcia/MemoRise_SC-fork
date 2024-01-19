@@ -1,5 +1,7 @@
-package com.example.memorise.ui.screens
+package com.example.memorise.feature_note.presentation.notes
 
+import android.annotation.SuppressLint
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,17 +10,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.SnackbarResult
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Create
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.outlined.Create
-import androidx.compose.material.icons.outlined.Info
-import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -44,46 +42,50 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.memorise.ui.Screens
+import com.example.memorise.feature_note.domain.model.UnifiedNote
+import com.example.memorise.feature_note.presentation.notes.components.NavigationItem
+import com.example.memorise.feature_note.presentation.notes.components.getNavigationItems
+import com.example.memorise.feature_note.presentation.ScreenNavigations.Screens
+import com.example.memorise.feature_note.presentation.notes.components.NoteItem
+import com.example.memorise.feature_note.presentation.notes.components.OrderSection
 import kotlinx.coroutines.launch
 
-data class NavigationItem(
-    val title: String,
-    val selectedIcon: ImageVector,
-    val unselectedIcon: ImageVector,
-    val badgeCount: Int? = null,
-    val route: (NavController) -> Unit
-)
 
+
+
+
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
     navController: NavController,
     items: List<NavigationItem>,
+    viewModel: NotesViewModel = hiltViewModel(),
 ) {
-    //can put the nav links per selection?
-    //this items variable calls the values within the getNavigationItems() function
+    val state = viewModel.state.value
+    val scaffoldState = rememberScaffoldState()
+    val scope = rememberCoroutineScope()
     val items = getNavigationItems(navController = navController)
+
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
         val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-        val scope = rememberCoroutineScope()
         var selectedItemIndex by rememberSaveable {
             mutableStateOf(0)
         }
-        var showMoreVert by remember {
-            mutableStateOf(false)
-        }
+//        var showMoreVert by remember {
+//            mutableStateOf(false)
+//        }
         var showButtonList by remember {
             mutableStateOf(false)
         }
-        var AddNewNotes by remember{
+        var AddNewNotes by remember {
             mutableStateOf(false)
         }
 
@@ -91,10 +93,11 @@ fun MainScreen(
             drawerContent = {
                 ModalDrawerSheet {
                     Spacer(modifier = Modifier.height(20.dp))
-                    Text(text = "MemoRise",
+                    Text(
+                        text = "MemoRise",
                         modifier = Modifier
                             .padding(
-                            start = 60.dp,
+                                start = 60.dp,
                                 bottom = 20.dp
                             ),
                         fontSize = 20.sp
@@ -121,16 +124,8 @@ fun MainScreen(
                                     contentDescription = item.title
                                 )
                             },
-                            badge = {
-                                item.badgeCount?.let {
-                                    Text(text = item.badgeCount.toString())
-                                }
-                            },
                             modifier = Modifier
                                 .padding(NavigationDrawerItemDefaults.ItemPadding)
-//                                .padding(
-//                                    bottom = 12.dp
-//                                )
                         )
                     }
                 }
@@ -138,6 +133,7 @@ fun MainScreen(
             drawerState = drawerState
         ) {
             Scaffold(
+//                scaffoldState = scaffoldState,
                 modifier = Modifier,
                 topBar = {
                     TopAppBar(
@@ -157,50 +153,52 @@ fun MainScreen(
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /*TODO*/ }) {
+                            IconButton(
+                                onClick = { /*TODO*/ }
+                            ) {
                                 Icon(
                                     imageVector = Icons.Default.Search,
                                     contentDescription = "Search"
                                 )
                             }
-                            IconButton(onClick = { showMoreVert = !showMoreVert }) {
-                                Icon(
-                                    imageVector = Icons.Default.MoreVert,
-                                    contentDescription = "More Options"
-                                )
-                            }
-                            DropdownMenu(
-                                expanded = showMoreVert,
-                                onDismissRequest = { showMoreVert = false }) {
-                                DropdownMenuItem(
-                                    text = { Text("Sort by") },
-                                    onClick = {}
-                                )
-//            onClick = {})
-                                DropdownMenuItem(
-                                    text = { Text("View by") },
-                                    onClick = {}
-                                )
-                                DropdownMenuItem(
-                                    text = { Text("Categories") },
-                                    onClick = {}
-                                )
-                            }
+                            OrderSection(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 16.dp),
+                                noteOrder = state.noteOrder,
+                                onOrderChange = {
+                                    viewModel.onEvent(NotesEvent.Order(it))
+                                }
+                            )
                         }
                     )
-                }
-            ) { values ->
+                },
+            ) {
                 LazyColumn(
                     modifier = Modifier
-                        //fill max size makes the list take the
-                        // whole horizontal spaces per items
                         .fillMaxSize()
-                        .padding(values)
                 ) {
-                    items(100) {
-                        Text(text = "Note number $it",
+                    items(state.notes) { note ->
+                        NoteItem(
+                            note = note,
                             modifier = Modifier
-                                .padding(16.dp))
+                                .fillMaxWidth()
+                                .clickable {
+
+                                },
+                            onDeleteClick = {
+                                viewModel.onEvent(NotesEvent.DeleteNote(note))
+                                scope.launch {
+                                    val result = scaffoldState.snackbarHostState.showSnackbar(
+                                        message = "Note Deleted",
+                                        actionLabel = "Undo"
+                                    )
+                                    if(result == SnackbarResult.ActionPerformed) {
+                                        viewModel.onEvent(NotesEvent.RestoreNote)
+                                    }
+                                }
+                            }
+                        )
                     }
                 }
             }
@@ -209,7 +207,8 @@ fun MainScreen(
                     .fillMaxSize()
                     .padding(24.dp)
             ) {
-                IconButton(onClick = {showButtonList = !showButtonList},
+                IconButton(
+                    onClick = { showButtonList = !showButtonList },
                     modifier = Modifier
                         .align(Alignment.BottomEnd)
                         .size(60.dp)
@@ -222,54 +221,12 @@ fun MainScreen(
                     )
                     DropdownMenu(
                         expanded = showButtonList,
-                        onDismissRequest = {showButtonList = false},
+                        onDismissRequest = { showButtonList = false },
                     ) {
                         DropdownMenuItem(
                             text = { Text("Add new note") },
-                            onClick = {navController.navigate(Screens.NoteSelectionScreen.route)}
-//                            onClick = {AddNewNotes = !AddNewNotes}
+                            onClick = { navController.navigate(Screens.NoteSelectionScreen.route) }
                         )
-                        Box(modifier = Modifier
-                            .fillMaxWidth()
-                            ,
-                        ) {
-//                            DropdownMenu(
-//                                expanded = AddNewNotes,
-//                                onDismissRequest = {AddNewNotes = false},
-//                            )
-//                            {
-//                                DropdownMenuItem(
-//                                    text = { Text("Basic Note") },
-//                                    onClick = {
-//                                        navController.navigate(Screens.BasicNoteScreen.route)
-//                                    }
-//                                )
-//                                DropdownMenuItem(
-//                                    text = { Text("Cornell Note Method") },
-//                                    onClick = {
-//                                        navController.navigate(Screens.CornellNoteScreen.route)
-//                                    }
-//                                )
-//                                DropdownMenuItem(
-//                                    text = { Text("Outline Note Method") },
-//                                    onClick = {
-//                                        navController.navigate(Screens.OutlineNoteScreen.route)
-//                                    }
-//                                )
-//                                DropdownMenuItem(
-//                                    text = { Text("Charting Note Method") },
-//                                    onClick = {
-//                                        navController.navigate((Screens.ChartingNoteScreen.route))
-//                                    }
-//                                )
-//                                DropdownMenuItem(
-//                                    text = { Text("Quadrant Note Method") },
-//                                    onClick = {
-//                                        navController.navigate(Screens.QuadrantNoteScreen.route)
-//                                    }
-//                                )
-//                            }
-                        }
                         DropdownMenuItem(
                             text = { Text("Add new image") },
                             onClick = { /*TODO*/ }
@@ -282,37 +239,10 @@ fun MainScreen(
                 }
             }
         }
-
     }
 }
 
-//function that calls on the list of navigation items and calls them to the main activity
-fun getNavigationItems(
-    navController: NavController
-): List<NavigationItem> {
-    return listOf(
-        NavigationItem(
-            title = "notes",
-            selectedIcon = Icons.Filled.Create,
-            unselectedIcon = Icons.Outlined.Create,
-            route = {navController.navigate(Screens.MainScreen.route)}
 
-        ),
-        NavigationItem(
-            title = "Settings",
-            selectedIcon = Icons.Filled.Settings,
-            unselectedIcon = Icons.Outlined.Settings,
-            route = {navController.navigate(Screens.SettingScreen.route)}
-        ),
-        NavigationItem(
-            title = "About Us",
-            selectedIcon = Icons.Filled.Info,
-            unselectedIcon = Icons.Outlined.Info,
-            route = {navController.navigate(Screens.AboutUsScreen.route)}
-//            badgeCount = 69
-        )
-    )
-}
 
 
 //this function gets a list for the vertical menu within the main screen, the three dots with the sort by, view by, and categories

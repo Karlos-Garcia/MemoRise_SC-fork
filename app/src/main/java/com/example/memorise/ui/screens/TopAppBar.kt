@@ -1,4 +1,4 @@
-package com.example.memorise.ui.screens.noteScreens
+package com.example.memorise.ui.screens
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,7 +15,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
-import com.example.memorise.ui.Screens
+import com.example.memorise.feature_note.presentation.ScreenNavigations.Screens
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -54,3 +54,40 @@ fun Topappbar(
         }
     }
 }
+
+//basic notes original topappbar
+//@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+//@OptIn(ExperimentalMaterial3Api::class)
+//@Composable
+//fun basicNote(
+//    navController: NavController
+//) {
+//
+//    Surface(
+//        modifier = Modifier.fillMaxSize(),
+//        color = MaterialTheme.colorScheme.background
+//    ) {
+//        Scaffold(
+//            modifier = Modifier,
+//            topBar = {
+//                TopAppBar(
+//                    title = {
+//                        Text(text = "Basic Notes")
+//                    },
+//                    navigationIcon = {
+//                        IconButton(onClick = {
+//                            navController.navigate(Screens.MainScreen.route)
+//                        }) {
+//                            Icon(
+//                                imageVector = Icons.Default.ArrowBack,
+//                                contentDescription = "Back"
+//                            )
+//                        }
+//                    },
+//                )
+//            }
+//        ){
+//            basicTextFields()
+//        }
+//    }
+//}

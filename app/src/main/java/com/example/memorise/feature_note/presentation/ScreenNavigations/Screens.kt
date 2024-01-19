@@ -1,4 +1,4 @@
-package com.example.memorise.ui
+package com.example.memorise.feature_note.presentation.ScreenNavigations
 
 sealed class Screens(val route: String) {
     object MainScreen : Screens(route="main_screen")

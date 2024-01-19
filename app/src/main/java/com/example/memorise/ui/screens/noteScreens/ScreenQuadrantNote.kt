@@ -9,63 +9,35 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.memorise.ui.Screens
+import androidx.navigation.compose.rememberNavController
+import com.example.memorise.ui.screens.Topappbar
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun QuadrantNote(
     navController: NavController
 ) {
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background
+    val navController = rememberNavController()
+
+    Topappbar (
+        navController = navController,
+        name = "Cornell Note"
     ) {
-        Scaffold(
-            modifier = Modifier,
-            topBar = {
-                TopAppBar(
-                    title = {
-                        Text(text = "Quadrant Note")
-                    },
-                    navigationIcon = {
-                        IconButton(onClick = {
-                            navController.navigate(Screens.MainScreen.route)
-                        }) {
-                            Icon(
-                                imageVector = Icons.Default.ArrowBack,
-                                contentDescription = "Back"
-                            )
-                        }
-                    },
-                )
-            }
-        ){
-            QuadrantTextFields()
-        }
+        QuadrantTextFields()
     }
 }
-@Preview
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun QuadrantTextFields(

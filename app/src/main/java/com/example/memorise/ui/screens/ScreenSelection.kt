@@ -21,14 +21,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.memorise.ui.Screens
+import com.example.memorise.feature_note.domain.model.NoteType
+import com.example.memorise.feature_note.presentation.ScreenNavigations.Screens
+import com.example.memorise.feature_note.presentation.add_edit_notes.AddEditNoteViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SelectionScreen(
-    navController: NavController
-) {
+    modifier: Modifier = Modifier,
+    navController: NavController,
+    viewModel: AddEditNoteViewModel
+    ) {
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -54,15 +58,19 @@ fun SelectionScreen(
                 )
             }
         ){
-            selectionScreen(navController = navController)
+            selectionScreen(
+                navController = navController,
+                viewModel = viewModel
+            )
         }
     }
 }
 @Composable
 fun selectionScreen(
     modifier: Modifier = Modifier,
-    navController: NavController
-) {
+    navController: NavController,
+    viewModel: AddEditNoteViewModel
+    ) {
     Column(
         modifier = Modifier
             .padding(
@@ -72,26 +80,38 @@ fun selectionScreen(
     ) {
         Button(
             modifier = modifier.fillMaxWidth(),
-            onClick = {navController.navigate(Screens.BasicNoteScreen.route)}) {
+            onClick = {
+                viewModel.onNoteTypeSelected(NoteType.BASIC)
+                navController.navigate(Screens.BasicNoteScreen.route)
+            }) {
             Text(text = "Basic Note",
                 textAlign = TextAlign.Left)
         }
         Button(
             modifier = modifier.fillMaxWidth(),
-            onClick = {navController.navigate(Screens.CornellNoteScreen.route)}) {
+            onClick = {
+                viewModel.onNoteTypeSelected(NoteType.CORNELL)
+                navController.navigate(Screens.CornellNoteScreen.route)
+            }) {
             Text(text = "Cornell Note Method",
                 textAlign = TextAlign.Left)
 
         }
         Button(
             modifier = modifier.fillMaxWidth(),
-            onClick = {navController.navigate(Screens.OutlineNoteScreen.route)}) {
+            onClick = {
+                viewModel.onNoteTypeSelected(NoteType.OUTLINE)
+                navController.navigate(Screens.OutlineNoteScreen.route)
+            }) {
             Text(text = "Outline Note Method",
                 textAlign = TextAlign.Left)
         }
         Button(
             modifier = modifier.fillMaxWidth(),
-            onClick = {navController.navigate(Screens.ChartingNoteScreen.route)}) {
+            onClick = {
+                viewModel.onNoteTypeSelected(NoteType.CHARTING)
+                navController.navigate(Screens.ChartingNoteScreen.route)
+            }) {
             Text(
                 text = "Charting Note Method",
                 textAlign = TextAlign.Left,
@@ -99,23 +119,21 @@ fun selectionScreen(
         }
         Button(
             modifier = modifier.fillMaxWidth(),
-            onClick = {navController.navigate(Screens.QuadrantNoteScreen.route)}) {
+            onClick = {
+                viewModel.onNoteTypeSelected((NoteType.QUADRANT))
+                navController.navigate(Screens.QuadrantNoteScreen.route)
+            }) {
             Text(text = "Quadrant Note Method",
                 textAlign = TextAlign.Left)
         }
         Button(
             modifier = modifier.fillMaxWidth(),
-            onClick = {navController.navigate(Screens.LadderNoteScreen.route)}) {
+            onClick = {
+                viewModel.onNoteTypeSelected(NoteType.LADDER)
+                navController.navigate(Screens.LadderNoteScreen.route)
+            }) {
             Text(text = "Ladder",
                 textAlign = TextAlign.Left)
         }
-        Button(
-            modifier = modifier.fillMaxWidth(),
-            onClick = { /*TODO*/ }) {
-            Text(text = "Graph",
-                textAlign = TextAlign.Left)
-        }
     }
-
-
 }
