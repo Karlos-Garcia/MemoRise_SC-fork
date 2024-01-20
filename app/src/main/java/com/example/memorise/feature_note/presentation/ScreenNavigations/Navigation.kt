@@ -3,22 +3,23 @@ package com.example.memorise.feature_note.presentation.ScreenNavigations
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.memorise.feature_note.domain.use_case.NoteUseCases
-import com.example.memorise.feature_note.presentation.add_edit_notes.AddEditNoteViewModel
+import androidx.navigation.navArgument
 import com.example.memorise.feature_note.presentation.notes.MainScreen
 import com.example.memorise.feature_note.presentation.notes.components.getNavigationItems
-import com.example.memorise.ui.screens.noteScreens.CornellNote
-import com.example.memorise.ui.screens.noteScreens.QuadrantNote
 import com.example.memorise.ui.screens.SelectionScreen
 import com.example.memorise.ui.screens.aboutUsScreen
-import com.example.memorise.ui.screens.noteScreens.basicNote
-import com.example.memorise.ui.screens.noteScreens.chartingNote
+import com.example.memorise.ui.screens.noteScreens.CornellNote
 import com.example.memorise.ui.screens.noteScreens.LadderNote
-import com.example.memorise.ui.screens.noteScreens.outlineNote
+import com.example.memorise.ui.screens.noteScreens.OutlineNote
+import com.example.memorise.ui.screens.noteScreens.QuadrantNote
+import com.example.memorise.ui.screens.noteScreens.basicNote
 import com.example.memorise.ui.screens.settingScreen
+
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -28,6 +29,7 @@ fun Navigation() {
         navController = navController,
         startDestination = Screens.MainScreen.route
     ) {
+
         composable(
             route = Screens.MainScreen.route,
         ) {
@@ -36,6 +38,7 @@ fun Navigation() {
                 items = getNavigationItems(navController),
             )
         }
+
         composable(
             route = Screens.SettingScreen.route,
         ) {
@@ -43,6 +46,7 @@ fun Navigation() {
                 navController = navController
             )
         }
+
         composable(
             route = Screens.AboutUsScreen.route,
         ) {
@@ -50,50 +54,89 @@ fun Navigation() {
                 navController = navController
             )
         }
-        composable(
-            route = Screens.BasicNoteScreen.route,
-        ) {
-            basicNote(
-                navController = navController
-            )
-        }
-        composable(
-            route = Screens.ChartingNoteScreen.route,
-        ) {
-            chartingNote(
-                navController = navController
-            )
-        }
-        composable(
-            route = Screens.CornellNoteScreen.route,
-        ) {
-            CornellNote(
-                navController = navController
-            )
-        }
-        composable(
-            route = Screens.OutlineNoteScreen.route,
-        ) {
-            outlineNote(
-                navController = navController
-            )
-        }
-        composable(
-            route = Screens.QuadrantNoteScreen.route,
-        ) {
-            QuadrantNote(
-                navController = navController
-            )
-        }
+
         composable(
             route = Screens.NoteSelectionScreen.route,
         ) {
             SelectionScreen(
                 navController = navController,
+                viewModel = hiltViewModel()
             )
         }
+
         composable(
-            route = Screens.LadderNoteScreen.route,
+            route = Screens.BasicNoteScreen.route + "?noteId={noteId}",
+            arguments = listOf(
+                navArgument(
+                    name = "noteId"
+                ) {
+                    type = NavType.IntType
+                    defaultValue = -1
+                },
+            )
+        ) {
+            basicNote(
+                navController = navController)
+        }
+
+        composable(
+            route = Screens.CornellNoteScreen.route + "?noteId={noteId}",
+            arguments = listOf (
+                navArgument (
+                    name = "noteId"
+                ) {
+                    type = NavType.IntType
+                    defaultValue = -1
+                },
+            )
+        ) {
+            CornellNote(
+            navController = navController)
+        }
+
+
+        composable(
+            route = Screens.OutlineNoteScreen.route + "?noteId={noteId}",
+            arguments = listOf (
+                navArgument(
+                    name = "noteId"
+                ) {
+                    type = NavType.IntType
+                    defaultValue = -1
+                },
+            )
+        ) {
+            OutlineNote(
+                navController = navController
+            )
+        }
+
+        composable(
+            route = Screens.QuadrantNoteScreen.route + "?noteId={noteId}",
+            arguments = listOf (
+                navArgument(
+                    name = "noteId"
+                ) {
+                    type = NavType.IntType
+                    defaultValue = -1
+                },
+            )
+        ) {
+            QuadrantNote(
+                navController = navController
+            )
+        }
+
+        composable(
+            route = Screens.LadderNoteScreen.route + "?noteId={noteId}",
+            arguments = listOf (
+                navArgument(
+                    name = "noteId"
+                ) {
+                    type = NavType.IntType
+                    defaultValue = -1
+                },
+            )
         ) {
             LadderNote(
                 navController = navController

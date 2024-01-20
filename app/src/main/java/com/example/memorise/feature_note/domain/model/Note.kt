@@ -1,7 +1,6 @@
 package com.example.memorise.feature_note.domain.model
 
 import androidx.room.Entity
-import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
 
@@ -27,6 +26,7 @@ data class UnifiedNote(
 enum class NoteType {
     BASIC, CORNELL, OUTLINE, CHARTING, QUADRANT, LADDER
 }
+
 
 class InvalidNoteException(message: String): Exception(message)
 

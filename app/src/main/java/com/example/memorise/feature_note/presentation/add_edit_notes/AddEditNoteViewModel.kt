@@ -1,7 +1,9 @@
 package com.example.memorise.feature_note.presentation.add_edit_notes
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.memorise.feature_note.domain.model.InvalidNoteException
@@ -18,6 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AddEditNoteViewModel @Inject constructor(
     private val noteUseCases: NoteUseCases,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val _noteTitle = mutableStateOf(NoteTextFieldState(
@@ -91,6 +94,54 @@ class AddEditNoteViewModel @Inject constructor(
     private var currentNoteId: Int? = null
 
     var currentNoteType: NoteType? = null
+
+    //retrieves the notes when noteId is not equal to -1
+    init {
+        savedStateHandle.get<Int>("noteId")?.let { noteId ->
+            if(noteId != -1) {
+                viewModelScope.launch {
+                    noteUseCases.getNote(noteId)?.also {note ->
+                        Log.d("AddEditNoteViewModel", "Retrieved note: $note")
+
+                        currentNoteId = note.id
+                        _noteTitle.value = noteTitle.value.copy(
+                            text = note.title,
+                        )
+                        _noteContent1.value = noteContent1.value.copy(
+                            text = note.content1 ?: "",
+                        )
+                        _noteContent2.value = noteContent2.value.copy(
+                            text = note.content2 ?: "",
+                        )
+                        _noteContent3.value = noteContent3.value.copy(
+                            text = note.content3 ?: "",
+                        )
+                        _noteContent4.value = noteContent4.value.copy(
+                            text = note.content4 ?: "",
+                        )
+                        _noteContent5.value = noteContent5.value.copy(
+                            text = note.content5 ?: "",
+                        )
+                        _noteKeyword1.value = noteKeyword1.value.copy(
+                            text = note.keyword1 ?: "",
+                        )
+                        _noteKeyword2.value = noteKeyword2.value.copy(
+                            text = note.keyword2 ?: "",
+                        )
+                        _noteKeyword3.value = noteKeyword3.value.copy(
+                            text = note.keyword3 ?: "",
+                        )
+                        _noteKeyword4.value = noteKeyword4.value.copy(
+                            text = note.keyword4 ?: "",
+                        )
+                        _noteSummary.value = noteSummary.value.copy(
+                            text = note.summary ?: "",
+                        )
+                    }
+                }
+            }
+        }
+    }
     fun onNoteTypeSelected(noteType: NoteType) {
         currentNoteType = noteType
     }
@@ -103,23 +154,11 @@ class AddEditNoteViewModel @Inject constructor(
                     text = event.value
                 )
             }
-            is AddEditNoteEvent.ChangeTitleFocus -> {
-                _noteTitle.value = noteTitle.value.copy(
-                    isHintVisible = !event.focusState.isFocused &&
-                            noteTitle.value.text.isBlank()
-                )
-            }
 
             //content1
             is AddEditNoteEvent.EnteredContent1 -> {
                 _noteContent1.value = _noteContent1.value.copy(
                     text = event.value
-                )
-            }
-            is AddEditNoteEvent.ChangeContentFocus1 -> {
-                _noteContent1.value = _noteContent1.value.copy(
-                    isHintVisible = !event.focusState.isFocused &&
-                            _noteContent1.value.text.isBlank()
                 )
             }
 
@@ -129,23 +168,11 @@ class AddEditNoteViewModel @Inject constructor(
                     text = event.value
                 )
             }
-            is AddEditNoteEvent.ChangeContentFocus2 -> {
-                _noteContent2.value = _noteContent2.value.copy(
-                    isHintVisible = !event.focusState.isFocused &&
-                            _noteContent2.value.text.isBlank()
-                )
-            }
 
             //content3
             is AddEditNoteEvent.EnteredContent3 -> {
                 _noteContent3.value = _noteContent3.value.copy(
                     text = event.value
-                )
-            }
-            is AddEditNoteEvent.ChangeContentFocus3 -> {
-                _noteContent3.value = _noteContent3.value.copy(
-                    isHintVisible = !event.focusState.isFocused &&
-                            _noteContent3.value.text.isBlank()
                 )
             }
 
@@ -155,23 +182,11 @@ class AddEditNoteViewModel @Inject constructor(
                     text = event.value
                 )
             }
-            is AddEditNoteEvent.ChangeContentFocus4 -> {
-                _noteContent4.value = _noteContent4.value.copy(
-                    isHintVisible = !event.focusState.isFocused &&
-                            _noteContent4.value.text.isBlank()
-                )
-            }
 
             //content5
             is AddEditNoteEvent.EnteredContent5 -> {
                 _noteContent5.value = _noteContent5.value.copy(
                     text = event.value
-                )
-            }
-            is AddEditNoteEvent.ChangeContentFocus5 -> {
-                _noteContent5.value = _noteContent5.value.copy(
-                    isHintVisible = !event.focusState.isFocused &&
-                            _noteContent5.value.text.isBlank()
                 )
             }
 
@@ -181,23 +196,11 @@ class AddEditNoteViewModel @Inject constructor(
                     text = event.value
                 )
             }
-            is AddEditNoteEvent.ChangeKeywordFocus1 -> {
-                _noteKeyword1.value = _noteKeyword1.value.copy(
-                    isHintVisible = !event.focusState.isFocused &&
-                            _noteKeyword1.value.text.isBlank()
-                )
-            }
 
             //keyword2
             is AddEditNoteEvent.EnteredKeyword2 -> {
                 _noteKeyword2.value = _noteKeyword2.value.copy(
                     text = event.value
-                )
-            }
-            is AddEditNoteEvent.ChangeKeywordFocus2 -> {
-                _noteKeyword2.value = _noteKeyword2.value.copy(
-                    isHintVisible = !event.focusState.isFocused &&
-                            _noteKeyword2.value.text.isBlank()
                 )
             }
 
@@ -207,23 +210,11 @@ class AddEditNoteViewModel @Inject constructor(
                     text = event.value
                 )
             }
-            is AddEditNoteEvent.ChangeKeywordFocus3 -> {
-                _noteKeyword3.value = _noteKeyword3.value.copy(
-                    isHintVisible = !event.focusState.isFocused &&
-                            _noteKeyword3.value.text.isBlank()
-                )
-            }
 
             //keyword4
             is AddEditNoteEvent.EnteredKeyword4 -> {
                 _noteKeyword4.value = _noteKeyword4.value.copy(
                     text = event.value
-                )
-            }
-            is AddEditNoteEvent.ChangeKeywordFocus4 -> {
-                _noteKeyword4.value = _noteKeyword4.value.copy(
-                    isHintVisible = !event.focusState.isFocused &&
-                            _noteKeyword4.value.text.isBlank()
                 )
             }
 
@@ -233,11 +224,10 @@ class AddEditNoteViewModel @Inject constructor(
                     text = event.value
                 )
             }
-            is AddEditNoteEvent.ChangeSummaryFocus -> {
-                _noteSummary.value = _noteSummary.value.copy(
-                    isHintVisible = !event.focusState.isFocused &&
-                            _noteSummary.value.text.isBlank()
-                )
+
+            //notetype
+            is AddEditNoteEvent.EnteredNoteType -> {
+                currentNoteType = event.noteType
             }
 
             is AddEditNoteEvent.SaveNote -> {
@@ -255,6 +245,7 @@ class AddEditNoteViewModel @Inject constructor(
                                 content3 = noteContent3.value.text,
                                 content4 = noteContent4.value.text,
                                 content5 = noteContent5.value.text,
+                                summary = noteSummary.value.text,
                                 timestamp = System.currentTimeMillis(),
                                 noteType = currentNoteType ?: NoteType.BASIC,
                                 id = currentNoteId

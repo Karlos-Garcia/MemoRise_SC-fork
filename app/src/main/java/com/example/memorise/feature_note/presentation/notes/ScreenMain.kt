@@ -1,7 +1,6 @@
 package com.example.memorise.feature_note.presentation.notes
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -46,7 +45,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.memorise.feature_note.domain.model.UnifiedNote
+import com.example.memorise.feature_note.domain.model.NoteType
 import com.example.memorise.feature_note.presentation.notes.components.NavigationItem
 import com.example.memorise.feature_note.presentation.notes.components.getNavigationItems
 import com.example.memorise.feature_note.presentation.ScreenNavigations.Screens
@@ -173,19 +172,30 @@ fun MainScreen(
                         }
                     )
                 },
-            ) {
+            ) { values ->
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
+                        .padding(values)
                 ) {
                     items(state.notes) { note ->
                         NoteItem(
                             note = note,
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable {
+                                .fillMaxWidth(),
+                            onItemClick = {
+                                println("Note clicked: ${note.noteType}, noteId: ${note.id}")
 
-                                },
+                                val route = when (note.noteType) {
+                                    NoteType.BASIC -> Screens.BasicNoteScreen.route + "?noteId=${note.id}"
+                                    NoteType.CORNELL -> Screens.CornellNoteScreen.route + "?noteId=${note.id}"
+                                    NoteType.CHARTING -> Screens.ChartingNoteScreen.route + "?noteId=${note.id}"
+                                    NoteType.QUADRANT -> Screens.QuadrantNoteScreen.route + "?noteId=${note.id}"
+                                    NoteType.OUTLINE -> Screens.OutlineNoteScreen.route + "?noteId=${note.id}"
+                                    NoteType.LADDER -> Screens.LadderNoteScreen.route + "?noteId=${note.id}"
+                                }
+                                navController.navigate(route)
+                            },
                             onDeleteClick = {
                                 viewModel.onEvent(NotesEvent.DeleteNote(note))
                                 scope.launch {
@@ -241,139 +251,3 @@ fun MainScreen(
         }
     }
 }
-
-
-
-
-//this function gets a list for the vertical menu within the main screen, the three dots with the sort by, view by, and categories
-//@Composable
-//fun homeMoreVert(
-//
-//) {
-//    var showMoreVert by remember {
-//        mutableStateOf(false)
-//    }
-//    IconButton(onClick = { showMoreVert = !showMoreVert }) {
-//        Icon(
-//            imageVector = Icons.Default.MoreVert,
-//            contentDescription = "More Options"
-//        )
-//    }
-//    DropdownMenu(
-//        expanded = showMoreVert,
-//        onDismissRequest = { showMoreVert = false }) {
-//        DropdownMenuItem(
-//            text = { Text("Sort by") },
-//            onClick = {}
-//        )
-////            onClick = {})
-//        DropdownMenuItem(
-//            text = { Text("View by") },
-//            onClick = {}
-//        )
-//        DropdownMenuItem(
-//            text = { Text("Categories") },
-//            onClick = {}
-//        )
-//    }
-//}
-
-//@Composable
-//fun addButton (
-//) {
-//    var showButtonList by remember {
-//        mutableStateOf(false)
-//    }
-//    Box(
-//        modifier = Modifier
-//            .fillMaxSize()
-//            .padding(24.dp)
-//    ) {
-//        IconButton(onClick = {showButtonList = !showButtonList},
-//            modifier = Modifier
-//                .align(Alignment.BottomEnd)
-//                .size(60.dp)
-//        ) {
-//            Icon(
-//                imageVector = Icons.Default.Add,
-//                contentDescription = "Add",
-//                modifier = Modifier
-//                    .size(40.dp)
-//            )
-//            DropdownMenu(
-//                expanded = showButtonList,
-//                onDismissRequest = {showButtonList = false},
-//            ) {
-//                DropdownMenuItem(
-//                    text = { Text("Add new note")},
-//                    onClick = {}
-//                )
-//                addNewNote()
-//                DropdownMenuItem(
-//                    text = { Text("Add new image") },
-//                    onClick = { /*TODO*/ }
-//                )
-//                DropdownMenuItem(
-//                    text = { Text("Add new folder") },
-//                    onClick = { /*TODO*/ }
-//                )
-//            }
-//        }
-//    }
-//}
-
-//this functions list all the note taking methods after selecting "Add new note" from the + selection in main screen
-//@Composable
-//fun addNewNote(
-//    navigateToBasicNote: () -> Unit,
-//    navigateToCornellNote: () -> Unit,
-//    navigateToOutlineNote: () -> Unit,
-//    navigateToChartingNote: () -> Unit,
-//    navigateToQuadrantNote: () -> Unit,
-//
-//) {
-//    var AddNewNotes by remember{
-//        mutableStateOf(false)
-//    }
-//    DropdownMenuItem(
-//        text = { Text("Add new note") },
-//        onClick = {AddNewNotes = !AddNewNotes}
-//    )
-//    Box(modifier = Modifier
-//        .fillMaxWidth()
-//        ,
-//    ) {
-//        DropdownMenu(
-//        expanded = AddNewNotes,
-//        onDismissRequest = {AddNewNotes = false},
-//        )
-//    {
-//        DropdownMenuItem(
-//            text = { Text("Basic Note") },
-//            onClick = {
-////               navController.navigate(Screens.BasicNoteScreen.route)
-//            }
-//        )
-//        DropdownMenuItem(
-//            text = { Text("Cornell Note Method") },
-//            onClick = {
-////                navController.navigate(Screens.CornellNoteScreen.route)
-//            }
-//        )
-//        DropdownMenuItem(
-//            text = { Text("Outline Note Method") },
-//            onClick = {}
-//        )
-//        DropdownMenuItem(
-//            text = { Text("Charting Note Method") },
-//            onClick = {}
-//        )
-//        DropdownMenuItem(
-//            text = { Text("Quadrant Note Method") },
-//            onClick = {}
-//        )
-//    }
-//    }
-//}
-
-

@@ -17,6 +17,10 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -47,7 +51,7 @@ fun SelectionScreen(
                     },
                     navigationIcon = {
                         IconButton(onClick = {
-                            navController.navigate(Screens.MainScreen.route)
+                            navController.navigateUp()
                         }) {
                             Icon(
                                 imageVector = Icons.Default.ArrowBack,
@@ -71,6 +75,8 @@ fun selectionScreen(
     navController: NavController,
     viewModel: AddEditNoteViewModel
     ) {
+    var selectedNoteType by remember { mutableStateOf<NoteType?>(null) }
+
     Column(
         modifier = Modifier
             .padding(
@@ -81,7 +87,7 @@ fun selectionScreen(
         Button(
             modifier = modifier.fillMaxWidth(),
             onClick = {
-                viewModel.onNoteTypeSelected(NoteType.BASIC)
+                selectedNoteType = NoteType.BASIC
                 navController.navigate(Screens.BasicNoteScreen.route)
             }) {
             Text(text = "Basic Note",
@@ -90,7 +96,7 @@ fun selectionScreen(
         Button(
             modifier = modifier.fillMaxWidth(),
             onClick = {
-                viewModel.onNoteTypeSelected(NoteType.CORNELL)
+                selectedNoteType = NoteType.CORNELL
                 navController.navigate(Screens.CornellNoteScreen.route)
             }) {
             Text(text = "Cornell Note Method",
@@ -100,7 +106,7 @@ fun selectionScreen(
         Button(
             modifier = modifier.fillMaxWidth(),
             onClick = {
-                viewModel.onNoteTypeSelected(NoteType.OUTLINE)
+                selectedNoteType = NoteType.OUTLINE
                 navController.navigate(Screens.OutlineNoteScreen.route)
             }) {
             Text(text = "Outline Note Method",
@@ -109,7 +115,7 @@ fun selectionScreen(
         Button(
             modifier = modifier.fillMaxWidth(),
             onClick = {
-                viewModel.onNoteTypeSelected(NoteType.CHARTING)
+                selectedNoteType = NoteType.CHARTING
                 navController.navigate(Screens.ChartingNoteScreen.route)
             }) {
             Text(
@@ -120,7 +126,7 @@ fun selectionScreen(
         Button(
             modifier = modifier.fillMaxWidth(),
             onClick = {
-                viewModel.onNoteTypeSelected((NoteType.QUADRANT))
+                selectedNoteType = NoteType.QUADRANT
                 navController.navigate(Screens.QuadrantNoteScreen.route)
             }) {
             Text(text = "Quadrant Note Method",
@@ -129,11 +135,12 @@ fun selectionScreen(
         Button(
             modifier = modifier.fillMaxWidth(),
             onClick = {
-                viewModel.onNoteTypeSelected(NoteType.LADDER)
+                selectedNoteType = NoteType.LADDER
                 navController.navigate(Screens.LadderNoteScreen.route)
             }) {
             Text(text = "Ladder",
                 textAlign = TextAlign.Left)
         }
+
     }
 }

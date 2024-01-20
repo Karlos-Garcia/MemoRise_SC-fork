@@ -39,7 +39,7 @@ fun Topappbar(
                     },
                     navigationIcon = {
                         IconButton(onClick = {
-                            navController.navigate(Screens.MainScreen.route)
+                            navController.navigateUp()
                         }) {
                             Icon(
                                 imageVector = Icons.Default.ArrowBack,
@@ -54,40 +54,3 @@ fun Topappbar(
         }
     }
 }
-
-//basic notes original topappbar
-//@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-//@OptIn(ExperimentalMaterial3Api::class)
-//@Composable
-//fun basicNote(
-//    navController: NavController
-//) {
-//
-//    Surface(
-//        modifier = Modifier.fillMaxSize(),
-//        color = MaterialTheme.colorScheme.background
-//    ) {
-//        Scaffold(
-//            modifier = Modifier,
-//            topBar = {
-//                TopAppBar(
-//                    title = {
-//                        Text(text = "Basic Notes")
-//                    },
-//                    navigationIcon = {
-//                        IconButton(onClick = {
-//                            navController.navigate(Screens.MainScreen.route)
-//                        }) {
-//                            Icon(
-//                                imageVector = Icons.Default.ArrowBack,
-//                                contentDescription = "Back"
-//                            )
-//                        }
-//                    },
-//                )
-//            }
-//        ){
-//            basicTextFields()
-//        }
-//    }
-//}
