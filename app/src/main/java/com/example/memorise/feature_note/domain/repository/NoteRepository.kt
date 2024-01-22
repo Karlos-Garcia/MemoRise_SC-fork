@@ -12,4 +12,7 @@ interface NoteRepository {
     suspend fun insertNote(note: UnifiedNote)
 
     suspend fun deleteNote(note: UnifiedNote)
+
+    //upwards working
+    fun searchNotes(query: String): Flow<List<UnifiedNote>>
 }

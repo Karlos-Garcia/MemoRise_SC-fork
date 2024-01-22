@@ -36,7 +36,7 @@ fun settingScreen(
                     },
                     navigationIcon = {
                         IconButton(onClick = {
-                            navController.navigate(Screens.MainScreen.route)
+                            navController.navigateUp()
                         }) {
                             Icon(
                                 imageVector = Icons.Default.ArrowBack,

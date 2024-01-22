@@ -22,4 +22,9 @@ interface NoteDao {
 
     @Delete
     suspend fun deleteUnifiedNote(note: UnifiedNote)
+
+    //upwards working
+    @Query ("SELECT * FROM UnifiedNote WHERE title LIKE '%' || :query || '%' ")
+    fun searchNotes (query: String): Flow<List<UnifiedNote>>
+
 }

@@ -23,4 +23,9 @@ class NoteRepositoryImpl(
     override suspend fun deleteNote(note: UnifiedNote) {
         return dao.deleteUnifiedNote(note)
     }
+
+    //upwards working
+    override fun searchNotes(query: String): Flow<List<UnifiedNote>> {
+        return dao.searchNotes(query)
+    }
 }

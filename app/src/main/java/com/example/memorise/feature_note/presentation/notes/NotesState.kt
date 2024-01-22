@@ -7,5 +7,5 @@ import com.example.memorise.feature_note.domain.util.OrderType
 data class NotesState(
     val notes: List<UnifiedNote> = emptyList(),
     val noteOrder: NoteOrder = NoteOrder.Date(OrderType.Descending),
-//    val isOrderSectionVisible: Boolean = false
+    val searchQuery: String? = null,
 )

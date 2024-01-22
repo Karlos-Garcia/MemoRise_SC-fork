@@ -72,6 +72,7 @@ fun basicTextFields(
             is AddEditNoteViewModel.UiEvent.SaveNote -> {
                 navController.navigate(Screens.MainScreen.route)
                 }
+
             }
         }
     }

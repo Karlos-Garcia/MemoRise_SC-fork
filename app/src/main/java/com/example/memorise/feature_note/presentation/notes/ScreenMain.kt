@@ -1,15 +1,19 @@
 package com.example.memorise.feature_note.presentation.notes
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.SnackbarResult
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -30,6 +34,7 @@ import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
@@ -41,6 +46,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -65,6 +72,7 @@ fun MainScreen(
     items: List<NavigationItem>,
     viewModel: NotesViewModel = hiltViewModel(),
 ) {
+
     val state = viewModel.state.value
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
@@ -152,24 +160,72 @@ fun MainScreen(
                             }
                         },
                         actions = {
-                            IconButton(
-                                onClick = { /*TODO*/ }
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.fillMaxWidth()
                             ) {
-                                Icon(
-                                    imageVector = Icons.Default.Search,
-                                    contentDescription = "Search"
+                                Spacer(modifier = Modifier.width(52.dp))
+
+                                TextField(
+
+                                    value = state.searchQuery ?: "",
+                                    onValueChange = { newQuery ->
+                                        viewModel.onEvent(NotesEvent.Search(newQuery))
+                                    },
+                                    label = { Text("Search Notes") },
+                                    modifier = Modifier
+                                        .weight(1f) // Takes up remaining horizontal space
+                                        .clip(RoundedCornerShape(16.dp))
+
                                 )
-                            }
-                            OrderSection(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 16.dp),
-                                noteOrder = state.noteOrder,
-                                onOrderChange = {
-                                    viewModel.onEvent(NotesEvent.Order(it))
+
+                                Box(
+                                    modifier = Modifier
+                                        .padding(start = 8.dp)
+                                        .height(56.dp) // Adjust height as needed
+                                ) {
+                                    OrderSection(
+                                        modifier = Modifier
+                                            .fillMaxSize(),
+                                        noteOrder = state.noteOrder,
+                                        onOrderChange = {
+                                            viewModel.onEvent(NotesEvent.Order(it))
+                                        }
+                                    )
                                 }
-                            )
+//                                OrderSection(
+//                                    modifier = Modifier
+//                                        .padding(start = 8.dp)
+//                                        .height(56.dp), // Adjust height as needed
+//                                    noteOrder = state.noteOrder,
+//                                    onOrderChange = {
+//                                        viewModel.onEvent(NotesEvent.Order(it))
+//                                    }
+//                                )
+                            }
                         }
+
+//                        actions = {
+//                            Spacer(modifier = Modifier.width(52.dp))
+//                            TextField(
+//                                value = state.searchQuery ?: "",
+//                                onValueChange = { newQuery ->
+//                                    viewModel.onEvent(NotesEvent.Search(newQuery))
+//                                },
+//                                label = { Text("Search Notes") },
+//                                modifier = Modifier
+//                                    .align(Alignment.CenterVertically)
+//                                    .clip(RoundedCornerShape(16.dp))
+//                            )
+//                            OrderSection(
+//                                modifier = Modifier
+//                                    .padding(vertical = 16.dp),
+//                                noteOrder = state.noteOrder,
+//                                onOrderChange = {
+//                                    viewModel.onEvent(NotesEvent.Order(it))
+//                                }
+//                            )
+//                        }
                     )
                 },
             ) { values ->

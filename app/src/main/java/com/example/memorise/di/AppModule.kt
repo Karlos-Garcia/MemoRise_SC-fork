@@ -10,6 +10,7 @@ import com.example.memorise.feature_note.domain.use_case.DeleteNoteUseCase
 import com.example.memorise.feature_note.domain.use_case.GetNoteUseCase
 import com.example.memorise.feature_note.domain.use_case.GetNotesUseCase
 import com.example.memorise.feature_note.domain.use_case.NoteUseCases
+import com.example.memorise.feature_note.domain.use_case.SearchNotesUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -43,7 +44,8 @@ object AppModule {
             getNotes = GetNotesUseCase(repository),
             deleteNote = DeleteNoteUseCase(repository),
             addNote = AddNote(repository),
-            getNote = GetNoteUseCase(repository)
+            getNote = GetNoteUseCase(repository),
+            searchNotes = SearchNotesUseCase(repository),
         )
     }
 }

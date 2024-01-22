@@ -4,6 +4,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.room.Query
 import com.example.memorise.feature_note.domain.model.UnifiedNote
 import com.example.memorise.feature_note.domain.use_case.NoteUseCases
 import com.example.memorise.feature_note.domain.util.NoteOrder
@@ -22,6 +23,7 @@ class NotesViewModel @Inject constructor(
 
     private val _state = mutableStateOf(NotesState())
     val state: State<NotesState> = _state
+
 
     private var recentlyDeletedNote: UnifiedNote? = null
     private var getNotesJob : Job? = null
@@ -51,12 +53,23 @@ class NotesViewModel @Inject constructor(
                     recentlyDeletedNote = null
                 }
             }
-//            is NotesEvent.ToggleOrderSection -> {
-//                _state.value = state.value.copy(
-//                    isOrderSectionVisible = !state.value.isOrderSectionVisible
-//                )
-//            }
+            is NotesEvent.Search -> {
+                getNotesWithQuery(event.query)
+            }
         }
+    }
+
+    //making this work
+    private fun getNotesWithQuery(query: String) {
+        getNotesJob?.cancel()
+        getNotesJob = noteUseCases.searchNotes.execute(query)
+            .onEach { notes ->
+                _state.value = state.value.copy(
+                    notes = notes,
+                    searchQuery = query,
+                )
+            }
+            .launchIn(viewModelScope)
     }
 
     private fun getNotes(noteOrder: NoteOrder) {
@@ -65,7 +78,9 @@ class NotesViewModel @Inject constructor(
             .onEach { notes ->
                 _state.value = state.value.copy(
                     notes = notes,
-                    noteOrder = noteOrder
+                    noteOrder = noteOrder,
+                    //newly added searchQuery
+                    searchQuery = null
                 )
             }
             .launchIn(viewModelScope)
