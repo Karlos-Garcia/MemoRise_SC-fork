@@ -7,7 +7,5 @@ sealed class NotesEvent {
     data class Order(val noteOrder: NoteOrder): NotesEvent()
     data class DeleteNote(val note: UnifiedNote): NotesEvent()
     object RestoreNote: NotesEvent()
-
-    //upwards working
     data class Search(val query: String): NotesEvent()
 }

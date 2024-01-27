@@ -55,7 +55,6 @@ fun NoteItem(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-//                .padding(8.dp)
             ) {
             Text(
                 modifier = Modifier

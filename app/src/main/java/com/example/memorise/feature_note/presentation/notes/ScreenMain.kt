@@ -1,7 +1,10 @@
 package com.example.memorise.feature_note.presentation.notes
 
 import android.annotation.SuppressLint
+import android.net.Uri
 import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -53,9 +56,12 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.memorise.feature_note.domain.model.NoteType
+import com.example.memorise.feature_note.presentation.PhotoPicker
 import com.example.memorise.feature_note.presentation.notes.components.NavigationItem
 import com.example.memorise.feature_note.presentation.notes.components.getNavigationItems
 import com.example.memorise.feature_note.presentation.ScreenNavigations.Screens
+import com.example.memorise.feature_note.presentation.add_edit_notes.AddEditNoteEvent
+import com.example.memorise.feature_note.presentation.add_edit_notes.AddEditNoteViewModel
 import com.example.memorise.feature_note.presentation.notes.components.NoteItem
 import com.example.memorise.feature_note.presentation.notes.components.OrderSection
 import kotlinx.coroutines.launch
@@ -73,6 +79,15 @@ fun MainScreen(
     viewModel: NotesViewModel = hiltViewModel(),
 ) {
 
+//    val imagePickerLauncher = rememberLauncherForActivityResult(
+//        contract = ActivityResultContracts.PickVisualMedia()
+//    ) { uri: Uri? ->
+//        uri?.let {
+//            viewModel.onImageSelected(it)}
+//    }
+
+    var isPhotoPickerVisible by remember { mutableStateOf(false) }
+
     val state = viewModel.state.value
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
@@ -86,13 +101,7 @@ fun MainScreen(
         var selectedItemIndex by rememberSaveable {
             mutableStateOf(0)
         }
-//        var showMoreVert by remember {
-//            mutableStateOf(false)
-//        }
         var showButtonList by remember {
-            mutableStateOf(false)
-        }
-        var AddNewNotes by remember {
             mutableStateOf(false)
         }
 
@@ -140,7 +149,6 @@ fun MainScreen(
             drawerState = drawerState
         ) {
             Scaffold(
-//                scaffoldState = scaffoldState,
                 modifier = Modifier,
                 topBar = {
                     TopAppBar(
@@ -176,9 +184,7 @@ fun MainScreen(
                                     modifier = Modifier
                                         .weight(1f) // Takes up remaining horizontal space
                                         .clip(RoundedCornerShape(16.dp))
-
                                 )
-
                                 Box(
                                     modifier = Modifier
                                         .padding(start = 8.dp)
@@ -193,39 +199,8 @@ fun MainScreen(
                                         }
                                     )
                                 }
-//                                OrderSection(
-//                                    modifier = Modifier
-//                                        .padding(start = 8.dp)
-//                                        .height(56.dp), // Adjust height as needed
-//                                    noteOrder = state.noteOrder,
-//                                    onOrderChange = {
-//                                        viewModel.onEvent(NotesEvent.Order(it))
-//                                    }
-//                                )
                             }
                         }
-
-//                        actions = {
-//                            Spacer(modifier = Modifier.width(52.dp))
-//                            TextField(
-//                                value = state.searchQuery ?: "",
-//                                onValueChange = { newQuery ->
-//                                    viewModel.onEvent(NotesEvent.Search(newQuery))
-//                                },
-//                                label = { Text("Search Notes") },
-//                                modifier = Modifier
-//                                    .align(Alignment.CenterVertically)
-//                                    .clip(RoundedCornerShape(16.dp))
-//                            )
-//                            OrderSection(
-//                                modifier = Modifier
-//                                    .padding(vertical = 16.dp),
-//                                noteOrder = state.noteOrder,
-//                                onOrderChange = {
-//                                    viewModel.onEvent(NotesEvent.Order(it))
-//                                }
-//                            )
-//                        }
                     )
                 },
             ) { values ->
@@ -240,8 +215,6 @@ fun MainScreen(
                             modifier = Modifier
                                 .fillMaxWidth(),
                             onItemClick = {
-                                println("Note clicked: ${note.noteType}, noteId: ${note.id}")
-
                                 val route = when (note.noteType) {
                                     NoteType.BASIC -> Screens.BasicNoteScreen.route + "?noteId=${note.id}"
                                     NoteType.CORNELL -> Screens.CornellNoteScreen.route + "?noteId=${note.id}"
@@ -295,8 +268,13 @@ fun MainScreen(
                         )
                         DropdownMenuItem(
                             text = { Text("Add new image") },
-                            onClick = { /*TODO*/ }
+                            onClick = {
+                                isPhotoPickerVisible = true
+                            }
                         )
+                        if (isPhotoPickerVisible) {
+                            PhotoPicker()
+                        }
                         DropdownMenuItem(
                             text = { Text("Add new folder") },
                             onClick = { /*TODO*/ }

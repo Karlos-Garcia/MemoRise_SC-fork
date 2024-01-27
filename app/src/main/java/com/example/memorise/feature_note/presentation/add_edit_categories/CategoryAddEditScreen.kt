@@ -1,4 +1,4 @@
-package com.example.memorise.ui.screens.noteScreens
+package com.example.memorise.feature_note.presentation.add_edit_categories
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
@@ -25,38 +25,34 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.memorise.feature_note.domain.model.NoteType
-import com.example.memorise.feature_note.presentation.ScreenNavigations.Screens
+import com.example.memorise.feature_note.presentation.add_edit_categories.components.AddEditCategoryEvent
+import com.example.memorise.feature_note.presentation.add_edit_categories.components.AddEditCategoryViewModel
 //import com.example.memorise.feature_note.presentation.TextFormatting.TextFormattingBar
-import com.example.memorise.feature_note.presentation.add_edit_notes.AddEditNoteEvent
-import com.example.memorise.feature_note.presentation.add_edit_notes.AddEditNoteViewModel
 import com.example.memorise.ui.screens.Topappbar
 import kotlinx.coroutines.flow.collectLatest
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun basicNote(
+fun AddEditCategoryScreen(
     navController: NavController,
-    viewModel: AddEditNoteViewModel = hiltViewModel(),
-    ) {
+    viewModel: AddEditCategoryViewModel = hiltViewModel(),
+) {
     Topappbar (
         navController = navController,
-        name = "Basic Note"
+        name = "Category"
     ) {
-        viewModel.onNoteTypeSelected(NoteType.BASIC)
-        basicTextFields(navController, viewModel)
+        categoryTextFields(navController, viewModel)
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun basicTextFields(
+fun categoryTextFields(
     navController: NavController ,
-    viewModel: AddEditNoteViewModel,
+    viewModel: AddEditCategoryViewModel,
     modifier: Modifier = Modifier,
 ) {
-    val titleState = viewModel.noteTitle.value
-    val content1State = viewModel.noteContent1.value
+    val titleState = viewModel.categoryTitle.value
 
     val scaffoldState = rememberScaffoldState()
 
@@ -65,14 +61,13 @@ fun basicTextFields(
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
             when (event) {
-                is AddEditNoteViewModel.UiEvent.ShowSnackbar -> {
+                is AddEditCategoryViewModel.UiCategoryEvent.ShowSnackbar -> {
                     scaffoldState.snackbarHostState.showSnackbar(
                         message = event.message
                     )
                 }
-
-                is AddEditNoteViewModel.UiEvent.SaveNote -> {
-                    navController.navigate(Screens.MainScreen.route)
+                is AddEditCategoryViewModel.UiCategoryEvent.SaveCategory -> {
+                    navController.navigateUp()
                 }
 
             }
@@ -89,8 +84,9 @@ fun basicTextFields(
             label = { Text(text = "Title") },
             value = titleState.text,
             onValueChange = {
-                viewModel.onEvent(AddEditNoteEvent.EnteredTitle(it))
+                viewModel.onEvent(AddEditCategoryEvent.EnteredTitle(it))
             },
+            singleLine = true,
             modifier = modifier
                 .fillMaxWidth()
                 .padding(
@@ -99,22 +95,7 @@ fun basicTextFields(
                 )
                 .clip(RoundedCornerShape(12.dp))
         )
-        TextField(
-            label = { Text(text = "Content") },
-            value = content1State.text,
-            onValueChange = {
-                viewModel.onEvent(AddEditNoteEvent.EnteredContent1(it))
-            },
-            modifier = modifier
-                .fillMaxSize()
-                .padding(
-                    top = 8.dp,
-                    start = 8.dp,
-                    end = 8.dp,
-                    bottom = 8.dp
-                )
-                .clip(RoundedCornerShape(12.dp))
-        )
+
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -122,7 +103,7 @@ fun basicTextFields(
         ) {
             IconButton(
                 onClick = {
-                    viewModel.onEvent(AddEditNoteEvent.SaveNote)
+                    viewModel.onEvent(AddEditCategoryEvent.SaveCategory)
                 },
                 modifier = Modifier
                     .align(Alignment.BottomEnd)

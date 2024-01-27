@@ -9,12 +9,13 @@ import androidx.lifecycle.viewModelScope
 import com.example.memorise.feature_note.domain.model.InvalidNoteException
 import com.example.memorise.feature_note.domain.model.NoteType
 import com.example.memorise.feature_note.domain.model.UnifiedNote
-import com.example.memorise.feature_note.domain.use_case.NoteUseCases
+import com.example.memorise.feature_note.domain.use_case.NotesUseCase.NoteUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
 
 
 @HiltViewModel
@@ -95,6 +96,7 @@ class AddEditNoteViewModel @Inject constructor(
 
     var currentNoteType: NoteType? = null
 
+
     //retrieves the notes when noteId is not equal to -1
     init {
         savedStateHandle.get<Int>("noteId")?.let { noteId ->
@@ -148,84 +150,61 @@ class AddEditNoteViewModel @Inject constructor(
 
     fun onEvent(event: AddEditNoteEvent) {
         when(event) {
-            //title
             is AddEditNoteEvent.EnteredTitle -> {
                 _noteTitle.value = noteTitle.value.copy(
                     text = event.value
                 )
             }
-
-            //content1
             is AddEditNoteEvent.EnteredContent1 -> {
                 _noteContent1.value = _noteContent1.value.copy(
                     text = event.value
                 )
             }
-
-            //content2
             is AddEditNoteEvent.EnteredContent2 -> {
                 _noteContent2.value = _noteContent2.value.copy(
                     text = event.value
                 )
             }
-
-            //content3
             is AddEditNoteEvent.EnteredContent3 -> {
                 _noteContent3.value = _noteContent3.value.copy(
                     text = event.value
                 )
             }
-
-            //content4
             is AddEditNoteEvent.EnteredContent4 -> {
                 _noteContent4.value = _noteContent4.value.copy(
                     text = event.value
                 )
             }
-
-            //content5
             is AddEditNoteEvent.EnteredContent5 -> {
                 _noteContent5.value = _noteContent5.value.copy(
                     text = event.value
                 )
             }
-
-            //keyword1
             is AddEditNoteEvent.EnteredKeyword1 -> {
                 _noteKeyword1.value = _noteKeyword1.value.copy(
                     text = event.value
                 )
             }
-
-            //keyword2
             is AddEditNoteEvent.EnteredKeyword2 -> {
                 _noteKeyword2.value = _noteKeyword2.value.copy(
                     text = event.value
                 )
             }
-
-            //keyword3
             is AddEditNoteEvent.EnteredKeyword3 -> {
                 _noteKeyword3.value = _noteKeyword3.value.copy(
                     text = event.value
                 )
             }
-
-            //keyword4
             is AddEditNoteEvent.EnteredKeyword4 -> {
                 _noteKeyword4.value = _noteKeyword4.value.copy(
                     text = event.value
                 )
             }
-
-            //Summary
             is AddEditNoteEvent.EnteredSummary -> {
                 _noteSummary.value = _noteSummary.value.copy(
                     text = event.value
                 )
             }
-
-            //notetype
             is AddEditNoteEvent.EnteredNoteType -> {
                 currentNoteType = event.noteType
             }
@@ -263,6 +242,7 @@ class AddEditNoteViewModel @Inject constructor(
             }
         }
     }
+
     sealed class UiEvent {
         data class ShowSnackbar(val message: String): UiEvent()
         object SaveNote: UiEvent()

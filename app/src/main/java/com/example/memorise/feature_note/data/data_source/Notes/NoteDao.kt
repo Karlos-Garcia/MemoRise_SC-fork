@@ -1,4 +1,4 @@
-package com.example.memorise.feature_note.data.data_source
+package com.example.memorise.feature_note.data.data_source.Notes
 
 import androidx.room.Dao
 import androidx.room.Delete
@@ -10,7 +10,6 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface NoteDao {
-
     @Query("SELECT * FROM UnifiedNote")
     fun getAllNotes(): Flow<List<UnifiedNote>>
 
@@ -23,8 +22,6 @@ interface NoteDao {
     @Delete
     suspend fun deleteUnifiedNote(note: UnifiedNote)
 
-    //upwards working
     @Query ("SELECT * FROM UnifiedNote WHERE title LIKE '%' || :query || '%' ")
     fun searchNotes (query: String): Flow<List<UnifiedNote>>
-
 }

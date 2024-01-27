@@ -1,9 +1,12 @@
 package com.example.memorise.feature_note.presentation.notes.components
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Create
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.outlined.AddCircle
 import androidx.compose.material.icons.outlined.Create
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Settings
@@ -28,7 +31,12 @@ fun getNavigationItems(
             selectedIcon = Icons.Filled.Create,
             unselectedIcon = Icons.Outlined.Create,
             route = {navController.navigate(Screens.MainScreen.route)}
-
+        ),
+        NavigationItem(
+            title = "Category",
+            selectedIcon = Icons.Filled.AddCircle,
+            unselectedIcon = Icons.Outlined.AddCircle,
+            route = {navController.navigate(Screens.CategoryScreen.route)}
         ),
         NavigationItem(
             title = "Settings",
@@ -41,6 +49,7 @@ fun getNavigationItems(
             selectedIcon = Icons.Filled.Info,
             unselectedIcon = Icons.Outlined.Info,
             route = {navController.navigate(Screens.AboutUsScreen.route)}
-        )
+        ),
+
     )
 }

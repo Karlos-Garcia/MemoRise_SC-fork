@@ -1,4 +1,4 @@
-package com.example.memorise.feature_note.domain.use_case
+package com.example.memorise.feature_note.domain.use_case.NotesUseCase
 
 data class NoteUseCases(
     val getNotes: GetNotesUseCase,

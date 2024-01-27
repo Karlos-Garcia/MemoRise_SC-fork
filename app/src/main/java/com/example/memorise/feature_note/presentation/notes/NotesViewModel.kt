@@ -4,9 +4,8 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.room.Query
 import com.example.memorise.feature_note.domain.model.UnifiedNote
-import com.example.memorise.feature_note.domain.use_case.NoteUseCases
+import com.example.memorise.feature_note.domain.use_case.NotesUseCase.NoteUseCases
 import com.example.memorise.feature_note.domain.util.NoteOrder
 import com.example.memorise.feature_note.domain.util.OrderType
 import dagger.hilt.android.lifecycle.HiltViewModel
