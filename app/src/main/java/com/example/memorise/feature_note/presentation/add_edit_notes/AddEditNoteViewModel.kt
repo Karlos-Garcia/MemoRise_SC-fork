@@ -1,5 +1,6 @@
 package com.example.memorise.feature_note.presentation.add_edit_notes
 
+import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -12,6 +13,7 @@ import com.example.memorise.feature_note.domain.model.UnifiedNote
 import com.example.memorise.feature_note.domain.use_case.NotesUseCase.NoteUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -29,61 +31,51 @@ class AddEditNoteViewModel @Inject constructor(
     ))
     val noteTitle: State<NoteTextFieldState> = _noteTitle
 
-    //keyword 1
     private val _noteKeyword1 = mutableStateOf(NoteTextFieldState(
         hint = "Enter keyword..."
     ))
     val noteKeyword1: State<NoteTextFieldState> = _noteKeyword1
 
-    //keyword 2
     private val _noteKeyword2 = mutableStateOf(NoteTextFieldState(
         hint = "Enter keyword..."
     ))
     val noteKeyword2: State<NoteTextFieldState> = _noteKeyword2
 
-    //keyword 3
     private val _noteKeyword3 = mutableStateOf(NoteTextFieldState(
         hint = "Enter keyword..."
     ))
     val noteKeyword3: State<NoteTextFieldState> = _noteKeyword3
 
-    //keyword 4
     private val _noteKeyword4 = mutableStateOf(NoteTextFieldState(
         hint = "Enter keyword..."
     ))
     val noteKeyword4: State<NoteTextFieldState> = _noteKeyword4
 
-    //content 1
     private val _noteContent1 = mutableStateOf(NoteTextFieldState(
         hint = "Enter content..."
     ))
     val noteContent1: State<NoteTextFieldState> = _noteContent1
 
-    //content 2
     private val _noteContent2 = mutableStateOf(NoteTextFieldState(
         hint = "Enter content..."
     ))
     val noteContent2: State<NoteTextFieldState> = _noteContent2
 
-    //content 3
     private val _noteContent3 = mutableStateOf(NoteTextFieldState(
         hint = "Enter content..."
     ))
     val noteContent3: State<NoteTextFieldState> = _noteContent3
 
-    //content 4
     private val _noteContent4 = mutableStateOf(NoteTextFieldState(
         hint = "Enter content..."
     ))
     val noteContent4: State<NoteTextFieldState> = _noteContent4
 
-    //content 5
     private val _noteContent5 = mutableStateOf(NoteTextFieldState(
         hint = "Enter content..."
     ))
     val noteContent5: State<NoteTextFieldState> = _noteContent5
 
-    //summary
     private val _noteSummary = mutableStateOf(NoteTextFieldState(
         hint = "Enter summary..."
     ))
@@ -95,6 +87,9 @@ class AddEditNoteViewModel @Inject constructor(
     private var currentNoteId: Int? = null
 
     var currentNoteType: NoteType? = null
+
+    private val _selectedImageUri = mutableStateOf<Uri?>(null)
+    val selectedImageUri: State<Uri?> = _selectedImageUri
 
 
     //retrieves the notes when noteId is not equal to -1
@@ -139,6 +134,9 @@ class AddEditNoteViewModel @Inject constructor(
                         _noteSummary.value = noteSummary.value.copy(
                             text = note.summary ?: "",
                         )
+                        note.imagePath?.let { imagePath ->
+                            _selectedImageUri.value = Uri.parse(imagePath)
+                        }
                     }
                 }
             }
@@ -208,6 +206,9 @@ class AddEditNoteViewModel @Inject constructor(
             is AddEditNoteEvent.EnteredNoteType -> {
                 currentNoteType = event.noteType
             }
+            is AddEditNoteEvent.ImageSelected -> {
+                _selectedImageUri.value = event.uri
+            }
 
             is AddEditNoteEvent.SaveNote -> {
                 viewModelScope.launch {
@@ -227,6 +228,7 @@ class AddEditNoteViewModel @Inject constructor(
                                 summary = noteSummary.value.text,
                                 timestamp = System.currentTimeMillis(),
                                 noteType = currentNoteType ?: NoteType.BASIC,
+                                imagePath = _selectedImageUri.value?.toString(),
                                 id = currentNoteId
                             )
                         )

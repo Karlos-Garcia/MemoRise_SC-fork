@@ -20,12 +20,13 @@ data class UnifiedNote(
     val content5: String? = null,
     val summary: String? = null,
     val category: Int? = null,
+    val imagePath: String? = null,
     val noteType: NoteType, // Enum or string to identify the type
     val timestamp: Long = System.currentTimeMillis()
 )
 
 enum class NoteType {
-    BASIC, CORNELL, OUTLINE, CHARTING, QUADRANT, LADDER,
+    BASIC, CORNELL, OUTLINE, QUADRANT, LADDER, IMAGE
 }
 
 class InvalidNoteException(message: String): Exception(message)

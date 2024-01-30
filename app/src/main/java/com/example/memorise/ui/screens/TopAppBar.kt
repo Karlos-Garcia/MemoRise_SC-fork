@@ -23,7 +23,7 @@ import com.example.memorise.feature_note.presentation.ScreenNavigations.Screens
 fun Topappbar(
     navController: NavController,
     name: String,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
 
     Surface(

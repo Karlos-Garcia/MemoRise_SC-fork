@@ -98,9 +98,9 @@ fun NoteItem(
                     NoteType.BASIC -> "Basic Note"
                     NoteType.QUADRANT -> "Quadrant Note"
                     NoteType.LADDER -> "Ladder Note"
-                    NoteType.CHARTING -> "Charting Note"
                     NoteType.OUTLINE -> "Outline Note"
                     NoteType.CORNELL -> "Cornell Note"
+                    NoteType.IMAGE -> "Image Note"
                 }
                 Text(
                     modifier = Modifier

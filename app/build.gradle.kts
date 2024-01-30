@@ -45,7 +45,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.3"
+        kotlinCompilerExtensionVersion = "1.6.10"
     }
     packaging {
         resources {
@@ -86,10 +86,11 @@ dependencies {
     implementation("androidx.compose.material:material:1.5.4")
 
     //coil for image note
-    implementation ("io.coil-kt:coil:2.5.0")
-    implementation("io.coil-kt:coil-compose:2.5.0")
+    implementation ("io.coil-kt:coil:2.6.0")
+    implementation("io.coil-kt:coil-compose:2.6.0")
 
 
+    implementation ("androidx.compose.runtime:runtime-livedata:1.1.0-alpha01")
 }
 
 // Allow references to generated code

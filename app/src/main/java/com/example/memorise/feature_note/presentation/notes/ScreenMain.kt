@@ -2,7 +2,6 @@ package com.example.memorise.feature_note.presentation.notes
 
 import android.annotation.SuppressLint
 import android.net.Uri
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
@@ -21,7 +20,6 @@ import androidx.compose.material.SnackbarResult
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.DropdownMenu
@@ -50,24 +48,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.memorise.feature_note.domain.model.NoteType
-import com.example.memorise.feature_note.presentation.PhotoPicker
 import com.example.memorise.feature_note.presentation.notes.components.NavigationItem
 import com.example.memorise.feature_note.presentation.notes.components.getNavigationItems
 import com.example.memorise.feature_note.presentation.ScreenNavigations.Screens
-import com.example.memorise.feature_note.presentation.add_edit_notes.AddEditNoteEvent
 import com.example.memorise.feature_note.presentation.add_edit_notes.AddEditNoteViewModel
 import com.example.memorise.feature_note.presentation.notes.components.NoteItem
 import com.example.memorise.feature_note.presentation.notes.components.OrderSection
 import kotlinx.coroutines.launch
-
-
-
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -78,15 +70,6 @@ fun MainScreen(
     items: List<NavigationItem>,
     viewModel: NotesViewModel = hiltViewModel(),
 ) {
-
-//    val imagePickerLauncher = rememberLauncherForActivityResult(
-//        contract = ActivityResultContracts.PickVisualMedia()
-//    ) { uri: Uri? ->
-//        uri?.let {
-//            viewModel.onImageSelected(it)}
-//    }
-
-    var isPhotoPickerVisible by remember { mutableStateOf(false) }
 
     val state = viewModel.state.value
     val scaffoldState = rememberScaffoldState()
@@ -218,10 +201,10 @@ fun MainScreen(
                                 val route = when (note.noteType) {
                                     NoteType.BASIC -> Screens.BasicNoteScreen.route + "?noteId=${note.id}"
                                     NoteType.CORNELL -> Screens.CornellNoteScreen.route + "?noteId=${note.id}"
-                                    NoteType.CHARTING -> Screens.ChartingNoteScreen.route + "?noteId=${note.id}"
                                     NoteType.QUADRANT -> Screens.QuadrantNoteScreen.route + "?noteId=${note.id}"
                                     NoteType.OUTLINE -> Screens.OutlineNoteScreen.route + "?noteId=${note.id}"
                                     NoteType.LADDER -> Screens.LadderNoteScreen.route + "?noteId=${note.id}"
+                                    NoteType.IMAGE -> Screens.ImageNoteScreen.route + "?noteId=${note.id}"
                                 }
                                 navController.navigate(route)
                             },
@@ -269,12 +252,9 @@ fun MainScreen(
                         DropdownMenuItem(
                             text = { Text("Add new image") },
                             onClick = {
-                                isPhotoPickerVisible = true
+                                navController.navigate(Screens.ImageNoteScreen.route)
                             }
                         )
-                        if (isPhotoPickerVisible) {
-                            PhotoPicker()
-                        }
                         DropdownMenuItem(
                             text = { Text("Add new folder") },
                             onClick = { /*TODO*/ }

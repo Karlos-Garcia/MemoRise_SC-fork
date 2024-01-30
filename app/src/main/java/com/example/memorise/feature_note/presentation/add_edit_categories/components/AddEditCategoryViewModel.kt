@@ -56,7 +56,8 @@ class AddEditCategoryViewModel @Inject constructor(
                     try {
                         categoryUseCase.addCategory(
                             Category(
-                                categoryTitle = categoryTitle.value.text
+                                categoryTitle = categoryTitle.value.text,
+                                id = currentCategoryId
                             )
                         )
                         _eventFlow.emit(UiCategoryEvent.SaveCategory)

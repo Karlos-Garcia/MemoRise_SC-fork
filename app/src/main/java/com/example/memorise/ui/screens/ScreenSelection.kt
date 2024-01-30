@@ -115,17 +115,6 @@ fun selectionScreen(
         Button(
             modifier = modifier.fillMaxWidth(),
             onClick = {
-                selectedNoteType = NoteType.CHARTING
-                navController.navigate(Screens.ChartingNoteScreen.route)
-            }) {
-            Text(
-                text = "Charting Note Method",
-                textAlign = TextAlign.Left,
-               )
-        }
-        Button(
-            modifier = modifier.fillMaxWidth(),
-            onClick = {
                 selectedNoteType = NoteType.QUADRANT
                 navController.navigate(Screens.QuadrantNoteScreen.route)
             }) {
@@ -141,6 +130,16 @@ fun selectionScreen(
             Text(text = "Ladder",
                 textAlign = TextAlign.Left)
         }
-
+//        Button(
+//            modifier = modifier.fillMaxWidth(),
+//            onClick = {
+//                selectedNoteType = NoteType.IMAGE
+//                navController.navigate(Screens.ImageNoteScreen.route)
+//            }) {
+//            Text(
+//                text = "",
+//                textAlign = TextAlign.Left,
+//            )
+//        }
     }
 }

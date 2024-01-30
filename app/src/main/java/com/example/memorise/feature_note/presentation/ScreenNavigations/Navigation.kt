@@ -1,5 +1,6 @@
 package com.example.memorise.feature_note.presentation.ScreenNavigations
 
+import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
@@ -16,6 +17,7 @@ import com.example.memorise.feature_note.presentation.category.CategoryScreen
 import com.example.memorise.ui.screens.SelectionScreen
 import com.example.memorise.ui.screens.aboutUsScreen
 import com.example.memorise.ui.screens.noteScreens.CornellNote
+import com.example.memorise.ui.screens.noteScreens.ImageNoteScreen
 import com.example.memorise.ui.screens.noteScreens.LadderNote
 import com.example.memorise.ui.screens.noteScreens.OutlineNote
 import com.example.memorise.ui.screens.noteScreens.QuadrantNote
@@ -162,6 +164,19 @@ fun Navigation() {
             )
         ) {
             AddEditCategoryScreen(navController = navController)
+        }
+        composable(
+            route = Screens.ImageNoteScreen.route + "?noteId={noteId}",
+            arguments = listOf(
+                navArgument(
+                    name = "noteId"
+                ) {
+                    type = NavType.IntType
+                    defaultValue = -1
+                },
+            )
+        ) {
+            ImageNoteScreen(navController = navController)
         }
     }
 }

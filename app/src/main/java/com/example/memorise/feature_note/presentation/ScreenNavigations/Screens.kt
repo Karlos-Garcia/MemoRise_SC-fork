@@ -13,6 +13,7 @@ sealed class Screens(val route: String) {
     object LadderNoteScreen : Screens(route="LadderNote_Screen")
     object CategoryScreen : Screens(route="Category_Screen")
     object AddEditCategoryScreen : Screens(route="AddEditCategory_Screen")
+    object ImageNoteScreen : Screens(route="Image_Screen")
 
 
 

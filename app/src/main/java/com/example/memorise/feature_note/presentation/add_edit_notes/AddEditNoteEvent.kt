@@ -1,5 +1,6 @@
 package com.example.memorise.feature_note.presentation.add_edit_notes
 
+import android.net.Uri
 import androidx.compose.ui.focus.FocusState
 import com.example.memorise.feature_note.domain.model.NoteType
 
@@ -16,5 +17,6 @@ sealed class AddEditNoteEvent{
     data class EnteredKeyword4(val value: String) : AddEditNoteEvent()
     data class EnteredSummary(val value: String) : AddEditNoteEvent()
     data class EnteredNoteType(val noteType: NoteType): AddEditNoteEvent()
+    data class ImageSelected(val uri: Uri) : AddEditNoteEvent()
     object SaveNote : AddEditNoteEvent()
 }
