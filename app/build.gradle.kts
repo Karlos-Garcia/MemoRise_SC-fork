@@ -1,11 +1,9 @@
 import org.jetbrains.kotlin.kapt3.base.Kapt.kapt
-
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     kotlin("kapt")
     id("com.google.dagger.hilt.android")
-
 }
 
 android {
@@ -45,7 +43,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.6.10"
+        kotlinCompilerExtensionVersion = "1.4.4"
     }
     packaging {
         resources {
@@ -55,7 +53,6 @@ android {
 }
 
 dependencies {
-
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
     implementation("androidx.activity:activity-compose:1.8.1")
@@ -86,11 +83,13 @@ dependencies {
     implementation("androidx.compose.material:material:1.5.4")
 
     //coil for image note
-    implementation ("io.coil-kt:coil:2.6.0")
-    implementation("io.coil-kt:coil-compose:2.6.0")
-
+    implementation ("io.coil-kt:coil:2.5.0")
+    implementation ("io.coil-kt:coil-compose:2.5.0")
 
     implementation ("androidx.compose.runtime:runtime-livedata:1.1.0-alpha01")
+
+    //accompanist which is used for decoding an image
+    implementation ("com.google.accompanist:accompanist-coil:0.15.0")
 }
 
 // Allow references to generated code

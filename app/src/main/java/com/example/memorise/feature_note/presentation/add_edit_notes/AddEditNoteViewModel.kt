@@ -1,9 +1,12 @@
 package com.example.memorise.feature_note.presentation.add_edit_notes
 
+import android.content.Context
 import android.net.Uri
+import android.util.Base64
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,10 +15,12 @@ import com.example.memorise.feature_note.domain.model.NoteType
 import com.example.memorise.feature_note.domain.model.UnifiedNote
 import com.example.memorise.feature_note.domain.use_case.NotesUseCase.NoteUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 
@@ -23,7 +28,8 @@ import javax.inject.Inject
 @HiltViewModel
 class AddEditNoteViewModel @Inject constructor(
     private val noteUseCases: NoteUseCases,
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
+    private val context: Context
 ) : ViewModel() {
 
     private val _noteTitle = mutableStateOf(NoteTextFieldState(
@@ -91,6 +97,10 @@ class AddEditNoteViewModel @Inject constructor(
     private val _selectedImageUri = mutableStateOf<Uri?>(null)
     val selectedImageUri: State<Uri?> = _selectedImageUri
 
+    private val _decodedImageBytes = mutableStateOf<ByteArray?>(null)
+    val decodedImageBytes: State<ByteArray?> = _decodedImageBytes
+
+
 
     //retrieves the notes when noteId is not equal to -1
     init {
@@ -134,9 +144,7 @@ class AddEditNoteViewModel @Inject constructor(
                         _noteSummary.value = noteSummary.value.copy(
                             text = note.summary ?: "",
                         )
-                        note.imagePath?.let { imagePath ->
-                            _selectedImageUri.value = Uri.parse(imagePath)
-                        }
+                        _decodedImageBytes.value = note.imageBytes
                     }
                 }
             }
@@ -144,6 +152,19 @@ class AddEditNoteViewModel @Inject constructor(
     }
     fun onNoteTypeSelected(noteType: NoteType) {
         currentNoteType = noteType
+    }
+    private suspend fun decodeImageBytesFromUri(uri: Uri): ByteArray? {
+        return withContext(Dispatchers.IO) {
+            try {
+                val inputStream = context.contentResolver.openInputStream(uri)
+                val bytes = inputStream?.readBytes()
+                inputStream?.close()
+                bytes
+            } catch (e: Exception) {
+                Log.e("AddEditNoteViewModel", "Error decoding image bytes: $e")
+                null
+            }
+        }
     }
 
     fun onEvent(event: AddEditNoteEvent) {
@@ -208,6 +229,12 @@ class AddEditNoteViewModel @Inject constructor(
             }
             is AddEditNoteEvent.ImageSelected -> {
                 _selectedImageUri.value = event.uri
+                viewModelScope.launch {
+                    val imageBytes = decodeImageBytesFromUri(event.uri)
+                    if (imageBytes != null) {
+                        _decodedImageBytes.value = imageBytes
+                    }
+                }
             }
 
             is AddEditNoteEvent.SaveNote -> {
@@ -228,7 +255,7 @@ class AddEditNoteViewModel @Inject constructor(
                                 summary = noteSummary.value.text,
                                 timestamp = System.currentTimeMillis(),
                                 noteType = currentNoteType ?: NoteType.BASIC,
-                                imagePath = _selectedImageUri.value?.toString(),
+                                imageBytes = _decodedImageBytes.value,
                                 id = currentNoteId
                             )
                         )

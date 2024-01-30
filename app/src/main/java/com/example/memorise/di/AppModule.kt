@@ -1,6 +1,7 @@
 package com.example.memorise.di
 
 import android.app.Application
+import android.content.Context
 import androidx.room.Room
 import com.example.memorise.feature_note.data.data_source.Notes.NoteDatabase
 import com.example.memorise.feature_note.data.repository.NoteRepositoryImpl
@@ -64,4 +65,7 @@ object AppModule {
             getCategoryList = GetCategoriesListUseCase(repository)
         )
     }
+
+    @Provides
+    fun provideContext(application: Application): Context = application
 }

@@ -20,7 +20,7 @@ data class UnifiedNote(
     val content5: String? = null,
     val summary: String? = null,
     val category: Int? = null,
-    val imagePath: String? = null,
+    val imageBytes: ByteArray? = null,
     val noteType: NoteType, // Enum or string to identify the type
     val timestamp: Long = System.currentTimeMillis()
 )
