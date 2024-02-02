@@ -108,8 +108,6 @@ class AddEditNoteViewModel @Inject constructor(
             if(noteId != -1) {
                 viewModelScope.launch {
                     noteUseCases.getNote(noteId)?.also {note ->
-                        Log.d("AddEditNoteViewModel", "Retrieved note: $note")
-
                         currentNoteId = note.id
                         _noteTitle.value = noteTitle.value.copy(
                             text = note.title,
@@ -161,7 +159,6 @@ class AddEditNoteViewModel @Inject constructor(
                 inputStream?.close()
                 bytes
             } catch (e: Exception) {
-                Log.e("AddEditNoteViewModel", "Error decoding image bytes: $e")
                 null
             }
         }

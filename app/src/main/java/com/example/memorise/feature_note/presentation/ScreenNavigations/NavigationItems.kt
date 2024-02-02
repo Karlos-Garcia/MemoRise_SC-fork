@@ -1,9 +1,8 @@
-package com.example.memorise.feature_note.presentation.notes.components
+package com.example.memorise.feature_note.presentation.ScreenNavigations
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Create
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.AddCircle
@@ -12,7 +11,6 @@ import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavController
-import com.example.memorise.feature_note.presentation.ScreenNavigations.Screens
 
 data class NavigationItem(
     val title: String,
@@ -36,13 +34,16 @@ fun getNavigationItems(
             title = "Category",
             selectedIcon = Icons.Filled.AddCircle,
             unselectedIcon = Icons.Outlined.AddCircle,
-            route = {navController.navigate(Screens.CategoryScreen.route)}
+            route = {navController.popBackStack(route = Screens.CategoryScreen.route, inclusive = false)
+            navController.navigate(Screens.CategoryScreen.route)}
         ),
         NavigationItem(
             title = "Settings",
             selectedIcon = Icons.Filled.Settings,
             unselectedIcon = Icons.Outlined.Settings,
-            route = {navController.navigate(Screens.SettingScreen.route)}
+            route = {navController.popBackStack(route = Screens.SettingScreen.route, inclusive = false)
+            navController.navigate(Screens.SettingScreen.route)}
+
         ),
         NavigationItem(
             title = "About Us",
@@ -50,6 +51,5 @@ fun getNavigationItems(
             unselectedIcon = Icons.Outlined.Info,
             route = {navController.navigate(Screens.AboutUsScreen.route)}
         ),
-
     )
 }

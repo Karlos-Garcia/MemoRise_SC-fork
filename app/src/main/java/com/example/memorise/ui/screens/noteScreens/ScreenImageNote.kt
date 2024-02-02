@@ -147,6 +147,7 @@ fun ImageEditFields(
             onValueChange = {
                 viewModel.onEvent(AddEditNoteEvent.EnteredTitle(it))
             },
+            singleLine = true,
             modifier = modifier
                 .fillMaxWidth()
                 .padding(

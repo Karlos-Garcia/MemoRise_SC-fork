@@ -108,6 +108,7 @@ fun ladderNote(
             onValueChange = {
                 viewModel.onEvent(AddEditNoteEvent.EnteredTitle(it))
             },
+            singleLine = true
         )
         TextField(
             modifier = modifier

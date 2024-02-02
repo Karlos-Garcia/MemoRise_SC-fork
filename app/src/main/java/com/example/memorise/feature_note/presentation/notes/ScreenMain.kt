@@ -1,9 +1,6 @@
 package com.example.memorise.feature_note.presentation.notes
 
 import android.annotation.SuppressLint
-import android.net.Uri
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -39,6 +36,8 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -48,15 +47,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.memorise.feature_note.domain.model.NoteType
-import com.example.memorise.feature_note.presentation.notes.components.NavigationItem
-import com.example.memorise.feature_note.presentation.notes.components.getNavigationItems
+import com.example.memorise.feature_note.presentation.ScreenNavigations.NavigationItem
+import com.example.memorise.feature_note.presentation.ScreenNavigations.getNavigationItems
 import com.example.memorise.feature_note.presentation.ScreenNavigations.Screens
-import com.example.memorise.feature_note.presentation.add_edit_notes.AddEditNoteViewModel
 import com.example.memorise.feature_note.presentation.notes.components.NoteItem
 import com.example.memorise.feature_note.presentation.notes.components.OrderSection
 import kotlinx.coroutines.launch
@@ -70,11 +69,26 @@ fun MainScreen(
     items: List<NavigationItem>,
     viewModel: NotesViewModel = hiltViewModel(),
 ) {
-
-    val state = viewModel.state.value
+    val state by viewModel.state.collectAsState(initial = NotesState())
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
     val items = getNavigationItems(navController = navController)
+    val searchQueryState = remember { mutableStateOf(TextFieldValue()) }
+
+    //added for snackbar:
+    LaunchedEffect(key1 = true) {
+        viewModel.state.collect { state: NotesState ->
+            if (state.recentlyDeletedNote != null) {
+                val result = scaffoldState.snackbarHostState.showSnackbar(
+                    message = "Note Deleted",
+                    actionLabel = "Undo"
+                )
+                if (result == SnackbarResult.ActionPerformed) {
+                    viewModel.onEvent(NotesEvent.RestoreNote)
+                }
+            }
+        }
+    }
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -103,7 +117,6 @@ fun MainScreen(
                     )
                     items.forEachIndexed { index, item ->
                         NavigationDrawerItem(
-
                             label = {
                                 Text(text = item.title)
                             },
@@ -156,16 +169,15 @@ fun MainScreen(
                                 modifier = Modifier.fillMaxWidth()
                             ) {
                                 Spacer(modifier = Modifier.width(52.dp))
-
                                 TextField(
-
-                                    value = state.searchQuery ?: "",
-                                    onValueChange = { newQuery ->
-                                        viewModel.onEvent(NotesEvent.Search(newQuery))
+                                    value = searchQueryState.value,
+                                    onValueChange = { newValue: TextFieldValue ->
+                                        searchQueryState.value = newValue
+                                        viewModel.onEvent(NotesEvent.Search(newValue.text))
                                     },
                                     label = { Text("Search Notes") },
                                     modifier = Modifier
-                                        .weight(1f) // Takes up remaining horizontal space
+                                        .weight(1f)
                                         .clip(RoundedCornerShape(16.dp))
                                 )
                                 Box(
@@ -208,17 +220,19 @@ fun MainScreen(
                                 }
                                 navController.navigate(route)
                             },
+                            scaffoldState = scaffoldState,
                             onDeleteClick = {
                                 viewModel.onEvent(NotesEvent.DeleteNote(note))
-                                scope.launch {
-                                    val result = scaffoldState.snackbarHostState.showSnackbar(
-                                        message = "Note Deleted",
-                                        actionLabel = "Undo"
-                                    )
-                                    if(result == SnackbarResult.ActionPerformed) {
-                                        viewModel.onEvent(NotesEvent.RestoreNote)
-                                    }
-                                }
+//                                viewModel.onEvent(NotesEvent.DeleteNote(note))
+//                                scope.launch {
+//                                    val result = scaffoldState.snackbarHostState.showSnackbar(
+//                                        message = "Note Deleted",
+//                                        actionLabel = "Undo"
+//                                    )
+//                                    if(result == SnackbarResult.ActionPerformed) {
+//                                        viewModel.onEvent(NotesEvent.RestoreNote)
+//                                    }
+//                                }
                             }
                         )
                     }

@@ -8,4 +8,5 @@ data class NotesState(
     val notes: List<UnifiedNote> = emptyList(),
     val noteOrder: NoteOrder = NoteOrder.Date(OrderType.Descending),
     val searchQuery: String? = null,
+    val recentlyDeletedNote: UnifiedNote? = null
 )

@@ -93,6 +93,7 @@ fun outlineNote(
             onValueChange = {
                 viewModel.onEvent(AddEditNoteEvent.EnteredTitle(it))
             },
+            singleLine = true,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(
@@ -107,6 +108,7 @@ fun outlineNote(
                 onValueChange = {
                     viewModel.onEvent(AddEditNoteEvent.EnteredKeyword1(it))
                 },
+                singleLine = true,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(
@@ -136,7 +138,8 @@ fun outlineNote(
                 value = keyword2State.text,
                 onValueChange = {
                                 viewModel.onEvent(AddEditNoteEvent.EnteredKeyword2(it))
-                                }  ,
+                                },
+                singleLine = true,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(

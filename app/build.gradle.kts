@@ -90,6 +90,10 @@ dependencies {
 
     //accompanist which is used for decoding an image
     implementation ("com.google.accompanist:accompanist-coil:0.15.0")
+
+    //implementing this to fix the state for the search bar
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
+
 }
 
 // Allow references to generated code

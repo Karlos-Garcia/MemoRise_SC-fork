@@ -1,7 +1,6 @@
 package com.example.memorise.ui.screens.noteScreens
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,8 +11,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.rememberScaffoldState
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -21,8 +18,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -74,7 +69,6 @@ fun basicTextFields(
                         message = event.message
                     )
                 }
-
                 is AddEditNoteViewModel.UiEvent.SaveNote -> {
                     navController.navigate(Screens.MainScreen.route)
                 }
@@ -95,6 +89,7 @@ fun basicTextFields(
             onValueChange = {
                 viewModel.onEvent(AddEditNoteEvent.EnteredTitle(it))
             },
+            singleLine = true,
             modifier = modifier
                 .fillMaxWidth()
                 .padding(

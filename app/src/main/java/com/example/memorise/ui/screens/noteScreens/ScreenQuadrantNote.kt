@@ -105,6 +105,7 @@ modifier: Modifier = Modifier,
             onValueChange = {
                 viewModel.onEvent(AddEditNoteEvent.EnteredTitle(it))
             },
+            singleLine = true,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(

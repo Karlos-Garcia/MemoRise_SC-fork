@@ -1,6 +1,5 @@
 package com.example.memorise.feature_note.presentation.ScreenNavigations
 
-import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
@@ -12,7 +11,6 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.memorise.feature_note.presentation.add_edit_categories.AddEditCategoryScreen
 import com.example.memorise.feature_note.presentation.notes.MainScreen
-import com.example.memorise.feature_note.presentation.notes.components.getNavigationItems
 import com.example.memorise.feature_note.presentation.category.CategoryScreen
 import com.example.memorise.ui.screens.SelectionScreen
 import com.example.memorise.ui.screens.aboutUsScreen
@@ -47,7 +45,8 @@ fun Navigation() {
             route = Screens.SettingScreen.route,
         ) {
             settingScreen(
-                navController = navController
+                navController = navController,
+                items = getNavigationItems(navController)
             )
         }
 
@@ -55,7 +54,8 @@ fun Navigation() {
             route = Screens.AboutUsScreen.route,
         ) {
             aboutUsScreen(
-                navController = navController
+                navController = navController,
+                items = getNavigationItems(navController)
             )
         }
 
@@ -150,7 +150,10 @@ fun Navigation() {
         composable(
             route = Screens.CategoryScreen.route
         ) {
-            CategoryScreen(navController = navController)
+            CategoryScreen(
+                navController = navController,
+                items = getNavigationItems(navController)
+            )
         }
         composable(
             route = Screens.AddEditCategoryScreen.route + "?categoryId={categoryId}",
