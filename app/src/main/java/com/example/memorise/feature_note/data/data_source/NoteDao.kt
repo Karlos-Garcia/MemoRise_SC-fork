@@ -1,4 +1,4 @@
-package com.example.memorise.feature_note.data.data_source.Notes
+package com.example.memorise.feature_note.data.data_source
 
 import androidx.room.Dao
 import androidx.room.Delete

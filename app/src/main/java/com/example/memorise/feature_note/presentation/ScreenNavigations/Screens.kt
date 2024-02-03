@@ -14,9 +14,7 @@ sealed class Screens(val route: String) {
     object CategoryScreen : Screens(route="Category_Screen")
     object AddEditCategoryScreen : Screens(route="AddEditCategory_Screen")
     object ImageNoteScreen : Screens(route="Image_Screen")
-
-
-
+    object FolderScreen : Screens(route = "Folder_Screen")
 }
 
 

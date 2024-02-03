@@ -3,7 +3,7 @@ package com.example.memorise.di
 import android.app.Application
 import android.content.Context
 import androidx.room.Room
-import com.example.memorise.feature_note.data.data_source.Notes.NoteDatabase
+import com.example.memorise.feature_note.data.data_source.NoteDatabase
 import com.example.memorise.feature_note.data.repository.NoteRepositoryImpl
 import com.example.memorise.feature_note.domain.repository.NoteRepository
 import com.example.memorise.feature_note.domain.use_case.CategoryUseCase.AddCategory
@@ -11,6 +11,11 @@ import com.example.memorise.feature_note.domain.use_case.CategoryUseCase.Categor
 import com.example.memorise.feature_note.domain.use_case.CategoryUseCase.DeleteCategoryUseCase
 import com.example.memorise.feature_note.domain.use_case.CategoryUseCase.GetCategoriesListUseCase
 import com.example.memorise.feature_note.domain.use_case.CategoryUseCase.GetCategoryUseCase
+import com.example.memorise.feature_note.domain.use_case.FolderUseCase.AddFolder
+import com.example.memorise.feature_note.domain.use_case.FolderUseCase.DeleteFolder
+import com.example.memorise.feature_note.domain.use_case.FolderUseCase.FolderUseCases
+import com.example.memorise.feature_note.domain.use_case.FolderUseCase.GetFolder
+import com.example.memorise.feature_note.domain.use_case.FolderUseCase.GetFolderList
 import com.example.memorise.feature_note.domain.use_case.NotesUseCase.AddNote
 import com.example.memorise.feature_note.domain.use_case.NotesUseCase.DeleteNoteUseCase
 import com.example.memorise.feature_note.domain.use_case.NotesUseCase.GetNoteUseCase
@@ -40,7 +45,7 @@ object AppModule {
     @Provides
     @Singleton
     fun provideNoteRepository(db: NoteDatabase): NoteRepository {
-        return NoteRepositoryImpl(db.noteDao, db.categoryDao)
+        return NoteRepositoryImpl(db.noteDao, db.categoryDao, db.folderDao)
     }
 
     @Provides
@@ -63,6 +68,17 @@ object AppModule {
             deleteCategory = DeleteCategoryUseCase(repository),
             addCategory = AddCategory(repository),
             getCategoryList = GetCategoriesListUseCase(repository)
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideFolderUseCases(repository: NoteRepository): FolderUseCases {
+        return FolderUseCases(
+            getFolder = GetFolder(repository),
+            deleteFolder = DeleteFolder(repository),
+            addFolder = AddFolder(repository),
+            getFolderList = GetFolderList(repository)
         )
     }
 

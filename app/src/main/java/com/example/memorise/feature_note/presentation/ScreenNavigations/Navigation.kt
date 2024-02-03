@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.memorise.feature_note.presentation.add_edit_categories.AddEditCategoryScreen
+import com.example.memorise.feature_note.presentation.add_edit_folder.AddEditFolderScreen
 import com.example.memorise.feature_note.presentation.notes.MainScreen
 import com.example.memorise.feature_note.presentation.category.CategoryScreen
 import com.example.memorise.ui.screens.SelectionScreen
@@ -180,6 +181,19 @@ fun Navigation() {
             )
         ) {
             ImageNoteScreen(navController = navController)
+        }
+        composable(
+            route = Screens.FolderScreen.route + "?folderId={folderId}",
+            arguments = listOf(
+                navArgument(
+                    name = "folderId"
+                ) {
+                    type = NavType.IntType
+                    defaultValue = -1
+                },
+            )
+        ) {
+            AddEditFolderScreen(navController = navController)
         }
     }
 }

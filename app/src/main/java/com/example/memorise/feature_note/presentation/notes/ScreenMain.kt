@@ -53,9 +53,14 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.memorise.feature_note.domain.model.NoteType
+import com.example.memorise.feature_note.presentation.Folders.FolderItem
+import com.example.memorise.feature_note.presentation.Folders.FolderState
+import com.example.memorise.feature_note.presentation.Folders.FolderViewModel
+import com.example.memorise.feature_note.presentation.Folders.FoldersEvent
 import com.example.memorise.feature_note.presentation.ScreenNavigations.NavigationItem
 import com.example.memorise.feature_note.presentation.ScreenNavigations.getNavigationItems
 import com.example.memorise.feature_note.presentation.ScreenNavigations.Screens
+import com.example.memorise.feature_note.presentation.category.CategoriesEvent
 import com.example.memorise.feature_note.presentation.notes.components.NoteItem
 import com.example.memorise.feature_note.presentation.notes.components.OrderSection
 import kotlinx.coroutines.launch
@@ -67,9 +72,11 @@ import kotlinx.coroutines.launch
 fun MainScreen(
     navController: NavController,
     items: List<NavigationItem>,
-    viewModel: NotesViewModel = hiltViewModel(),
+    notesViewModel: NotesViewModel = hiltViewModel(),
+    foldersViewModel: FolderViewModel = hiltViewModel(),
 ) {
-    val state by viewModel.state.collectAsState(initial = NotesState())
+    val folderStates by foldersViewModel.folderState.collectAsState(initial = FolderState())
+    val notesState by notesViewModel.state.collectAsState(initial = NotesState())
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
     val items = getNavigationItems(navController = navController)
@@ -77,17 +84,31 @@ fun MainScreen(
 
     //added for snackbar:
     LaunchedEffect(key1 = true) {
-        viewModel.state.collect { state: NotesState ->
+        notesViewModel.state.collect { state: NotesState ->
             if (state.recentlyDeletedNote != null) {
                 val result = scaffoldState.snackbarHostState.showSnackbar(
                     message = "Note Deleted",
                     actionLabel = "Undo"
                 )
                 if (result == SnackbarResult.ActionPerformed) {
-                    viewModel.onEvent(NotesEvent.RestoreNote)
+                    notesViewModel.onEvent(NotesEvent.RestoreNote)
                 }
             }
         }
+    }
+
+//    var shouldFetchFolders by remember {mutableStateOf(true)}
+//
+//    LaunchedEffect(shouldFetchFolders.value) {
+//        if (shouldFetchFolders.value) {
+//            foldersViewModel.onFolderEvent(FoldersEvent.ListFolder)
+//            shouldFetchFolders.value = false
+//        }
+//    }
+//    shouldFetchFolders.value = true
+
+    LaunchedEffect(Unit) {
+        foldersViewModel.onFolderEvent(FoldersEvent.ListFolder)
     }
 
     Surface(
@@ -173,7 +194,7 @@ fun MainScreen(
                                     value = searchQueryState.value,
                                     onValueChange = { newValue: TextFieldValue ->
                                         searchQueryState.value = newValue
-                                        viewModel.onEvent(NotesEvent.Search(newValue.text))
+                                        notesViewModel.onEvent(NotesEvent.Search(newValue.text))
                                     },
                                     label = { Text("Search Notes") },
                                     modifier = Modifier
@@ -188,9 +209,9 @@ fun MainScreen(
                                     OrderSection(
                                         modifier = Modifier
                                             .fillMaxSize(),
-                                        noteOrder = state.noteOrder,
+                                        noteOrder = notesState.noteOrder,
                                         onOrderChange = {
-                                            viewModel.onEvent(NotesEvent.Order(it))
+                                            notesViewModel.onEvent(NotesEvent.Order(it))
                                         }
                                     )
                                 }
@@ -204,7 +225,20 @@ fun MainScreen(
                         .fillMaxSize()
                         .padding(values)
                 ) {
-                    items(state.notes) { note ->
+                    items(folderStates.folder) {
+                        folder ->
+                        FolderItem(
+                            folder = folder,
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            onItemClick = {navController.navigate(Screens.FolderScreen.route + "?folderId=${folder.id}")},
+                            onDeleteClick = {
+                               foldersViewModel.onFolderEvent(FoldersEvent.DeleteFolder(folder))
+                            }
+                        )
+                    }
+                    items(notesState.notes) {
+                        note ->
                         NoteItem(
                             note = note,
                             modifier = Modifier
@@ -222,7 +256,7 @@ fun MainScreen(
                             },
                             scaffoldState = scaffoldState,
                             onDeleteClick = {
-                                viewModel.onEvent(NotesEvent.DeleteNote(note))
+                                notesViewModel.onEvent(NotesEvent.DeleteNote(note))
 //                                viewModel.onEvent(NotesEvent.DeleteNote(note))
 //                                scope.launch {
 //                                    val result = scaffoldState.snackbarHostState.showSnackbar(
@@ -271,7 +305,9 @@ fun MainScreen(
                         )
                         DropdownMenuItem(
                             text = { Text("Add new folder") },
-                            onClick = { /*TODO*/ }
+                            onClick = {
+                                navController.navigate(Screens.FolderScreen.route)
+                            }
                         )
                     }
                 }

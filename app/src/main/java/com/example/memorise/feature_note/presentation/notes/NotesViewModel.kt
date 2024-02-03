@@ -1,7 +1,5 @@
 package com.example.memorise.feature_note.presentation.notes
 
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.memorise.feature_note.domain.model.UnifiedNote
