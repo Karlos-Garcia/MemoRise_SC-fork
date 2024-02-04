@@ -3,7 +3,6 @@ package com.example.memorise.feature_note.domain.model
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-
 @Entity
 data class UnifiedNote(
     @PrimaryKey(autoGenerate = true)
@@ -22,12 +21,10 @@ data class UnifiedNote(
     val category: Int? = null,
     val imageBytes: ByteArray? = null,
     val folderId: Int? = null,
-    val noteType: NoteType, // Enum or string to identify the type
+    val noteType: NoteType,
     val timestamp: Long = System.currentTimeMillis()
 )
-
 enum class NoteType {
     BASIC, CORNELL, OUTLINE, QUADRANT, LADDER, IMAGE
 }
-
 class InvalidNoteException(message: String): Exception(message)

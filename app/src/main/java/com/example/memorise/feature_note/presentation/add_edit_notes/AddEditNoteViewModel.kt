@@ -100,6 +100,26 @@ class AddEditNoteViewModel @Inject constructor(
     private val _decodedImageBytes = mutableStateOf<ByteArray?>(null)
     val decodedImageBytes: State<ByteArray?> = _decodedImageBytes
 
+    private val _isBold = mutableStateOf(false)
+    val isBold: State<Boolean> get() = _isBold
+
+    private val _isItalic = mutableStateOf(false)
+    val isItalic: State<Boolean> get() = _isItalic
+
+    private val _isUnderlined = mutableStateOf(false)
+    val isUnderlined: State<Boolean> get() = _isUnderlined
+
+    fun toggleBold() {
+        _isBold.value = !_isBold.value
+    }
+
+    fun toggleItalic() {
+        _isItalic.value = !_isItalic.value
+    }
+
+    fun toggleUnderline() {
+        _isUnderlined.value = !_isUnderlined.value
+    }
 
 
     //retrieves the notes when noteId is not equal to -1

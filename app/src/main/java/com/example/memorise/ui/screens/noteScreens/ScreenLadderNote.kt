@@ -1,6 +1,7 @@
 package com.example.memorise.ui.screens.noteScreens
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,9 +16,12 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -25,9 +29,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.memorise.R
 import com.example.memorise.feature_note.domain.model.NoteType
 import com.example.memorise.feature_note.presentation.ScreenNavigations.Screens
 import com.example.memorise.feature_note.presentation.add_edit_notes.AddEditNoteEvent
@@ -53,6 +59,7 @@ fun LadderNote(
 }
 
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ladderNote(
@@ -86,105 +93,120 @@ fun ladderNote(
         }
     }
 
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .verticalScroll(rememberScrollState())
-            .horizontalScroll(rememberScrollState())
-            .padding(
-                start = 8.dp,
-                top = 72.dp,
-                bottom = 8.dp,
-                end = 8.dp
-
+    Scaffold(
+        modifier = Modifier.fillMaxWidth(),
+        bottomBar = {
+            BottomAppBar(
+                actions = {
+                    IconButton(onClick = { /*TODO*/ }) {
+                        Image(
+                            painter = painterResource (id = R.drawable.format_bold_fill0_wght400_grad0_opsz24),
+                            contentDescription = "Bold")
+                    }
+                    IconButton(onClick = { /*TODO*/ }) {
+                        Image(
+                            painter = painterResource (id = R.drawable.format_italic_fill0_wght400_grad0_opsz24),
+                            contentDescription = "Italic")
+                    }
+                    IconButton(onClick = { /*TODO*/ }) {
+                        Image(
+                            painter = painterResource (id = R.drawable.format_underlined_fill0_wght400_grad0_opsz24),
+                            contentDescription = "Underline")
+                    }
+                },
+                floatingActionButton = {
+                    FloatingActionButton(onClick = { viewModel.onEvent(AddEditNoteEvent.SaveNote) }) {
+                        Icon(
+                            imageVector = Icons.Default.Done,
+                            contentDescription = "Save Note",
+                            modifier = Modifier
+                        )
+                    }
+                }
             )
-    ) {
-        TextField(
-            modifier = modifier
-                .padding(bottom = 16.dp)
-                .fillMaxWidth(),
-            label = {Text(text = "Title")},
-            value = titleState.text,
-            onValueChange = {
-                viewModel.onEvent(AddEditNoteEvent.EnteredTitle(it))
-            },
-            singleLine = true
-        )
-        TextField(
-            modifier = modifier
-                .padding(bottom = 8.dp)
-                .width(100.dp),
-            label = {Text(text = "Content")},
-            value = content1State.text,
-            onValueChange = {
-                viewModel.onEvent(AddEditNoteEvent.EnteredContent1(it))
-                            },
-        )
-        TextField(
-            modifier = modifier
-                .padding(bottom = 8.dp)
-                .height(80.dp)
-                .width(150.dp),
-            label = {Text(text = "Content")},
-            value = content2State.text,
-            onValueChange = {
-                viewModel.onEvent(AddEditNoteEvent.EnteredContent2(it))
-            },
+        },
+        content = {values ->
+            Column(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .verticalScroll(rememberScrollState())
+                    .horizontalScroll(rememberScrollState())
+                    .padding(
+                        start = 8.dp,
+                        top = 72.dp,
+                        bottom = 8.dp,
+                        end = 8.dp
+                    )
+                    .padding(values)
+            ) {
+                TextField(
+                    modifier = modifier
+                        .padding(bottom = 8.dp)
+                        .fillMaxWidth(),
+                    label = {Text(text = "Title")},
+                    value = titleState.text,
+                    onValueChange = {
+                        viewModel.onEvent(AddEditNoteEvent.EnteredTitle(it))
+                    },
+                    singleLine = true
+                )
+                TextField(
+                    modifier = modifier
+                        .padding(bottom = 8.dp)
+//                        .height(90.dp)
+                        .width(110.dp),
+                    label = {Text(text = "Content")},
+                    value = content1State.text,
+                    onValueChange = {
+                        viewModel.onEvent(AddEditNoteEvent.EnteredContent1(it))
+                    },
+                )
+                TextField(
+                    modifier = modifier
+                        .padding(bottom = 8.dp)
+//                        .height(90.dp)
+                        .width(165.dp),
+                    label = {Text(text = "Content")},
+                    value = content2State.text,
+                    onValueChange = {
+                        viewModel.onEvent(AddEditNoteEvent.EnteredContent2(it))
+                    },
 
-        )
-        TextField(
-            modifier = modifier
-                .padding(bottom = 8.dp)
-                .height(80.dp)
-                .width(200.dp),
-            label = {Text(text = "Content")},
-            value = content3State.text,
-            onValueChange = {
-                viewModel.onEvent(AddEditNoteEvent.EnteredContent3(it))
-            },
-        )
-        TextField(
-            modifier = modifier
-                .padding(bottom = 8.dp)
-                .height(80.dp)
-                .width(250.dp),
-            label = {Text(text = "Content")},
-            value = content4State.text,
-            onValueChange = {
-                viewModel.onEvent(AddEditNoteEvent.EnteredContent4(it))
-            },
-        )
-        TextField(
-            modifier = modifier
-                .padding(bottom = 8.dp)
-                .height(80.dp)
-                .width(300.dp),
-            label = {Text(text = "Content")},
-            value = content5State.text,
-            onValueChange = {
-                viewModel.onEvent(AddEditNoteEvent.EnteredContent5(it))
-            },
-        )
-    }
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp)
-    ) {
-        IconButton(
-            onClick = {
-                viewModel.onEvent(AddEditNoteEvent.SaveNote)
-            },
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .size(60.dp)
-        ) {
-            Icon(
-                imageVector = Icons.Default.Done,
-                contentDescription = "Save Note",
-                modifier = Modifier
-                    .size(40.dp)
-            )
+                    )
+                TextField(
+                    modifier = modifier
+                        .padding(bottom = 8.dp)
+//                        .height(90.dp)
+                        .width(220.dp),
+                    label = {Text(text = "Content")},
+                    value = content3State.text,
+                    onValueChange = {
+                        viewModel.onEvent(AddEditNoteEvent.EnteredContent3(it))
+                    },
+                )
+                TextField(
+                    modifier = modifier
+                        .padding(bottom = 8.dp)
+//                        .height(90.dp)
+                        .width(275.dp),
+                    label = {Text(text = "Content")},
+                    value = content4State.text,
+                    onValueChange = {
+                        viewModel.onEvent(AddEditNoteEvent.EnteredContent4(it))
+                    },
+                )
+                TextField(
+                    modifier = modifier
+                        .padding(bottom = 8.dp)
+//                        .height(90.dp)
+                        .width(325.dp),
+                    label = {Text(text = "Content")},
+                    value = content5State.text,
+                    onValueChange = {
+                        viewModel.onEvent(AddEditNoteEvent.EnteredContent5(it))
+                    },
+                )
+            }
         }
-    }
+    )
 }

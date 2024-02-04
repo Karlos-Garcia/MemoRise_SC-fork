@@ -55,7 +55,6 @@ class AddEditFolderViewModel @Inject constructor(
                             Folder(
                                 id = currentFolderId,
                                 name = folderTitle.value.text,
-                                parentId = parentId
                             )
                         )
                         _eventFlow.emit(UiFolderEvent.SaveFolder)

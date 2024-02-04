@@ -29,6 +29,7 @@ fun settingScreen(
             },
             navController = navController,
             selectedItemIndex = 2,
+            title = "Settings"
         ) {
 
         }

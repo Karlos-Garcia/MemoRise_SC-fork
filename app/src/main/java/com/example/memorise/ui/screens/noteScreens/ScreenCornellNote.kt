@@ -1,39 +1,36 @@
 package com.example.memorise.ui.screens.noteScreens
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
+import com.example.memorise.R
 import com.example.memorise.feature_note.domain.model.NoteType
 import com.example.memorise.feature_note.presentation.ScreenNavigations.Screens
 import com.example.memorise.feature_note.presentation.add_edit_notes.AddEditNoteEvent
@@ -56,6 +53,7 @@ fun CornellNote(
     }
 }
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun cornellTextFields(
@@ -94,122 +92,138 @@ fun cornellTextFields(
         color = MaterialTheme.colorScheme.onSurface
     )
 
-    Column(modifier = Modifier
-        .padding(
-            top = 76.dp,
-        )
-        .fillMaxSize()) {
-        TextField(
-            singleLine = true,
-            label = {Text(text = "Title", style = labelStyle)},
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(
-                    start = 8.dp,
-                    end = 8.dp,
-                    bottom = 8.dp
-                ),
-            value = titleState.text,
-            onValueChange = {
-                viewModel.onEvent(AddEditNoteEvent.EnteredTitle(it))
-            }
-        )
-        Row {
-            TextField(
-                label = {Text(text = "Keywords", style = labelStyle)},
-                modifier = modifier
-                    .fillMaxWidth(0.25f)
-                    .fillMaxHeight(0.25f)
-                    .padding(
-                        start = 8.dp,
-                        end = 8.dp,
-                        bottom = 8.dp,
-                    ),
-                value = keyword1State.text,
-                onValueChange = {
-                    viewModel.onEvent(AddEditNoteEvent.EnteredKeyword1(it))
-                }
-            )
-            TextField(
-                label = {Text(text = "Content", style = labelStyle)},
-                modifier = modifier
-                    .fillMaxWidth(1f)
-                    .fillMaxHeight(0.25f)
-                    .padding(
-                        end = 8.dp,
-                        bottom = 8.dp
-                    ),
-                value = content1State.text,
-                onValueChange = {
-                    viewModel.onEvent(AddEditNoteEvent.EnteredContent1(it))
-                }
-            )
-        }
-        Row {
-            TextField(
-                label = {Text(text = "Keywords", style = labelStyle)},
-                modifier = modifier
-                    .fillMaxWidth(0.25f)
-                    .fillMaxHeight(0.35f)
-                    .padding(
-                        start = 8.dp,
-                        end = 8.dp,
-                        bottom = 8.dp,
-                    ),
-                value = keyword2State.text,
-                onValueChange = {
-                    viewModel.onEvent(AddEditNoteEvent.EnteredKeyword2(it))
-                }
-            )
-            TextField(
-                label = {Text(text = "Content", style = labelStyle)},
-                modifier = modifier
-                    .fillMaxWidth(1f)
-                    .fillMaxHeight(0.35f)
-                    .padding(
-                        end = 8.dp,
-                        bottom = 8.dp,
-                    ),
-                value = content2State.text,
-                onValueChange = {
-                    viewModel.onEvent(AddEditNoteEvent.EnteredContent2(it))
-                }
-            )
-        }
-        TextField(
-            label = {Text(text = "Summary", style = labelStyle)},
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(
-                    start = 8.dp,
-                    bottom = 8.dp,
-                    end = 8.dp,
-                ),
-            value = summaryState.text,
-            onValueChange = {
-                viewModel.onEvent(AddEditNoteEvent.EnteredSummary(it))
-            }
-        )
-    }
-    Box(
+    Scaffold(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp)
-    ) {
-        IconButton(
-            onClick = {
-                viewModel.onEvent(AddEditNoteEvent.SaveNote)
-            },
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .size(60.dp)
-        ) {
-            Icon(
-                imageVector = Icons.Default.Done,
-                contentDescription = "Save Note",
-                modifier = Modifier
-                    .size(40.dp)
+            .fillMaxWidth(),
+        bottomBar = {
+            BottomAppBar(
+                actions = {
+                    IconButton(onClick = { /*TODO*/ }) {
+                        Image(
+                            painter = painterResource (id = R.drawable.format_bold_fill0_wght400_grad0_opsz24),
+                            contentDescription = "Bold")
+                    }
+                    IconButton(onClick = { /*TODO*/ }) {
+                        Image(
+                            painter = painterResource (id = R.drawable.format_italic_fill0_wght400_grad0_opsz24),
+                            contentDescription = "Italic")
+                    }
+                    IconButton(onClick = { /*TODO*/ }) {
+                        Image(
+                            painter = painterResource (id = R.drawable.format_underlined_fill0_wght400_grad0_opsz24),
+                            contentDescription = "Underline")
+                    }
+                },
+                floatingActionButton = {
+                    FloatingActionButton(onClick = { viewModel.onEvent(AddEditNoteEvent.SaveNote) }) {
+                        Icon(
+                            imageVector = Icons.Default.Done,
+                            contentDescription = "Save Note",
+                            modifier = Modifier
+                        )
+                    }
+                }
             )
+        },
+        content = {values ->
+            Column(modifier = Modifier
+                .padding(
+                    top = 76.dp,
+                )
+                .padding(values)
+                .fillMaxSize()) {
+                TextField(
+                    singleLine = true,
+                    label = {Text(text = "Title", style = labelStyle)},
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .padding(
+                            start = 8.dp,
+                            end = 8.dp,
+                            bottom = 8.dp
+                        ),
+                    value = titleState.text,
+                    onValueChange = {
+                        viewModel.onEvent(AddEditNoteEvent.EnteredTitle(it))
+                    }
+                )
+                Row {
+                    TextField(
+                        label = {Text(text = "Keywords", style = labelStyle)},
+                        modifier = modifier
+                            .fillMaxWidth(0.25f)
+                            .fillMaxHeight(0.25f)
+                            .padding(
+                                start = 8.dp,
+                                end = 8.dp,
+                                bottom = 8.dp,
+                            ),
+                        value = keyword1State.text,
+                        onValueChange = {
+                            viewModel.onEvent(AddEditNoteEvent.EnteredKeyword1(it))
+                        }
+                    )
+                    TextField(
+                        label = {Text(text = "Content", style = labelStyle)},
+                        modifier = modifier
+                            .fillMaxWidth(1f)
+                            .fillMaxHeight(0.25f)
+                            .padding(
+                                end = 8.dp,
+                                bottom = 8.dp
+                            ),
+                        value = content1State.text,
+                        onValueChange = {
+                            viewModel.onEvent(AddEditNoteEvent.EnteredContent1(it))
+                        }
+                    )
+                }
+                Row {
+                    TextField(
+                        label = {Text(text = "Keywords", style = labelStyle)},
+                        modifier = modifier
+                            .fillMaxWidth(0.25f)
+                            .fillMaxHeight(0.35f)
+                            .padding(
+                                start = 8.dp,
+                                end = 8.dp,
+                                bottom = 8.dp,
+                            ),
+                        value = keyword2State.text,
+                        onValueChange = {
+                            viewModel.onEvent(AddEditNoteEvent.EnteredKeyword2(it))
+                        }
+                    )
+                    TextField(
+                        label = {Text(text = "Content", style = labelStyle)},
+                        modifier = modifier
+                            .fillMaxWidth(1f)
+                            .fillMaxHeight(0.35f)
+                            .padding(
+                                end = 8.dp,
+                                bottom = 8.dp,
+                            ),
+                        value = content2State.text,
+                        onValueChange = {
+                            viewModel.onEvent(AddEditNoteEvent.EnteredContent2(it))
+                        }
+                    )
+                }
+                TextField(
+                    label = {Text(text = "Summary", style = labelStyle)},
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(
+                            start = 8.dp,
+                            bottom = 8.dp,
+                            end = 8.dp,
+                        ),
+                    value = summaryState.text,
+                    onValueChange = {
+                        viewModel.onEvent(AddEditNoteEvent.EnteredSummary(it))
+                    }
+                )
+            }
         }
-    }
+    )
 }

@@ -46,9 +46,15 @@ import com.example.memorise.feature_note.presentation.add_edit_notes.AddEditNote
 import com.example.memorise.ui.screens.Topappbar
 import kotlinx.coroutines.flow.collectLatest
 import android.graphics.BitmapFactory
+import androidx.compose.foundation.Image
+import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.viewModelScope
+import com.example.memorise.R
 import com.example.memorise.feature_note.presentation.add_edit_notes.components.DisplayImage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -71,6 +77,7 @@ fun ImageNoteScreen(
     }
 }
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ImageEditFields(
@@ -105,100 +112,114 @@ fun ImageEditFields(
         }
     }
 
-    Column(
-        modifier = Modifier
-            .padding(
-                top = 76.dp,
+    Scaffold(
+        modifier = Modifier.fillMaxWidth(),
+        bottomBar = {
+            BottomAppBar(
+                actions = {
+                    IconButton(onClick = { /*TODO*/ }) {
+                        Image(
+                            painter = painterResource (id = R.drawable.format_bold_fill0_wght400_grad0_opsz24),
+                            contentDescription = "Bold")
+                    }
+                    IconButton(onClick = { /*TODO*/ }) {
+                        Image(
+                            painter = painterResource (id = R.drawable.format_italic_fill0_wght400_grad0_opsz24),
+                            contentDescription = "Italic")
+                    }
+                    IconButton(onClick = { /*TODO*/ }) {
+                        Image(
+                            painter = painterResource (id = R.drawable.format_underlined_fill0_wght400_grad0_opsz24),
+                            contentDescription = "Underline")
+                    }
+                },
+                floatingActionButton = {
+                    FloatingActionButton(onClick = { viewModel.onEvent(AddEditNoteEvent.SaveNote) }) {
+                        Icon(
+                            imageVector = Icons.Default.Done,
+                            contentDescription = "Save Note",
+                            modifier = Modifier
+                        )
+                    }
+                }
             )
-            .fillMaxWidth()
-    ) {
-        Button(
-            onClick = {
-                singlePhotoPickerLauncher.launch("image/*")
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(
-                    start = 8.dp,
-                    end = 8.dp,
-                    bottom = 8.dp
+        },
+        content = {values ->
+            Column(
+                modifier = Modifier
+                    .padding(
+                        top = 76.dp,
+                    )
+                    .padding(values)
+                    .fillMaxWidth()
+            ) {
+                Button(
+                    onClick = {
+                        singlePhotoPickerLauncher.launch("image/*")
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            start = 8.dp,
+                            end = 8.dp,
+                            bottom = 8.dp
+                        )
+                        .clip(RoundedCornerShape(12.dp))
+                ) {
+                    Text(text = "Select Image")
+                }
+
+                val imageBitmapState = remember { mutableStateOf<Bitmap?>(null) }
+
+                LaunchedEffect(key1 = decodedImageBytes) {
+                    if (decodedImageBytes != null) {
+                        val imageBitmap = viewModel.viewModelScope.async(Dispatchers.IO) {
+                            BitmapFactory.decodeByteArray(decodedImageBytes, 0, decodedImageBytes.size)
+                        }.await()
+                        imageBitmapState.value = imageBitmap
+                    }
+                }
+
+                DisplayImage(imageBitmapState.value)
+
+                TextField(
+                    label = { Text(text = "Title") },
+                    value = titleState.text,
+                    onValueChange = {
+                        viewModel.onEvent(AddEditNoteEvent.EnteredTitle(it))
+                    },
+                    singleLine = true,
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .padding(
+                            start = 8.dp,
+                            end = 8.dp,
+                        )
+                        .clip(RoundedCornerShape(12.dp))
                 )
-                .clip(RoundedCornerShape(12.dp))
-        ) {
-            Text(text = "Select Image")
-        }
-
-        val imageBitmapState = remember { mutableStateOf<Bitmap?>(null) }
-
-        LaunchedEffect(key1 = decodedImageBytes) {
-            if (decodedImageBytes != null) {
-                val imageBitmap = viewModel.viewModelScope.async(Dispatchers.IO) {
-                    BitmapFactory.decodeByteArray(decodedImageBytes, 0, decodedImageBytes.size)
-                }.await()
-                imageBitmapState.value = imageBitmap
+                TextField(
+                    label = { Text(text = "Content") },
+                    value = content1State.text,
+                    onValueChange = {
+                        viewModel.onEvent(AddEditNoteEvent.EnteredContent1(it))
+                    },
+                    modifier = modifier
+                        .fillMaxSize()
+                        .padding(
+                            top = 8.dp,
+                            start = 8.dp,
+                            end = 8.dp,
+                            bottom = 8.dp
+                        )
+                        .clip(RoundedCornerShape(12.dp))
+                )
             }
         }
-
-        DisplayImage(imageBitmapState.value)
-
-        TextField(
-            label = { Text(text = "Title") },
-            value = titleState.text,
-            onValueChange = {
-                viewModel.onEvent(AddEditNoteEvent.EnteredTitle(it))
-            },
-            singleLine = true,
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(
-                    start = 8.dp,
-                    end = 8.dp,
-                )
-                .clip(RoundedCornerShape(12.dp))
-        )
-        TextField(
-            label = { Text(text = "Content") },
-            value = content1State.text,
-            onValueChange = {
-                viewModel.onEvent(AddEditNoteEvent.EnteredContent1(it))
-            },
-            modifier = modifier
-                .fillMaxSize()
-                .padding(
-                    top = 8.dp,
-                    start = 8.dp,
-                    end = 8.dp,
-                    bottom = 8.dp
-                )
-                .clip(RoundedCornerShape(12.dp))
-        )
-    }
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp)
-    ) {
-        IconButton(
-            onClick = {
-                viewModel.onEvent(AddEditNoteEvent.SaveNote)
-            },
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .size(60.dp)
-        ) {
-            Icon(
-                imageVector = Icons.Default.Done,
-                contentDescription = "Save Note",
-                modifier = Modifier
-                    .size(40.dp)
-            )
-        }
-    }
+    )
 }
 
 //*************************notes
 //AsyncImage: You're using AsyncImage from Coil Accompanist to display the decoded image bitmap within the DisplayImage composable.
-
 //bitmap factory is from coil-accompanist library
 //BitmapFactory: While Coil handles downloading and decoding images from various sources, the code uses BitmapFactory.decodeByteArray to decode the already acquired decodedImageBytes data.
 //LaunchedEffect: The LaunchedEffect observes changes in the decodedImageBytes state variable and triggers the image decoding and display process within the effect block

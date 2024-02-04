@@ -199,12 +199,12 @@ fun MainScreen(
                                     label = { Text("Search Notes") },
                                     modifier = Modifier
                                         .weight(1f)
-                                        .clip(RoundedCornerShape(16.dp))
+//                                        .padding(top = 32.dp, bottom = 32.dp)
+                                        .clip(RoundedCornerShape(20.dp))
                                 )
                                 Box(
                                     modifier = Modifier
-                                        .padding(start = 8.dp)
-                                        .height(56.dp) // Adjust height as needed
+                                        .padding(start = 8.dp),
                                 ) {
                                     OrderSection(
                                         modifier = Modifier
@@ -231,7 +231,9 @@ fun MainScreen(
                             folder = folder,
                             modifier = Modifier
                                 .fillMaxWidth(),
-                            onItemClick = {navController.navigate(Screens.FolderScreen.route + "?folderId=${folder.id}")},
+                            onItemClick = {
+                                navController.navigate(Screens.FolderScreen.route + "?folderId=${folder.id}")
+                                          },
                             onDeleteClick = {
                                foldersViewModel.onFolderEvent(FoldersEvent.DeleteFolder(folder))
                             }

@@ -52,6 +52,7 @@ fun AppDrawer(
     drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
     selectedItemIndex: Int = 0,
     navController: NavController,
+    title: String,
     content: @Composable () -> Unit,
 ) {
     val items = getNavigationItems(navController = navController)
@@ -66,7 +67,7 @@ fun AppDrawer(
             ModalDrawerSheet {
                 Spacer(modifier = Modifier.height(20.dp))
                 Text(
-                    text = "MemoRise",
+                    text = title,
                     modifier = Modifier
                         .padding(
                             start = 60.dp,

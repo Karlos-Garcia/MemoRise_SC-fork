@@ -40,7 +40,6 @@ fun aboutUsScreen(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
-
         AppDrawer(
             items = items,
             onItemClick = { item ->
@@ -48,6 +47,7 @@ fun aboutUsScreen(
             },
             navController = navController,
             selectedItemIndex = 3,
+            title = "About Us",
         ) {
             aboutUs()
         }

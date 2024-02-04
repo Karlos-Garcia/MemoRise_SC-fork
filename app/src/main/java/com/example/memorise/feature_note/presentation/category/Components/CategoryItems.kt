@@ -12,11 +12,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,6 +40,42 @@ fun CategoryItem(
     onDeleteClick: () -> Unit,
     onItemClick: () -> Unit,
 ) {
+
+    var showConfirmationDialog by remember { mutableStateOf(false) }
+
+    if (showConfirmationDialog) {
+        AlertDialog(
+            onDismissRequest = {
+                showConfirmationDialog = false
+            },
+            title = {
+                Text("Delete Category")
+            },
+            text = {
+                Text("Are you sure you want to delete this Category?")
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        onDeleteClick()
+                        showConfirmationDialog = false
+                    }
+                ) {
+                    Text("Confirm")
+                }
+            },
+            dismissButton = {
+                Button(
+                    onClick = {
+                        showConfirmationDialog = false
+                    }
+                ) {
+                    Text("Cancel")
+                }
+            }
+        )
+    }
+    
     Box(modifier = Modifier
         .fillMaxSize()
         .padding(8.dp)
@@ -65,7 +107,7 @@ fun CategoryItem(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 IconButton(
-                    onClick = onDeleteClick,
+                    onClick = { showConfirmationDialog = true },
                 ) {
                     Icon(
                         imageVector = Icons.Default.Delete,

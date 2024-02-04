@@ -46,7 +46,6 @@ fun CategoryScreen(
     navController: NavController,
     viewModel: CategoryViewModel = hiltViewModel(),
     items: List<NavigationItem>
-
 ) {
     val categoryState = viewModel.categoryState.value
     val scaffoldState = rememberScaffoldState()
@@ -67,6 +66,7 @@ fun CategoryScreen(
             },
             navController = navController,
             selectedItemIndex = 1,
+            title = "Category",
             content = {
                 LazyColumn(
                     modifier = Modifier
