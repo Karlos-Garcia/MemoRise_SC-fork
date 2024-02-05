@@ -7,13 +7,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.memorise.feature_note.domain.model.Category
 import com.example.memorise.feature_note.domain.model.FormattedSegment
 import com.example.memorise.feature_note.domain.model.InvalidNoteException
 import com.example.memorise.feature_note.domain.model.NoteType
 import com.example.memorise.feature_note.domain.model.Note
+import com.example.memorise.feature_note.domain.use_case.CategoryUseCase.CategoryUseCases
 import com.example.memorise.feature_note.domain.use_case.NotesUseCase.NoteUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -27,63 +30,42 @@ import javax.inject.Inject
 @HiltViewModel
 class AddEditNoteViewModel @Inject constructor(
     private val noteUseCases: NoteUseCases,
+    private val categoryUseCase: CategoryUseCases,
     savedStateHandle: SavedStateHandle,
     private val context: Context
 ) : ViewModel() {
 
-    private val _noteTitle = mutableStateOf(NoteTextFieldState(
-        hint = "Enter title..."
-    ))
+    private val _noteTitle = mutableStateOf(NoteTextFieldState(hint = "Enter title..."))
     val noteTitle: State<NoteTextFieldState> = _noteTitle
 
-    private val _noteKeyword1 = mutableStateOf(NoteTextFieldState(
-        hint = "Enter keyword..."
-    ))
+    private val _noteKeyword1 = mutableStateOf(NoteTextFieldState(hint = "Enter keyword..."))
     val noteKeyword1: State<NoteTextFieldState> = _noteKeyword1
 
-    private val _noteKeyword2 = mutableStateOf(NoteTextFieldState(
-        hint = "Enter keyword..."
-    ))
+    private val _noteKeyword2 = mutableStateOf(NoteTextFieldState(hint = "Enter keyword..."))
     val noteKeyword2: State<NoteTextFieldState> = _noteKeyword2
 
-    private val _noteKeyword3 = mutableStateOf(NoteTextFieldState(
-        hint = "Enter keyword..."
-    ))
+    private val _noteKeyword3 = mutableStateOf(NoteTextFieldState(hint = "Enter keyword..."))
     val noteKeyword3: State<NoteTextFieldState> = _noteKeyword3
 
-    private val _noteKeyword4 = mutableStateOf(NoteTextFieldState(
-        hint = "Enter keyword..."
-    ))
+    private val _noteKeyword4 = mutableStateOf(NoteTextFieldState(hint = "Enter keyword..."))
     val noteKeyword4: State<NoteTextFieldState> = _noteKeyword4
 
-    private val _noteContent1 = mutableStateOf(NoteTextFieldState(
-        hint = "Enter content..."
-    ))
+    private val _noteContent1 = mutableStateOf(NoteTextFieldState(hint = "Enter content..."))
     val noteContent1: State<NoteTextFieldState> = _noteContent1
 
-    private val _noteContent2 = mutableStateOf(NoteTextFieldState(
-        hint = "Enter content..."
-    ))
+    private val _noteContent2 = mutableStateOf(NoteTextFieldState(hint = "Enter content..."))
     val noteContent2: State<NoteTextFieldState> = _noteContent2
 
-    private val _noteContent3 = mutableStateOf(NoteTextFieldState(
-        hint = "Enter content..."
-    ))
+    private val _noteContent3 = mutableStateOf(NoteTextFieldState(hint = "Enter content..."))
     val noteContent3: State<NoteTextFieldState> = _noteContent3
 
-    private val _noteContent4 = mutableStateOf(NoteTextFieldState(
-        hint = "Enter content..."
-    ))
+    private val _noteContent4 = mutableStateOf(NoteTextFieldState(hint = "Enter content..."))
     val noteContent4: State<NoteTextFieldState> = _noteContent4
 
-    private val _noteContent5 = mutableStateOf(NoteTextFieldState(
-        hint = "Enter content..."
-    ))
+    private val _noteContent5 = mutableStateOf(NoteTextFieldState(hint = "Enter content..."))
     val noteContent5: State<NoteTextFieldState> = _noteContent5
 
-    private val _noteSummary = mutableStateOf(NoteTextFieldState(
-        hint = "Enter summary..."
-    ))
+    private val _noteSummary = mutableStateOf(NoteTextFieldState(hint = "Enter summary..."))
     val noteSummary: State<NoteTextFieldState> = _noteSummary
 
     private val _eventFlow = MutableSharedFlow<UiEvent>()
@@ -102,6 +84,16 @@ class AddEditNoteViewModel @Inject constructor(
     private val _selectedWord = mutableStateOf<String?>(null)
     val selectedWord: State<String?> = _selectedWord
 
+    private val _selectedCategory = MutableStateFlow<Category?>(null)
+    val selectedCategory: StateFlow<Category?> = _selectedCategory
+
+    val categories: Flow<List<Category>> = categoryUseCase.getCategoryList()
+
+    fun onCategorySelected(category: Category) {
+        _selectedCategory.value = category
+    }
+
+
     private val _highlightedWordIndex = MutableStateFlow(-1)
     val highlightedWordIndex: StateFlow<Int?> get() = _highlightedWordIndex
 
@@ -111,14 +103,6 @@ class AddEditNoteViewModel @Inject constructor(
     val isItalic: State<Boolean> get() = _isItalic
     private val _isUnderlined = mutableStateOf(false)
     val isUnderlined: State<Boolean> get() = _isUnderlined
-
-    private val _isBoldTitle = mutableStateOf(false)
-    val isBoldTitle: State<Boolean> get() = _isBoldTitle
-    private val _isItalicTitle = mutableStateOf(false)
-    val isItalicTitle: State<Boolean> get() = _isItalicTitle
-    private val _isUnderlinedTitle = mutableStateOf(false)
-    val isUnderlinedTitle: State<Boolean> get() = _isUnderlinedTitle
-
 
     fun toggleBold() {
         _isBold.value = !_isBold.value
@@ -152,7 +136,7 @@ class AddEditNoteViewModel @Inject constructor(
                     if( index == highlightedIndex) segmenttoUpdate else it
                 }
                 )
-                noteUseCases.addNote(updatedNote)
+//                noteUseCases.addNote(updatedNote)
             }
         }
     }
@@ -169,8 +153,6 @@ class AddEditNoteViewModel @Inject constructor(
         )
     }
 
-
-    //retrieves the notes when noteId is not equal to -1
     init {
         savedStateHandle.get<Int>("noteId")?.let { noteId ->
             if(noteId != -1) {
@@ -319,9 +301,8 @@ class AddEditNoteViewModel @Inject constructor(
                             isBold = _isBold.value,
                             isItalic = _isItalic.value,
                             isUnderlined = _isUnderlined.value,
-//                            start =
                         )
-
+                        val selectedCategoryId = _selectedCategory.value?.id
                         noteUseCases.addNote(
                             Note(
                                 title = noteTitle.value.text,
@@ -335,12 +316,14 @@ class AddEditNoteViewModel @Inject constructor(
                                 content4 = noteContent4.value.text,
                                 content5 = noteContent5.value.text,
                                 summary = noteSummary.value.text,
+                                category_id = selectedCategoryId ?: -1,
                                 timestamp = System.currentTimeMillis(),
                                 noteType = currentNoteType ?: NoteType.BASIC,
                                 imageBytes = _decodedImageBytes.value,
                                 id = currentNoteId,
                                 segments = formattedSegments
-                            )
+                            ),
+                        selectedCategoryId ?: -1
                         )
                         _eventFlow.emit(UiEvent.SaveNote)
                     } catch(e: InvalidNoteException) {

@@ -33,6 +33,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.example.memorise.feature_note.domain.model.Category
 import com.example.memorise.feature_note.domain.model.NoteType
 import com.example.memorise.feature_note.domain.model.Note
 import java.text.SimpleDateFormat
@@ -42,6 +43,7 @@ import java.util.Locale
 @Composable
 fun NoteItem(
     note: Note,
+    category: String,
     modifier: Modifier = Modifier,
     cornerRadius: Dp = 16.dp,
     scaffoldState: ScaffoldState,
@@ -109,6 +111,7 @@ fun NoteItem(
                             modifier = Modifier
                                 .size(96.dp)
                                 .clip(RoundedCornerShape(16.dp))
+                                .background(color = Color(0xFF696372.toInt()))
                         )
                     }
                     else -> {}
@@ -117,19 +120,41 @@ fun NoteItem(
                     modifier = Modifier
                         .fillMaxSize()
                 ) {
-                    Text(
-                        modifier = Modifier
-                            .padding(
-                                top = 8.dp,
-                                start = 8.dp,
-                                bottom = 8.dp,
-                                end = 8.dp
+                    Row() {
+                        Text(
+                            modifier = Modifier
+                                .padding(
+                                    top = 8.dp,
+                                    start = 8.dp,
+                                    bottom = 8.dp,
+                                    end = 8.dp
+                                )
+                                .weight(1f),
+                            text = note.title,
+                            style = MaterialTheme.typography.titleLarge,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                        Box(modifier = Modifier
+                            .clip(RoundedCornerShape(12.dp))
+                            .background(color = Color(0xFF696372.toInt()))
+                            .align(Alignment.CenterVertically)
+                        ) {
+                            Text(
+                                modifier = Modifier
+                                    .padding(
+                                        top = 8.dp,
+                                        start = 8.dp,
+                                        bottom = 8.dp,
+                                        end = 8.dp
+                                    ),
+                                text = category,
+                                style = MaterialTheme.typography.bodyMedium
                             )
-                            .fillMaxWidth(),
-                        text = note.title,
-                        style = MaterialTheme.typography.titleLarge,
-                        overflow = TextOverflow.Ellipsis
-                    )
+                        }
+
+
+                    }
+
                     Text(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -190,120 +215,6 @@ fun NoteItem(
         }
     }
 }
-
-
-
-//this is the original one without the implementation for the image note       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//        Row(
-//            modifier = Modifier
-//                .fillMaxSize()
-//                .padding(8.dp)
-//        ) {
-//            Column(
-//                modifier = Modifier
-//                    .fillMaxSize()
-//            ) {
-//                Text(
-//                    modifier = Modifier
-//                        .padding(
-//                            top = 8.dp,
-//                            start = 12.dp,
-//                            bottom = 8.dp,
-//                            end = 8.dp
-//                        )
-//                        .fillMaxWidth(),
-//                    text = note.title,
-//                    style = MaterialTheme.typography.titleLarge,
-//                    overflow = TextOverflow.Ellipsis
-//                )
-//                Text(
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .padding(
-//                            start = 8.dp,
-//                            bottom = 8.dp,
-//                            end = 8.dp
-//                        ),
-//                    text = note.content1 ?: "",
-//                    style = MaterialTheme.typography.bodyMedium,
-//                    maxLines = 3,
-//                    overflow = TextOverflow.Ellipsis
-//                )
-//            }
-//        }
-
-//        Column(
-//            modifier = Modifier
-//                .fillMaxSize()
-//            ) {
-//            Text(
-//                modifier = Modifier
-//                    .padding(
-//                        top = 8.dp,
-//                        start = 12.dp,
-//                        bottom = 8.dp,
-//                        end = 8.dp
-//                    )
-//                    .fillMaxWidth(),
-//                text = note.title,
-//                style = MaterialTheme.typography.titleLarge,
-//                overflow = TextOverflow.Ellipsis
-//            )
-//            Text(
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .padding(
-//                        start = 8.dp,
-//                        bottom = 8.dp,
-//                        end = 8.dp
-//                    ),
-//                text = note.content1 ?: "",
-//                style = MaterialTheme.typography.bodyMedium,
-//                maxLines = 3,
-//                overflow = TextOverflow.Ellipsis
-//            )
-//            Row(
-//                modifier = Modifier
-//                    .fillMaxWidth(),
-//                horizontalArrangement = Arrangement.SpaceBetween,
-//                verticalAlignment = Alignment.CenterVertically
-//            ) {
-//                Text(
-//                    modifier = Modifier
-//                        .padding(12.dp),
-//                    text = formatTimestamp(note.timestamp),
-//                    style = MaterialTheme.typography.bodySmall,
-//                )
-//                var noteTypetext = when (note.noteType) {
-//                    NoteType.BASIC -> "Basic Note"
-//                    NoteType.QUADRANT -> "Quadrant Note"
-//                    NoteType.LADDER -> "Ladder Note"
-//                    NoteType.OUTLINE -> "Outline Note"
-//                    NoteType.CORNELL -> "Cornell Note"
-//                    NoteType.IMAGE -> "Image Note"
-//                }
-//                Text(
-//                    modifier = Modifier
-//                        .padding(
-//                            start = 8.dp,
-//                            end = 8.dp
-//                        ),
-//                    text = noteTypetext,
-//                    style = MaterialTheme.typography.bodySmall,
-//                )
-//                IconButton(
-//                    onClick = onDeleteClick,
-//                ) {
-//                    Icon(
-//                        imageVector = Icons.Default.Delete,
-//                        contentDescription = "Delete Note"
-//                    )
-//                }
-//            }
-//        }
-//    }
-//}
-
 
 private fun formatTimestamp(timestamp: Long): String {
     val date = Date(timestamp)

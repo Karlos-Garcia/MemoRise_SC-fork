@@ -22,20 +22,26 @@ import javax.inject.Inject
 class NotesViewModel @Inject constructor(
     private val noteUseCases: NoteUseCases
 ) : ViewModel() {
-
-    //this is implemented for the flow
     private val _state = MutableStateFlow(NotesState())
     val state: Flow<NotesState> = _state.asStateFlow()
-
-//    this it the original
-//    private val _state = mutableStateOf(NotesState())
-//    val state: State<NotesState> = _state
 
     private var recentlyDeletedNote: Note? = null
     private var getNotesJob : Job? = null
     init {
         getNotes(NoteOrder.Date(OrderType.Descending))
     }
+
+    private suspend operator  fun invoke(noteId: Int): String {
+        return noteUseCases.getCategoryTitleForNote(noteId) ?: ""
+    }
+
+    fun getCategoryTitleForNoteAsync(noteId: Int): Flow<String> {
+        return flow {
+            emit(invoke(noteId))
+        }
+    }
+
+
 
     fun onEvent(event: NotesEvent) {
         when(event) {
@@ -55,10 +61,17 @@ class NotesViewModel @Inject constructor(
             }
             is NotesEvent.RestoreNote -> {
                 viewModelScope.launch {
-                    noteUseCases.addNote(recentlyDeletedNote ?: return@launch)
+                    val note = recentlyDeletedNote ?: return@launch
+                    noteUseCases.addNote(note, note.category_id)
                     recentlyDeletedNote = null
                 }
             }
+//            is NotesEvent.RestoreNote -> {
+//                viewModelScope.launch {
+//                    noteUseCases.addNote(recentlyDeletedNote ?: return@launch, recentlyDeletedNote.category_id)
+//                    recentlyDeletedNote = null
+//                }
+//            }
             is NotesEvent.Search -> {
                 getNotesWithQuery(event.query)
             }
@@ -96,18 +109,3 @@ class NotesViewModel @Inject constructor(
             .launchIn(viewModelScope)
     }
 }
-
-//this is the y
-
-//this is the original getnoteswithquery
-//    private fun getNotesWithQuery(query: String) {
-//        getNotesJob?.cancel()
-//        getNotesJob = noteUseCases.searchNotes.execute(query)
-//            .onEach { notes ->
-//                _state.value = state.value.copy(
-//                    notes = notes,
-//                    searchQuery = query,
-//                )
-//            }
-//            .launchIn(viewModelScope)
-//    }

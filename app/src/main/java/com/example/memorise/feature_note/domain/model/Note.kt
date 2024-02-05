@@ -18,13 +18,17 @@ data class Note(
     val content4: String? = null,
     val content5: String? = null,
     val summary: String? = null,
-    val category: Int? = null,
+    val category_id: Int? = null,
     val imageBytes: ByteArray? = null,
     val folderId: Int? = null,
     val noteType: NoteType,
     val timestamp: Long = System.currentTimeMillis(),
     val segments: List<FormattedSegment>
 )
+
+enum class NoteType {
+    BASIC, CORNELL, OUTLINE, QUADRANT, LADDER, IMAGE
+}
 
 data class FormattedSegment(
     val text: String,
@@ -33,9 +37,5 @@ data class FormattedSegment(
     val isItalic: Boolean = false,
     val isUnderlined: Boolean = false,
 )
-
-enum class NoteType {
-    BASIC, CORNELL, OUTLINE, QUADRANT, LADDER, IMAGE
-}
 
 class InvalidNoteException(message: String): Exception(message)

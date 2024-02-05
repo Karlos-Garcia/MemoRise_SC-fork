@@ -5,6 +5,8 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
+import com.example.memorise.feature_note.data.NoteWithCategory
 import com.example.memorise.feature_note.domain.model.Note
 import kotlinx.coroutines.flow.Flow
 
@@ -24,4 +26,8 @@ interface NoteDao {
 
     @Query ("SELECT * FROM Note WHERE title LIKE '%' || :query || '%' ")
     fun searchNotes (query: String): Flow<List<Note>>
+
+    @Transaction
+    @Query("SELECT * FROM Note")
+    fun getNotesWithCategories(): Flow<List<NoteWithCategory>>
 }

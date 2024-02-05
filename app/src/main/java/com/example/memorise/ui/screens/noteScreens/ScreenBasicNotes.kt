@@ -19,7 +19,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
@@ -31,13 +34,20 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.memorise.R
+import com.example.memorise.feature_note.domain.model.Category
 import com.example.memorise.feature_note.domain.model.NoteType
 import com.example.memorise.feature_note.presentation.ScreenNavigations.Screens
 import com.example.memorise.feature_note.presentation.add_edit_notes.AddEditNoteEvent
 import com.example.memorise.feature_note.presentation.add_edit_notes.AddEditNoteViewModel
 import com.example.memorise.ui.screens.Topappbar
 import kotlinx.coroutines.flow.collectLatest
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 
+@Composable
+fun rememberCategoriesState(viewModel: AddEditNoteViewModel): State<List<Category>> {
+    return viewModel.categories.collectAsState(initial = emptyList())
+}
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -45,9 +55,18 @@ fun basicNote(
     navController: NavController,
     viewModel: AddEditNoteViewModel = hiltViewModel(),
     ) {
+    val categories = rememberCategoriesState(viewModel)
+    val selectedCategory by viewModel.selectedCategory.collectAsState()
+
     Topappbar (
         navController = navController,
         name = "Basic Note",
+        showCategoryDropdown = true,
+        categories = categories.value,
+        selectedCategory = selectedCategory,
+        onCategorySelected = { category ->
+            viewModel.onCategorySelected(category)
+        }
     ) {
         viewModel.onNoteTypeSelected(NoteType.BASIC)
         basicTextFields(navController, viewModel)
@@ -130,11 +149,11 @@ fun basicTextFields(
                 onValueChange = {
                     viewModel.onEvent(AddEditNoteEvent.EnteredTitle(it))
                 },
-                textStyle = TextStyle(
-                    fontWeight = if (viewModel.isBoldTitle.value) FontWeight.Bold else null,
-                    fontStyle = if (viewModel.isItalicTitle.value) FontStyle.Italic else null,
-                    textDecoration = if (viewModel.isUnderlinedTitle.value) TextDecoration.Underline else null
-                ),
+//                textStyle = TextStyle(
+//                    fontWeight = if (viewModel.isBoldTitle.value) FontWeight.Bold else null,
+//                    fontStyle = if (viewModel.isItalicTitle.value) FontStyle.Italic else null,
+//                    textDecoration = if (viewModel.isUnderlinedTitle.value) TextDecoration.Underline else null
+//                ),
                 singleLine = true,
                 modifier = modifier
                     .fillMaxWidth()

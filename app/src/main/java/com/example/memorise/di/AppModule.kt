@@ -18,6 +18,7 @@ import com.example.memorise.feature_note.domain.use_case.FolderUseCase.GetFolder
 import com.example.memorise.feature_note.domain.use_case.FolderUseCase.GetFolderList
 import com.example.memorise.feature_note.domain.use_case.NotesUseCase.AddNote
 import com.example.memorise.feature_note.domain.use_case.NotesUseCase.DeleteNoteUseCase
+import com.example.memorise.feature_note.domain.use_case.NotesUseCase.GetCategoryTitleForNoteUseCase
 import com.example.memorise.feature_note.domain.use_case.NotesUseCase.GetNoteUseCase
 import com.example.memorise.feature_note.domain.use_case.NotesUseCase.GetNotesUseCase
 import com.example.memorise.feature_note.domain.use_case.NotesUseCase.NoteUseCases
@@ -57,6 +58,7 @@ object AppModule {
             addNote = AddNote(repository),
             getNote = GetNoteUseCase(repository),
             searchNotes = SearchNotesUseCase(repository),
+            getCategoryTitleForNote = GetCategoryTitleForNoteUseCase(repository)
         )
     }
 

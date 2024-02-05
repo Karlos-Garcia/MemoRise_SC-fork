@@ -24,6 +24,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -49,9 +51,18 @@ fun OutlineNote(
     navController: NavController,
     viewModel: AddEditNoteViewModel = hiltViewModel(),
 ) {
+    val categories = rememberCategoriesState(viewModel)
+    val selectedCategory by viewModel.selectedCategory.collectAsState()
+
     Topappbar (
         navController = navController,
-        name = "Outline Note"
+        name = "Outline Note",
+        showCategoryDropdown = true,
+        categories = categories.value,
+        selectedCategory = selectedCategory,
+        onCategorySelected = { category ->
+            viewModel.onCategorySelected(category)
+        }
     ) {
         viewModel.onNoteTypeSelected(NoteType.OUTLINE)
         outlineNote(navController, viewModel)

@@ -51,8 +51,11 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.memorise.feature_note.domain.model.Category
 import com.example.memorise.feature_note.domain.model.NoteType
+import com.example.memorise.feature_note.domain.use_case.CategoryUseCase.GetCategoryUseCase
 import com.example.memorise.feature_note.presentation.Folders.FolderItem
 import com.example.memorise.feature_note.presentation.Folders.FolderState
 import com.example.memorise.feature_note.presentation.Folders.FolderViewModel
@@ -241,8 +244,10 @@ fun MainScreen(
                     }
                     items(notesState.notes) {
                         note ->
+                        val categoryTitle by notesViewModel.getCategoryTitleForNoteAsync(note.id ?: 0).collectAsState("")
                         NoteItem(
                             note = note,
+                            category = categoryTitle,
                             modifier = Modifier
                                 .fillMaxWidth(),
                             onItemClick = {
@@ -259,16 +264,6 @@ fun MainScreen(
                             scaffoldState = scaffoldState,
                             onDeleteClick = {
                                 notesViewModel.onEvent(NotesEvent.DeleteNote(note))
-//                                viewModel.onEvent(NotesEvent.DeleteNote(note))
-//                                scope.launch {
-//                                    val result = scaffoldState.snackbarHostState.showSnackbar(
-//                                        message = "Note Deleted",
-//                                        actionLabel = "Undo"
-//                                    )
-//                                    if(result == SnackbarResult.ActionPerformed) {
-//                                        viewModel.onEvent(NotesEvent.RestoreNote)
-//                                    }
-//                                }
                             }
                         )
                     }

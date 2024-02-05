@@ -50,6 +50,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.res.painterResource
@@ -72,9 +74,19 @@ fun ImageNoteScreen(
     navController: NavController,
     viewModel: AddEditNoteViewModel = hiltViewModel(),
 ) {
+    val categories = rememberCategoriesState(viewModel)
+    val selectedCategory by viewModel.selectedCategory.collectAsState()
+
     Topappbar (
         navController = navController,
         name = "Image Note",
+        showCategoryDropdown = true,
+        categories = categories.value,
+        selectedCategory = selectedCategory,
+        onCategorySelected = { category ->
+            viewModel.onCategorySelected(category)
+        }
+
     ) {
         viewModel.onNoteTypeSelected(NoteType.IMAGE)
         ImageEditFields(navController, viewModel, viewModel.decodedImageBytes.value)

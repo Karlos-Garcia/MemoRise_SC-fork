@@ -22,6 +22,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -47,9 +49,18 @@ fun CornellNote(
     navController: NavController,
     viewModel: AddEditNoteViewModel = hiltViewModel()
 ) {
+    val categories = rememberCategoriesState(viewModel)
+    val selectedCategory by viewModel.selectedCategory.collectAsState()
+
     Topappbar (
         navController = navController,
-        name = "Cornell Note"
+        name = "Cornell Note",
+        showCategoryDropdown = true,
+        categories = categories.value,
+        selectedCategory = selectedCategory,
+        onCategorySelected = { category ->
+            viewModel.onCategorySelected(category)
+        }
     ) {
         viewModel.onNoteTypeSelected(NoteType.CORNELL)
         cornellTextFields(navController, viewModel)

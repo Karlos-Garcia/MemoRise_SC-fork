@@ -15,6 +15,8 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
+import com.example.memorise.feature_note.domain.model.Category
+import com.example.memorise.feature_note.presentation.add_edit_notes.components.CategoryDropdown
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -22,6 +24,10 @@ import androidx.navigation.NavController
 fun Topappbar(
     navController: NavController,
     name: String,
+    showCategoryDropdown: Boolean = false,
+    categories: List<Category> = emptyList(),
+    selectedCategory: Category? = null,
+    onCategorySelected: (Category) -> Unit = {},
     content: @Composable () -> Unit,
 ) {
 
@@ -46,6 +52,15 @@ fun Topappbar(
                             )
                         }
                     },
+                    actions = {
+                        if (showCategoryDropdown){
+                            CategoryDropdown(
+                                categories = categories,
+                                selectedCategory = selectedCategory,
+                                onCategorySelected = onCategorySelected
+                            )
+                        }
+                    }
                 )
             }
         ){

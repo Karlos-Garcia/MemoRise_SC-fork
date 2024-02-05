@@ -22,6 +22,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.input.OffsetMapping
+import androidx.compose.ui.text.input.TransformedText
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -54,6 +58,29 @@ fun categoryTextFields(
     val titleState = viewModel.categoryTitle.value
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
+
+    val maxLength = 12
+    val textLimitingTransformation = VisualTransformation { text ->
+        if (text.length <= maxLength) {
+            TransformedText(
+                text = text,
+                offsetMapping = OffsetMapping.Identity
+            )
+        } else {
+            val transformedText = AnnotatedString(text.substring(0 until maxLength))
+            val offsetMapping = object :OffsetMapping {
+                override fun originalToTransformed(offset: Int): Int =
+                    if (offset > maxLength) maxLength else offset
+
+                override fun transformedToOriginal(offset: Int): Int =
+                    if (offset > maxLength) maxLength else offset
+            }
+            TransformedText(
+                text = transformedText,
+                offsetMapping = offsetMapping
+            )
+        }
+    }
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
@@ -89,7 +116,8 @@ fun categoryTextFields(
                     start = 8.dp,
                     end = 8.dp,
                 )
-                .clip(RoundedCornerShape(12.dp))
+                .clip(RoundedCornerShape(12.dp)),
+            visualTransformation = textLimitingTransformation
         )
         Box(
             modifier = Modifier

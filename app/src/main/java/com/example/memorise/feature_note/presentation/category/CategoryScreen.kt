@@ -66,7 +66,7 @@ fun CategoryScreen(
             },
             navController = navController,
             selectedItemIndex = 1,
-            title = "Category",
+            title = "Categories",
             content = {
                 LazyColumn(
                     modifier = Modifier

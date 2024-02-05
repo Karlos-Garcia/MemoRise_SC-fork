@@ -67,7 +67,7 @@ fun AppDrawer(
             ModalDrawerSheet {
                 Spacer(modifier = Modifier.height(20.dp))
                 Text(
-                    text = title,
+                    text = "MemoRise",
                     modifier = Modifier
                         .padding(
                             start = 60.dp,
@@ -109,7 +109,7 @@ fun AppDrawer(
             topBar = {
                 TopAppBar(
                     title = {
-                        Text(text = "MemoRise")
+                        Text(text = title)
                     },
                     navigationIcon = {
                         IconButton(onClick = {
