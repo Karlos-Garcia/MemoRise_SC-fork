@@ -5,7 +5,7 @@ import com.example.memorise.feature_note.data.data_source.FolderDao
 import com.example.memorise.feature_note.data.data_source.NoteDao
 import com.example.memorise.feature_note.domain.model.Category
 import com.example.memorise.feature_note.domain.model.Folder
-import com.example.memorise.feature_note.domain.model.UnifiedNote
+import com.example.memorise.feature_note.domain.model.Note
 import com.example.memorise.feature_note.domain.repository.NoteRepository
 import kotlinx.coroutines.flow.Flow
 
@@ -14,19 +14,19 @@ class NoteRepositoryImpl(
     private val categoryDao: CategoryDao,
     private val folderDao: FolderDao,
 ) : NoteRepository {
-    override fun getAllNotes(): Flow<List<UnifiedNote>> {
+    override fun getAllNotes(): Flow<List<Note>> {
         return noteDao.getAllNotes()
     }
-    override suspend fun getNoteById(id: Int): UnifiedNote? {
+    override suspend fun getNoteById(id: Int): Note? {
         return noteDao.getNoteById(id)
     }
-    override suspend fun insertNote(note: UnifiedNote) {
+    override suspend fun insertNote(note: Note) {
         return noteDao.insertUnifiedNote(note)
     }
-    override suspend fun deleteNote(note: UnifiedNote) {
+    override suspend fun deleteNote(note: Note) {
         return noteDao.deleteUnifiedNote(note)
     }
-    override fun searchNotes(query: String): Flow<List<UnifiedNote>> {
+    override fun searchNotes(query: String): Flow<List<Note>> {
         return noteDao.searchNotes(query)
     }
     override fun getAllCategories(): Flow<List<Category>> {

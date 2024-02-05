@@ -2,7 +2,7 @@ package com.example.memorise.feature_note.presentation.notes
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.memorise.feature_note.domain.model.UnifiedNote
+import com.example.memorise.feature_note.domain.model.Note
 import com.example.memorise.feature_note.domain.use_case.NotesUseCase.NoteUseCases
 import com.example.memorise.feature_note.domain.util.NoteOrder
 import com.example.memorise.feature_note.domain.util.OrderType
@@ -31,7 +31,7 @@ class NotesViewModel @Inject constructor(
 //    private val _state = mutableStateOf(NotesState())
 //    val state: State<NotesState> = _state
 
-    private var recentlyDeletedNote: UnifiedNote? = null
+    private var recentlyDeletedNote: Note? = null
     private var getNotesJob : Job? = null
     init {
         getNotes(NoteOrder.Date(OrderType.Descending))
@@ -64,7 +64,7 @@ class NotesViewModel @Inject constructor(
             }
         }
     }
-    private fun updateNotesWithQuery(newQuery: String, notes: List<UnifiedNote>) {
+    private fun updateNotesWithQuery(newQuery: String, notes: List<Note>) {
         _state.value = _state.value.copy(
             notes = notes,
             searchQuery = if (newQuery != _state.value.searchQuery) newQuery else null

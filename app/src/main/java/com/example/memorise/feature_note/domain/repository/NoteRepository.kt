@@ -2,20 +2,20 @@ package com.example.memorise.feature_note.domain.repository
 
 import com.example.memorise.feature_note.domain.model.Category
 import com.example.memorise.feature_note.domain.model.Folder
-import com.example.memorise.feature_note.domain.model.UnifiedNote
+import com.example.memorise.feature_note.domain.model.Note
 import kotlinx.coroutines.flow.Flow
 
 interface NoteRepository {
 
-    fun getAllNotes(): Flow<List<UnifiedNote>>
+    fun getAllNotes(): Flow<List<Note>>
 
-    suspend fun getNoteById(id: Int): UnifiedNote?
+    suspend fun getNoteById(id: Int): Note?
 
-    suspend fun insertNote(note: UnifiedNote)
+    suspend fun insertNote(note: Note)
 
-    suspend fun deleteNote(note: UnifiedNote)
+    suspend fun deleteNote(note: Note)
 
-    fun searchNotes(query: String): Flow<List<UnifiedNote>>
+    fun searchNotes(query: String): Flow<List<Note>>
 
     fun getAllCategories(): Flow<List<Category>>
     suspend fun getCategoryById(id: Int): Category?

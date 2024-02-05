@@ -2,21 +2,20 @@ package com.example.memorise.feature_note.presentation.add_edit_notes
 
 import android.content.Context
 import android.net.Uri
-import android.util.Base64
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.memorise.feature_note.domain.model.FormattedSegment
 import com.example.memorise.feature_note.domain.model.InvalidNoteException
 import com.example.memorise.feature_note.domain.model.NoteType
-import com.example.memorise.feature_note.domain.model.UnifiedNote
+import com.example.memorise.feature_note.domain.model.Note
 import com.example.memorise.feature_note.domain.use_case.NotesUseCase.NoteUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
@@ -100,25 +99,74 @@ class AddEditNoteViewModel @Inject constructor(
     private val _decodedImageBytes = mutableStateOf<ByteArray?>(null)
     val decodedImageBytes: State<ByteArray?> = _decodedImageBytes
 
+    private val _selectedWord = mutableStateOf<String?>(null)
+    val selectedWord: State<String?> = _selectedWord
+
+    private val _highlightedWordIndex = MutableStateFlow(-1)
+    val highlightedWordIndex: StateFlow<Int?> get() = _highlightedWordIndex
+
     private val _isBold = mutableStateOf(false)
     val isBold: State<Boolean> get() = _isBold
-
     private val _isItalic = mutableStateOf(false)
     val isItalic: State<Boolean> get() = _isItalic
-
     private val _isUnderlined = mutableStateOf(false)
     val isUnderlined: State<Boolean> get() = _isUnderlined
 
+    private val _isBoldTitle = mutableStateOf(false)
+    val isBoldTitle: State<Boolean> get() = _isBoldTitle
+    private val _isItalicTitle = mutableStateOf(false)
+    val isItalicTitle: State<Boolean> get() = _isItalicTitle
+    private val _isUnderlinedTitle = mutableStateOf(false)
+    val isUnderlinedTitle: State<Boolean> get() = _isUnderlinedTitle
+
+
     fun toggleBold() {
         _isBold.value = !_isBold.value
+        updateFormatting()
     }
 
     fun toggleItalic() {
         _isItalic.value = !_isItalic.value
+        updateFormatting()
     }
 
     fun toggleUnderline() {
         _isUnderlined.value = !_isUnderlined.value
+        updateFormatting()
+    }
+
+    private fun updateFormatting() {
+        viewModelScope.launch {
+            val note = noteUseCases.getNote(currentNoteId ?: return@launch) ?: return@launch
+
+            val highlightedIndex = _highlightedWordIndex.value
+            if (highlightedIndex != -1) {
+                val segmenttoUpdate = note.segments[highlightedIndex].copy(
+                    isBold = _isBold.value,
+                    isItalic = _isItalic.value,
+                    isUnderlined = _isUnderlined.value
+                )
+
+                val updatedNote = note.copy (
+                    segments = note.segments.mapIndexed { index, it ->
+                    if( index == highlightedIndex) segmenttoUpdate else it
+                }
+                )
+                noteUseCases.addNote(updatedNote)
+            }
+        }
+    }
+
+    private fun getFormattedSegments(selectedWord: String?, isBold: Boolean, isItalic: Boolean, isUnderlined: Boolean, /*start: Int*/): List<FormattedSegment> {
+        return listOf(
+            FormattedSegment(
+                text = selectedWord ?: "",
+                isBold = isBold,
+                isItalic = isItalic,
+                isUnderlined = isUnderlined,
+//                start = start,
+            )
+        )
     }
 
 
@@ -253,12 +301,29 @@ class AddEditNoteViewModel @Inject constructor(
                     }
                 }
             }
+            is AddEditNoteEvent.ToggleBold -> {
+                toggleBold()
+            }
+            is AddEditNoteEvent.ToggleItalic -> {
+                toggleItalic()
+            }
+            is AddEditNoteEvent.ToggleUnderline -> {
+                toggleUnderline()
+            }
 
             is AddEditNoteEvent.SaveNote -> {
                 viewModelScope.launch {
                     try {
+                        val formattedSegments = getFormattedSegments(
+                            selectedWord = _selectedWord.value,
+                            isBold = _isBold.value,
+                            isItalic = _isItalic.value,
+                            isUnderlined = _isUnderlined.value,
+//                            start =
+                        )
+
                         noteUseCases.addNote(
-                            UnifiedNote(
+                            Note(
                                 title = noteTitle.value.text,
                                 keyword1 = noteKeyword1.value.text,
                                 keyword2 = noteKeyword2.value.text,
@@ -273,7 +338,8 @@ class AddEditNoteViewModel @Inject constructor(
                                 timestamp = System.currentTimeMillis(),
                                 noteType = currentNoteType ?: NoteType.BASIC,
                                 imageBytes = _decodedImageBytes.value,
-                                id = currentNoteId
+                                id = currentNoteId,
+                                segments = formattedSegments
                             )
                         )
                         _eventFlow.emit(UiEvent.SaveNote)

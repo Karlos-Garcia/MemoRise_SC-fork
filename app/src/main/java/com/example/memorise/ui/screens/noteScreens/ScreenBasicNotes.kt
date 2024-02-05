@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
@@ -89,17 +88,17 @@ fun basicTextFields(
         bottomBar = {
             androidx.compose.material3.BottomAppBar(
                 actions = {
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = { viewModel.toggleBold() }) {
                         Image(
                             painter = painterResource (id = R.drawable.format_bold_fill0_wght400_grad0_opsz24),
                             contentDescription = "Bold")
                     }
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = { viewModel.toggleItalic() }) {
                         Image(
                             painter = painterResource (id = R.drawable.format_italic_fill0_wght400_grad0_opsz24),
                             contentDescription = "Italic")
                     }
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = { viewModel.toggleUnderline() }) {
                         Image(
                             painter = painterResource (id = R.drawable.format_underlined_fill0_wght400_grad0_opsz24),
                             contentDescription = "Underline")
@@ -131,6 +130,11 @@ fun basicTextFields(
                 onValueChange = {
                     viewModel.onEvent(AddEditNoteEvent.EnteredTitle(it))
                 },
+                textStyle = TextStyle(
+                    fontWeight = if (viewModel.isBoldTitle.value) FontWeight.Bold else null,
+                    fontStyle = if (viewModel.isItalicTitle.value) FontStyle.Italic else null,
+                    textDecoration = if (viewModel.isUnderlinedTitle.value) TextDecoration.Underline else null
+                ),
                 singleLine = true,
                 modifier = modifier
                     .fillMaxWidth()
@@ -149,7 +153,7 @@ fun basicTextFields(
                 textStyle = TextStyle(
                     fontWeight = if (viewModel.isBold.value) FontWeight.Bold else null,
                     fontStyle = if (viewModel.isItalic.value) FontStyle.Italic else null,
-                    textDecoration = if (viewModel.isUnderlined.value) TextDecoration.LineThrough else null
+                    textDecoration = if (viewModel.isUnderlined.value) TextDecoration.Underline else null
                 ),
                 modifier = modifier
                     .fillMaxSize()

@@ -1,6 +1,5 @@
 package com.example.memorise.feature_note.presentation.notes.components
 
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -29,26 +28,20 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.CornerRadius
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.drawscope.clipPath
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.core.graphics.ColorUtils
 import coil.compose.AsyncImage
 import com.example.memorise.feature_note.domain.model.NoteType
-import com.example.memorise.feature_note.domain.model.UnifiedNote
+import com.example.memorise.feature_note.domain.model.Note
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
 @Composable
 fun NoteItem(
-    note: UnifiedNote,
+    note: Note,
     modifier: Modifier = Modifier,
     cornerRadius: Dp = 16.dp,
     scaffoldState: ScaffoldState,

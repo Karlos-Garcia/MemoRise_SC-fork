@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class UnifiedNote(
+data class Note(
     @PrimaryKey(autoGenerate = true)
     val id: Int? = null,
     val title: String,
@@ -22,9 +22,20 @@ data class UnifiedNote(
     val imageBytes: ByteArray? = null,
     val folderId: Int? = null,
     val noteType: NoteType,
-    val timestamp: Long = System.currentTimeMillis()
+    val timestamp: Long = System.currentTimeMillis(),
+    val segments: List<FormattedSegment>
 )
+
+data class FormattedSegment(
+    val text: String,
+//    val start: Int,
+    val isBold: Boolean = false,
+    val isItalic: Boolean = false,
+    val isUnderlined: Boolean = false,
+)
+
 enum class NoteType {
     BASIC, CORNELL, OUTLINE, QUADRANT, LADDER, IMAGE
 }
+
 class InvalidNoteException(message: String): Exception(message)

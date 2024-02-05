@@ -28,6 +28,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -92,17 +96,17 @@ fun outlineNote(
         bottomBar = {
             BottomAppBar(
                 actions = {
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = { viewModel.toggleBold() }) {
                         Image(
                             painter = painterResource (id = R.drawable.format_bold_fill0_wght400_grad0_opsz24),
                             contentDescription = "Bold")
                     }
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = { viewModel.toggleItalic() }) {
                         Image(
                             painter = painterResource (id = R.drawable.format_italic_fill0_wght400_grad0_opsz24),
                             contentDescription = "Italic")
                     }
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = { viewModel.toggleUnderline() }) {
                         Image(
                             painter = painterResource (id = R.drawable.format_underlined_fill0_wght400_grad0_opsz24),
                             contentDescription = "Underline")
@@ -129,6 +133,11 @@ fun outlineNote(
                     .verticalScroll(rememberScrollState())
             ) {
                 TextField(
+                    textStyle = TextStyle(
+                        fontWeight = if (viewModel.isBold.value) FontWeight.Bold else null,
+                        fontStyle = if (viewModel.isItalic.value) FontStyle.Italic else null,
+                        textDecoration = if (viewModel.isUnderlined.value) TextDecoration.Underline else null
+                    ),
                     label = {Text(text = "Title")},
                     value = titleState.text,
                     onValueChange = {
@@ -144,6 +153,11 @@ fun outlineNote(
                         )
                 )
                 TextField(
+                    textStyle = TextStyle(
+                        fontWeight = if (viewModel.isBold.value) FontWeight.Bold else null,
+                        fontStyle = if (viewModel.isItalic.value) FontStyle.Italic else null,
+                        textDecoration = if (viewModel.isUnderlined.value) TextDecoration.Underline else null
+                    ),
                     label = {Text(text = "Keyword")},
                     value = keyword1State.text,
                     onValueChange = {
@@ -159,6 +173,11 @@ fun outlineNote(
                         )
                 )
                 TextField(
+                    textStyle = TextStyle(
+                        fontWeight = if (viewModel.isBold.value) FontWeight.Bold else null,
+                        fontStyle = if (viewModel.isItalic.value) FontStyle.Italic else null,
+                        textDecoration = if (viewModel.isUnderlined.value) TextDecoration.Underline else null
+                    ),
                     label = {Text(text = "Content")},
                     value = content1State.text,
                     onValueChange = {
@@ -175,6 +194,11 @@ fun outlineNote(
                 )
 
                 TextField(
+                    textStyle = TextStyle(
+                        fontWeight = if (viewModel.isBold.value) FontWeight.Bold else null,
+                        fontStyle = if (viewModel.isItalic.value) FontStyle.Italic else null,
+                        textDecoration = if (viewModel.isUnderlined.value) TextDecoration.Underline else null
+                    ),
                     label = {Text(text = "Keyword")},
                     value = keyword2State.text,
                     onValueChange = {
@@ -191,6 +215,11 @@ fun outlineNote(
                 )
 
                 TextField(
+                    textStyle = TextStyle(
+                        fontWeight = if (viewModel.isBold.value) FontWeight.Bold else null,
+                        fontStyle = if (viewModel.isItalic.value) FontStyle.Italic else null,
+                        textDecoration = if (viewModel.isUnderlined.value) TextDecoration.Underline else null
+                    ),
                     label = {Text(text = "Content")},
                     value = content2State.text,
                     onValueChange = {

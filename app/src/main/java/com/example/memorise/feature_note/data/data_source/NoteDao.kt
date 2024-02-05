@@ -5,23 +5,23 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.memorise.feature_note.domain.model.UnifiedNote
+import com.example.memorise.feature_note.domain.model.Note
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface NoteDao {
-    @Query("SELECT * FROM UnifiedNote")
-    fun getAllNotes(): Flow<List<UnifiedNote>>
+    @Query("SELECT * FROM Note")
+    fun getAllNotes(): Flow<List<Note>>
 
-    @Query("SELECT * FROM UnifiedNote WHERE id = :id")
-    suspend fun getNoteById(id: Int): UnifiedNote?
+    @Query("SELECT * FROM Note WHERE id = :id")
+    suspend fun getNoteById(id: Int): Note?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertUnifiedNote(note: UnifiedNote)
+    suspend fun insertUnifiedNote(note: Note)
 
     @Delete
-    suspend fun deleteUnifiedNote(note: UnifiedNote)
+    suspend fun deleteUnifiedNote(note: Note)
 
-    @Query ("SELECT * FROM UnifiedNote WHERE title LIKE '%' || :query || '%' ")
-    fun searchNotes (query: String): Flow<List<UnifiedNote>>
+    @Query ("SELECT * FROM Note WHERE title LIKE '%' || :query || '%' ")
+    fun searchNotes (query: String): Flow<List<Note>>
 }

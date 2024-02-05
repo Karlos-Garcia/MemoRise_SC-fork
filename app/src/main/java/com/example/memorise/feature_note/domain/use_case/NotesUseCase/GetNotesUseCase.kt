@@ -1,6 +1,6 @@
 package com.example.memorise.feature_note.domain.use_case.NotesUseCase
 
-import com.example.memorise.feature_note.domain.model.UnifiedNote
+import com.example.memorise.feature_note.domain.model.Note
 import com.example.memorise.feature_note.domain.repository.NoteRepository
 import com.example.memorise.feature_note.domain.util.NoteOrder
 import com.example.memorise.feature_note.domain.util.OrderType
@@ -12,7 +12,7 @@ class GetNotesUseCase(
 ) {
     operator fun invoke(
         noteOrder: NoteOrder = NoteOrder.Date(OrderType.Descending)
-    ): Flow<List<UnifiedNote>> {
+    ): Flow<List<Note>> {
         return repository.getAllNotes().map { notes->
             when(noteOrder.orderType) {
                 is OrderType.Ascending -> {

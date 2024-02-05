@@ -94,6 +94,10 @@ dependencies {
     //implementing this to fix the state for the search bar
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
 
+    //implementing this to allow text formatting to and from type converter
+    implementation ("com.google.code.gson:gson:2.8.9")
+
+
 }
 
 // Allow references to generated code

@@ -25,7 +25,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -98,17 +101,17 @@ fun cornellTextFields(
         bottomBar = {
             BottomAppBar(
                 actions = {
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = { viewModel.toggleBold() }) {
                         Image(
                             painter = painterResource (id = R.drawable.format_bold_fill0_wght400_grad0_opsz24),
                             contentDescription = "Bold")
                     }
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = { viewModel.toggleItalic() }) {
                         Image(
                             painter = painterResource (id = R.drawable.format_italic_fill0_wght400_grad0_opsz24),
                             contentDescription = "Italic")
                     }
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = { viewModel.toggleUnderline() }) {
                         Image(
                             painter = painterResource (id = R.drawable.format_underlined_fill0_wght400_grad0_opsz24),
                             contentDescription = "Underline")
@@ -135,6 +138,11 @@ fun cornellTextFields(
                 TextField(
                     singleLine = true,
                     label = {Text(text = "Title", style = labelStyle)},
+                    textStyle = TextStyle(
+                        fontWeight = if (viewModel.isBold.value) FontWeight.Bold else null,
+                        fontStyle = if (viewModel.isItalic.value) FontStyle.Italic else null,
+                        textDecoration = if (viewModel.isUnderlined.value) TextDecoration.Underline else null
+                    ),
                     modifier = modifier
                         .fillMaxWidth()
                         .padding(
@@ -150,6 +158,11 @@ fun cornellTextFields(
                 Row {
                     TextField(
                         label = {Text(text = "Keywords", style = labelStyle)},
+                        textStyle = TextStyle(
+                            fontWeight = if (viewModel.isBold.value) FontWeight.Bold else null,
+                            fontStyle = if (viewModel.isItalic.value) FontStyle.Italic else null,
+                            textDecoration = if (viewModel.isUnderlined.value) TextDecoration.Underline else null
+                        ),
                         modifier = modifier
                             .fillMaxWidth(0.25f)
                             .fillMaxHeight(0.25f)
@@ -165,6 +178,11 @@ fun cornellTextFields(
                     )
                     TextField(
                         label = {Text(text = "Content", style = labelStyle)},
+                        textStyle = TextStyle(
+                            fontWeight = if (viewModel.isBold.value) FontWeight.Bold else null,
+                            fontStyle = if (viewModel.isItalic.value) FontStyle.Italic else null,
+                            textDecoration = if (viewModel.isUnderlined.value) TextDecoration.Underline else null
+                        ),
                         modifier = modifier
                             .fillMaxWidth(1f)
                             .fillMaxHeight(0.25f)
@@ -181,6 +199,11 @@ fun cornellTextFields(
                 Row {
                     TextField(
                         label = {Text(text = "Keywords", style = labelStyle)},
+                        textStyle = TextStyle(
+                            fontWeight = if (viewModel.isBold.value) FontWeight.Bold else null,
+                            fontStyle = if (viewModel.isItalic.value) FontStyle.Italic else null,
+                            textDecoration = if (viewModel.isUnderlined.value) TextDecoration.Underline else null
+                        ),
                         modifier = modifier
                             .fillMaxWidth(0.25f)
                             .fillMaxHeight(0.35f)
@@ -196,6 +219,11 @@ fun cornellTextFields(
                     )
                     TextField(
                         label = {Text(text = "Content", style = labelStyle)},
+                        textStyle = TextStyle(
+                            fontWeight = if (viewModel.isBold.value) FontWeight.Bold else null,
+                            fontStyle = if (viewModel.isItalic.value) FontStyle.Italic else null,
+                            textDecoration = if (viewModel.isUnderlined.value) TextDecoration.Underline else null
+                        ),
                         modifier = modifier
                             .fillMaxWidth(1f)
                             .fillMaxHeight(0.35f)
@@ -211,6 +239,11 @@ fun cornellTextFields(
                 }
                 TextField(
                     label = {Text(text = "Summary", style = labelStyle)},
+                    textStyle = TextStyle(
+                        fontWeight = if (viewModel.isBold.value) FontWeight.Bold else null,
+                        fontStyle = if (viewModel.isItalic.value) FontStyle.Italic else null,
+                        textDecoration = if (viewModel.isUnderlined.value) TextDecoration.Underline else null
+                    ),
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(
