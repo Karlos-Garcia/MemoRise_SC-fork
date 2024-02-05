@@ -51,6 +51,7 @@ fun NoteItem(
     onItemClick: () -> Unit,
 ) {
 
+
     var showConfirmationDialog by remember { mutableStateOf(false) }
 
     if (showConfirmationDialog) {

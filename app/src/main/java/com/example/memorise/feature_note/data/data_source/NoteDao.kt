@@ -30,4 +30,7 @@ interface NoteDao {
     @Transaction
     @Query("SELECT * FROM Note")
     fun getNotesWithCategories(): Flow<List<NoteWithCategory>>
+
+    @Query("SELECT * FROM Note WHERE folderId = :folderId OR folderId IS NULL")
+    fun getNotesByFolderId(folderId: Int?): Flow<List<Note>>
 }

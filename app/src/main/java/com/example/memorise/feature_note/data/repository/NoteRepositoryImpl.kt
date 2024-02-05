@@ -33,6 +33,9 @@ class NoteRepositoryImpl(
     override fun getNotesWithCategories(): Flow<List<NoteWithCategory>> {
         return noteDao.getNotesWithCategories()
     }
+    override fun getNotesByFolderId(folderId: Int?): Flow<List<Note>> {
+        return noteDao.getNotesByFolderId(folderId)
+    }
     override fun getAllCategories(): Flow<List<Category>> {
         return categoryDao.getAllCategories()
     }

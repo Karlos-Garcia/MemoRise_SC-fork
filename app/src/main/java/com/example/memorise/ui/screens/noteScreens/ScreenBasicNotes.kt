@@ -149,11 +149,6 @@ fun basicTextFields(
                 onValueChange = {
                     viewModel.onEvent(AddEditNoteEvent.EnteredTitle(it))
                 },
-//                textStyle = TextStyle(
-//                    fontWeight = if (viewModel.isBoldTitle.value) FontWeight.Bold else null,
-//                    fontStyle = if (viewModel.isItalicTitle.value) FontStyle.Italic else null,
-//                    textDecoration = if (viewModel.isUnderlinedTitle.value) TextDecoration.Underline else null
-//                ),
                 singleLine = true,
                 modifier = modifier
                     .fillMaxWidth()

@@ -38,6 +38,7 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -51,11 +52,8 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.memorise.feature_note.domain.model.Category
 import com.example.memorise.feature_note.domain.model.NoteType
-import com.example.memorise.feature_note.domain.use_case.CategoryUseCase.GetCategoryUseCase
 import com.example.memorise.feature_note.presentation.Folders.FolderItem
 import com.example.memorise.feature_note.presentation.Folders.FolderState
 import com.example.memorise.feature_note.presentation.Folders.FolderViewModel
@@ -63,7 +61,6 @@ import com.example.memorise.feature_note.presentation.Folders.FoldersEvent
 import com.example.memorise.feature_note.presentation.ScreenNavigations.NavigationItem
 import com.example.memorise.feature_note.presentation.ScreenNavigations.getNavigationItems
 import com.example.memorise.feature_note.presentation.ScreenNavigations.Screens
-import com.example.memorise.feature_note.presentation.category.CategoriesEvent
 import com.example.memorise.feature_note.presentation.notes.components.NoteItem
 import com.example.memorise.feature_note.presentation.notes.components.OrderSection
 import kotlinx.coroutines.launch
@@ -78,6 +75,8 @@ fun MainScreen(
     notesViewModel: NotesViewModel = hiltViewModel(),
     foldersViewModel: FolderViewModel = hiltViewModel(),
 ) {
+    var selectedFolderId by rememberSaveable { mutableStateOf<Int?>(null) }
+
     val folderStates by foldersViewModel.folderState.collectAsState(initial = FolderState())
     val notesState by notesViewModel.state.collectAsState(initial = NotesState())
     val scaffoldState = rememberScaffoldState()
@@ -99,16 +98,6 @@ fun MainScreen(
             }
         }
     }
-
-//    var shouldFetchFolders by remember {mutableStateOf(true)}
-//
-//    LaunchedEffect(shouldFetchFolders.value) {
-//        if (shouldFetchFolders.value) {
-//            foldersViewModel.onFolderEvent(FoldersEvent.ListFolder)
-//            shouldFetchFolders.value = false
-//        }
-//    }
-//    shouldFetchFolders.value = true
 
     LaunchedEffect(Unit) {
         foldersViewModel.onFolderEvent(FoldersEvent.ListFolder)
@@ -228,6 +217,7 @@ fun MainScreen(
                         .fillMaxSize()
                         .padding(values)
                 ) {
+
                     items(folderStates.folder) {
                         folder ->
                         FolderItem(
@@ -235,13 +225,31 @@ fun MainScreen(
                             modifier = Modifier
                                 .fillMaxWidth(),
                             onItemClick = {
-                                navController.navigate(Screens.FolderScreen.route + "?folderId=${folder.id}")
+                                selectedFolderId = folder.id
                                           },
                             onDeleteClick = {
                                foldersViewModel.onFolderEvent(FoldersEvent.DeleteFolder(folder))
                             }
                         )
                     }
+//                    items(notesState.notes)
+//                    val notes = if (selectedFolderId != null) {
+//                        notesViewModel.getNotesByFolderId(selectedFolderId).collectAsState(initial = emptyList()).value
+//                    } else {
+//                        notesState.notes
+//                    }
+
+//                    val notes = remember {
+//                        derivedStateOf {
+//                            if (selectedFolderId != null) {
+//                                notesViewModel.getNotesByFolderId(selectedFolderId).collectAsState(initial = emptyList()).value
+//                            } else {
+//                                notesState.notes
+//                            }
+//                        }
+//                    }
+
+
                     items(notesState.notes) {
                         note ->
                         val categoryTitle by notesViewModel.getCategoryTitleForNoteAsync(note.id ?: 0).collectAsState("")

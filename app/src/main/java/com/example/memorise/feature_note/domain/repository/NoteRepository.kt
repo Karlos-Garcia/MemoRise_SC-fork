@@ -14,6 +14,7 @@ interface NoteRepository {
     suspend fun deleteNote(note: Note)
     fun searchNotes(query: String): Flow<List<Note>>
     fun getNotesWithCategories(): Flow<List<NoteWithCategory>>
+    fun getNotesByFolderId(folderId: Int?): Flow<List<Note>>
 
     fun getAllCategories(): Flow<List<Category>>
     suspend fun getCategoryById(id: Int): Category?

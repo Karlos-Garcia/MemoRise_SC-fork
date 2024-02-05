@@ -34,37 +34,26 @@ class AddEditNoteViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val context: Context
 ) : ViewModel() {
-
     private val _noteTitle = mutableStateOf(NoteTextFieldState(hint = "Enter title..."))
     val noteTitle: State<NoteTextFieldState> = _noteTitle
-
     private val _noteKeyword1 = mutableStateOf(NoteTextFieldState(hint = "Enter keyword..."))
     val noteKeyword1: State<NoteTextFieldState> = _noteKeyword1
-
     private val _noteKeyword2 = mutableStateOf(NoteTextFieldState(hint = "Enter keyword..."))
     val noteKeyword2: State<NoteTextFieldState> = _noteKeyword2
-
     private val _noteKeyword3 = mutableStateOf(NoteTextFieldState(hint = "Enter keyword..."))
     val noteKeyword3: State<NoteTextFieldState> = _noteKeyword3
-
     private val _noteKeyword4 = mutableStateOf(NoteTextFieldState(hint = "Enter keyword..."))
     val noteKeyword4: State<NoteTextFieldState> = _noteKeyword4
-
     private val _noteContent1 = mutableStateOf(NoteTextFieldState(hint = "Enter content..."))
     val noteContent1: State<NoteTextFieldState> = _noteContent1
-
     private val _noteContent2 = mutableStateOf(NoteTextFieldState(hint = "Enter content..."))
     val noteContent2: State<NoteTextFieldState> = _noteContent2
-
     private val _noteContent3 = mutableStateOf(NoteTextFieldState(hint = "Enter content..."))
     val noteContent3: State<NoteTextFieldState> = _noteContent3
-
     private val _noteContent4 = mutableStateOf(NoteTextFieldState(hint = "Enter content..."))
     val noteContent4: State<NoteTextFieldState> = _noteContent4
-
     private val _noteContent5 = mutableStateOf(NoteTextFieldState(hint = "Enter content..."))
     val noteContent5: State<NoteTextFieldState> = _noteContent5
-
     private val _noteSummary = mutableStateOf(NoteTextFieldState(hint = "Enter summary..."))
     val noteSummary: State<NoteTextFieldState> = _noteSummary
 
@@ -81,9 +70,6 @@ class AddEditNoteViewModel @Inject constructor(
     private val _decodedImageBytes = mutableStateOf<ByteArray?>(null)
     val decodedImageBytes: State<ByteArray?> = _decodedImageBytes
 
-    private val _selectedWord = mutableStateOf<String?>(null)
-    val selectedWord: State<String?> = _selectedWord
-
     private val _selectedCategory = MutableStateFlow<Category?>(null)
     val selectedCategory: StateFlow<Category?> = _selectedCategory
 
@@ -92,10 +78,7 @@ class AddEditNoteViewModel @Inject constructor(
     fun onCategorySelected(category: Category) {
         _selectedCategory.value = category
     }
-
-
-    private val _highlightedWordIndex = MutableStateFlow(-1)
-    val highlightedWordIndex: StateFlow<Int?> get() = _highlightedWordIndex
+     //this is now all belong to text formatting:
 
     private val _isBold = mutableStateOf(false)
     val isBold: State<Boolean> get() = _isBold
@@ -108,50 +91,79 @@ class AddEditNoteViewModel @Inject constructor(
         _isBold.value = !_isBold.value
         updateFormatting()
     }
-
     fun toggleItalic() {
         _isItalic.value = !_isItalic.value
         updateFormatting()
     }
-
     fun toggleUnderline() {
         _isUnderlined.value = !_isUnderlined.value
         updateFormatting()
     }
 
+    private fun updateSegments(existingSegments: List<FormattedSegment>, newSegment: FormattedSegment): List<FormattedSegment> {
+        val updatedSegments = mutableListOf<FormattedSegment>()
+        return updatedSegments
+    }
+
+    private val _selectedTextRanges: MutableMap<Int, Pair<Int, Int>> = mutableMapOf()
+
+    fun onTextSelectionChange(textFieldId: Int, startIndex: Int, endIndex: Int) {
+        _selectedTextRanges[textFieldId] = startIndex to endIndex
+        updateFormatting()
+    }
+
     private fun updateFormatting() {
         viewModelScope.launch {
-            val note = noteUseCases.getNote(currentNoteId ?: return@launch) ?: return@launch
-
-            val highlightedIndex = _highlightedWordIndex.value
-            if (highlightedIndex != -1) {
-                val segmenttoUpdate = note.segments[highlightedIndex].copy(
-                    isBold = _isBold.value,
-                    isItalic = _isItalic.value,
-                    isUnderlined = _isUnderlined.value
+            for (textFieldId in _selectedTextRanges.keys) {
+                val selectedText = getSelectedText(textFieldId) ?: continue
+                val newSegment = FormattedSegment(
+                    text = selectedText,
+                    isBold = isBold.value,
+                    isItalic = isItalic.value,
+                    isUnderlined = isUnderlined.value,
+                    start = _selectedTextRanges[textFieldId]?.first ?: continue,
+                    end = _selectedTextRanges[textFieldId]?.second ?: continue,
+                    fieldId = textFieldId
                 )
-
-                val updatedNote = note.copy (
-                    segments = note.segments.mapIndexed { index, it ->
-                    if( index == highlightedIndex) segmenttoUpdate else it
-                }
-                )
-//                noteUseCases.addNote(updatedNote)
             }
         }
     }
 
-    private fun getFormattedSegments(selectedWord: String?, isBold: Boolean, isItalic: Boolean, isUnderlined: Boolean, /*start: Int*/): List<FormattedSegment> {
-        return listOf(
-            FormattedSegment(
-                text = selectedWord ?: "",
-                isBold = isBold,
-                isItalic = isItalic,
-                isUnderlined = isUnderlined,
-//                start = start,
-            )
-        )
+
+    private fun getTextForTextField(textFieldId: Int): String? {
+        return when (textFieldId) {
+            1 -> noteTitle.value.text
+            2 -> noteContent1.value.text
+            3 -> noteContent2.value.text
+            4 -> noteContent3.value.text
+            5 -> noteContent4.value.text
+            6 -> noteContent5.value.text
+            7 -> noteKeyword1.value.text
+            8 -> noteKeyword2.value.text
+            9 -> noteKeyword3.value.text
+            10 -> noteKeyword4.value.text
+            11 -> noteSummary.value.text
+            else -> null
+        }
     }
+
+    private fun getSelectedText(textFieldId: Int): String? {
+        val text = getTextForTextField(textFieldId) ?: return null
+        val (startIndex, endIndex) = _selectedTextRanges[textFieldId] ?: return ""
+        return text.substring(startIndex, endIndex)
+    }
+
+    private val _selectedStartTitle = mutableStateOf(-1)
+    val selectedStartTitle: State<Int> get() = _selectedStartTitle
+
+    private val _selectedEndTitle = mutableStateOf(-1)
+    val selectedEndTitle: State<Int> get() = _selectedEndTitle
+
+    private val _selectedStartContent = mutableStateOf(-1)
+    val selectedStartContent: State<Int> get() = _selectedStartContent
+
+    private val _selectedEndContent = mutableStateOf(-1)
+    val selectedEndContent: State<Int> get() = _selectedEndContent
 
     init {
         savedStateHandle.get<Int>("noteId")?.let { noteId ->
@@ -296,13 +308,23 @@ class AddEditNoteViewModel @Inject constructor(
             is AddEditNoteEvent.SaveNote -> {
                 viewModelScope.launch {
                     try {
-                        val formattedSegments = getFormattedSegments(
-                            selectedWord = _selectedWord.value,
-                            isBold = _isBold.value,
-                            isItalic = _isItalic.value,
-                            isUnderlined = _isUnderlined.value,
-                        )
                         val selectedCategoryId = _selectedCategory.value?.id
+
+                        val formattedSegments = mutableListOf<FormattedSegment>()
+                        for (textFieldId in _selectedTextRanges.keys) {
+                            val selectedText = getSelectedText(textFieldId) ?: continue
+                            val newSegment = FormattedSegment(
+                                text = selectedText,
+                                isBold = isBold.value,
+                                isItalic = isItalic.value,
+                                isUnderlined = isUnderlined.value,
+                                start = _selectedTextRanges[textFieldId]?.first ?: continue,
+                                end = _selectedTextRanges[textFieldId]?.second ?: continue,
+                                fieldId = textFieldId
+                            )
+                            formattedSegments.add(newSegment)
+                        }
+
                         noteUseCases.addNote(
                             Note(
                                 title = noteTitle.value.text,

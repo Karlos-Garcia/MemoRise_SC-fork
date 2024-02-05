@@ -10,11 +10,13 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -31,6 +33,7 @@ class NotesViewModel @Inject constructor(
         getNotes(NoteOrder.Date(OrderType.Descending))
     }
 
+
     private suspend operator  fun invoke(noteId: Int): String {
         return noteUseCases.getCategoryTitleForNote(noteId) ?: ""
     }
@@ -39,6 +42,18 @@ class NotesViewModel @Inject constructor(
         return flow {
             emit(invoke(noteId))
         }
+    }
+
+    fun getNotesByFolderId(folderId: Int?, defaultNoteOrder: NoteOrder = NoteOrder.Date(OrderType.Descending)): Flow<List<Note>> {
+        return noteUseCases.getNotesByFolderId(folderId)
+            .onEach { notes ->
+                _state.value = _state.value.copy(
+                    notes = notes,
+                    noteOrder = defaultNoteOrder,
+                    searchQuery = null
+                )
+            }
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), _state.value.notes)
     }
 
 

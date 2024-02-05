@@ -1,9 +1,19 @@
 package com.example.memorise.feature_note.domain.model
 
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
-@Entity
+@Entity(
+    foreignKeys = [
+        ForeignKey(
+            entity = Folder::class,
+            parentColumns = ["id"],
+            childColumns = ["folderId"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ]
+)
 data class Note(
     @PrimaryKey(autoGenerate = true)
     val id: Int? = null,
@@ -26,16 +36,20 @@ data class Note(
     val segments: List<FormattedSegment>
 )
 
+data class FormattedSegment(
+    val text: String,
+    val isBold: Boolean = false,
+    val isItalic: Boolean = false,
+    val isUnderlined: Boolean = false,
+    val start: Int,
+    val end: Int,
+    val fieldId: Int,
+)
+
 enum class NoteType {
     BASIC, CORNELL, OUTLINE, QUADRANT, LADDER, IMAGE
 }
 
-data class FormattedSegment(
-    val text: String,
-//    val start: Int,
-    val isBold: Boolean = false,
-    val isItalic: Boolean = false,
-    val isUnderlined: Boolean = false,
-)
+
 
 class InvalidNoteException(message: String): Exception(message)
