@@ -44,6 +44,7 @@ import com.example.memorise.feature_note.domain.model.NoteType
 import com.example.memorise.feature_note.presentation.ScreenNavigations.Screens
 import com.example.memorise.feature_note.presentation.add_edit_notes.AddEditNoteEvent
 import com.example.memorise.feature_note.presentation.add_edit_notes.AddEditNoteViewModel
+import com.example.memorise.ui.screens.Bottomappbar
 import com.example.memorise.ui.screens.Topappbar
 import kotlinx.coroutines.flow.collectLatest
 
@@ -66,12 +67,10 @@ fun LadderNote(
         onCategorySelected = { category ->
             viewModel.onCategorySelected(category)
         }
-
     ) {
         viewModel.onNoteTypeSelected(NoteType.LADDER)
         ladderNote(navController, viewModel)
     }
-
 }
 
 
@@ -83,6 +82,9 @@ fun ladderNote(
     viewModel: AddEditNoteViewModel,
     modifier: Modifier = Modifier,
 ) {
+    val folder = rememberFoldersState(viewModel)
+    val selectedFolder by viewModel.selectedFolder.collectAsState()
+
     val titleState = viewModel.noteTitle.value
     val content1State = viewModel.noteContent1.value
     val content2State = viewModel.noteContent2.value
@@ -109,39 +111,16 @@ fun ladderNote(
         }
     }
 
-    Scaffold(
-        modifier = Modifier.fillMaxWidth(),
-        bottomBar = {
-            BottomAppBar(
-                actions = {
-                    IconButton(onClick = { viewModel.toggleBold() }) {
-                        Image(
-                            painter = painterResource (id = R.drawable.format_bold_fill0_wght400_grad0_opsz24),
-                            contentDescription = "Bold")
-                    }
-                    IconButton(onClick = { viewModel.toggleItalic() }) {
-                        Image(
-                            painter = painterResource (id = R.drawable.format_italic_fill0_wght400_grad0_opsz24),
-                            contentDescription = "Italic")
-                    }
-                    IconButton(onClick = { viewModel.toggleUnderline() }) {
-                        Image(
-                            painter = painterResource (id = R.drawable.format_underlined_fill0_wght400_grad0_opsz24),
-                            contentDescription = "Underline")
-                    }
-                },
-                floatingActionButton = {
-                    FloatingActionButton(onClick = { viewModel.onEvent(AddEditNoteEvent.SaveNote) }) {
-                        Icon(
-                            imageVector = Icons.Default.Done,
-                            contentDescription = "Save Note",
-                            modifier = Modifier
-                        )
-                    }
-                }
-            )
+    Bottomappbar(
+        navController = navController,
+        showFolderDropdown = true,
+        folders = folder.value,
+        selectedFolder = selectedFolder,
+        onFolderSelected = { folder ->
+            viewModel.onFolderSelected(folder)
         },
-        content = {values ->
+        content = {
+            paddingValues ->
             Column(
                 modifier = modifier
                     .fillMaxWidth()
@@ -153,7 +132,7 @@ fun ladderNote(
                         bottom = 8.dp,
                         end = 8.dp
                     )
-                    .padding(values)
+                    .padding(paddingValues)
             ) {
                 TextField(
                     textStyle = TextStyle(

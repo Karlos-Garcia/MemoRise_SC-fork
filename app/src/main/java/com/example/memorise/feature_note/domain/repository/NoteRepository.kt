@@ -1,6 +1,7 @@
 package com.example.memorise.feature_note.domain.repository
 
 import com.example.memorise.feature_note.data.NoteWithCategory
+import com.example.memorise.feature_note.data.NoteWithFolder
 import com.example.memorise.feature_note.domain.model.Category
 import com.example.memorise.feature_note.domain.model.Folder
 import com.example.memorise.feature_note.domain.model.Note
@@ -15,6 +16,7 @@ interface NoteRepository {
     fun searchNotes(query: String): Flow<List<Note>>
     fun getNotesWithCategories(): Flow<List<NoteWithCategory>>
     fun getNotesByFolderId(folderId: Int?): Flow<List<Note>>
+    fun getNotesWithFolders(): Flow<List<NoteWithFolder>>
 
     fun getAllCategories(): Flow<List<Category>>
     suspend fun getCategoryById(id: Int): Category?

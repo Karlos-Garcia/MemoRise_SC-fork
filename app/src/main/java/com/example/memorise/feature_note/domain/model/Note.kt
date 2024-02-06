@@ -4,16 +4,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
-@Entity(
-    foreignKeys = [
-        ForeignKey(
-            entity = Folder::class,
-            parentColumns = ["id"],
-            childColumns = ["folderId"],
-            onDelete = ForeignKey.CASCADE
-        )
-    ]
-)
+@Entity
 data class Note(
     @PrimaryKey(autoGenerate = true)
     val id: Int? = null,

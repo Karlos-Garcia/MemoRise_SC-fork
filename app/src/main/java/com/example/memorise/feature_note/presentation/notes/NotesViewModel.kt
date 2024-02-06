@@ -38,6 +38,7 @@ class NotesViewModel @Inject constructor(
         return noteUseCases.getCategoryTitleForNote(noteId) ?: ""
     }
 
+    //this is used to retrieve the category title from the category entity and display it in the note item composable
     fun getCategoryTitleForNoteAsync(noteId: Int): Flow<String> {
         return flow {
             emit(invoke(noteId))
@@ -77,7 +78,7 @@ class NotesViewModel @Inject constructor(
             is NotesEvent.RestoreNote -> {
                 viewModelScope.launch {
                     val note = recentlyDeletedNote ?: return@launch
-                    noteUseCases.addNote(note, note.category_id)
+                    noteUseCases.addNote(note, note.category_id, note.folderId)
                     recentlyDeletedNote = null
                 }
             }

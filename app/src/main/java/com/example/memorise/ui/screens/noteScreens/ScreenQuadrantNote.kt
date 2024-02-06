@@ -47,6 +47,7 @@ import com.example.memorise.feature_note.domain.model.NoteType
 import com.example.memorise.feature_note.presentation.ScreenNavigations.Screens
 import com.example.memorise.feature_note.presentation.add_edit_notes.AddEditNoteEvent
 import com.example.memorise.feature_note.presentation.add_edit_notes.AddEditNoteViewModel
+import com.example.memorise.ui.screens.Bottomappbar
 import com.example.memorise.ui.screens.Topappbar
 import kotlinx.coroutines.flow.collectLatest
 
@@ -82,6 +83,9 @@ navController: NavController,
 viewModel: AddEditNoteViewModel,
 modifier: Modifier = Modifier,
 ) {
+    val folder = rememberFoldersState(viewModel)
+    val selectedFolder by viewModel.selectedFolder.collectAsState()
+
     val titleState = viewModel.noteTitle.value
     val keyword1State = viewModel.noteKeyword1.value
     val keyword2State = viewModel.noteKeyword2.value
@@ -110,39 +114,16 @@ modifier: Modifier = Modifier,
         }
     }
 
-    Scaffold(
-        modifier = Modifier.fillMaxWidth(),
-        bottomBar = {
-            BottomAppBar(
-                actions = {
-                    IconButton(onClick = { viewModel.toggleBold() }) {
-                        Image(
-                            painter = painterResource (id = R.drawable.format_bold_fill0_wght400_grad0_opsz24),
-                            contentDescription = "Bold")
-                    }
-                    IconButton(onClick = { viewModel.toggleItalic() }) {
-                        Image(
-                            painter = painterResource (id = R.drawable.format_italic_fill0_wght400_grad0_opsz24),
-                            contentDescription = "Italic")
-                    }
-                    IconButton(onClick = { viewModel.toggleUnderline() }) {
-                        Image(
-                            painter = painterResource (id = R.drawable.format_underlined_fill0_wght400_grad0_opsz24),
-                            contentDescription = "Underline")
-                    }
-                },
-                floatingActionButton = {
-                    FloatingActionButton(onClick = { viewModel.onEvent(AddEditNoteEvent.SaveNote) }) {
-                        Icon(
-                            imageVector = Icons.Default.Done,
-                            contentDescription = "Save Note",
-                            modifier = Modifier
-                        )
-                    }
-                }
-            )
+    Bottomappbar(
+        navController = navController,
+        showFolderDropdown = true,
+        folders = folder.value,
+        selectedFolder = selectedFolder,
+        onFolderSelected = { folder ->
+            viewModel.onFolderSelected(folder)
         },
-        content = {values ->
+        content = {
+                paddingValues ->
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -152,7 +133,7 @@ modifier: Modifier = Modifier,
                         bottom = 4.dp,
                         end = 4.dp
                     )
-                    .padding(values)
+                    .padding(paddingValues)
                     .verticalScroll(rememberScrollState())
             ) {
                 TextField(
@@ -178,7 +159,6 @@ modifier: Modifier = Modifier,
                 Row(
                     modifier = Modifier
                 ) {
-                    //top left keyword and content
                     Column() {
                         TextField(
                             textStyle = TextStyle(
@@ -198,7 +178,6 @@ modifier: Modifier = Modifier,
                                     end = 2.dp
                                 )
                                 .fillMaxWidth(0.5f)
-
                         )
                         TextField(
                             textStyle = TextStyle(
@@ -218,8 +197,6 @@ modifier: Modifier = Modifier,
                                 )
                                 .fillMaxWidth(0.5f)
                                 .height(340.dp)
-//                        .fillMaxWidth(0.5f)
-//                        .fillMaxHeight(0.45f)
                         )
                     }
                     //top right keyword and content

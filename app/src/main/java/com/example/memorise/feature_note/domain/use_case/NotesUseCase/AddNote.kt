@@ -8,7 +8,7 @@ class AddNote (
     private val repository: NoteRepository
 ){
     @Throws(InvalidNoteException::class)
-    suspend operator fun invoke(note: Note, categoryId: Int?) {
+    suspend operator fun invoke(note: Note, categoryId: Int?, folderId: Int?) {
         if(note.title.isBlank()) {
             throw InvalidNoteException("The title of the note can't be empty")
         }

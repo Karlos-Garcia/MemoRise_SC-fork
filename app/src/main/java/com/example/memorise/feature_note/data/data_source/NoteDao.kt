@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import com.example.memorise.feature_note.data.NoteWithCategory
+import com.example.memorise.feature_note.data.NoteWithFolder
 import com.example.memorise.feature_note.domain.model.Note
 import kotlinx.coroutines.flow.Flow
 
@@ -33,4 +34,8 @@ interface NoteDao {
 
     @Query("SELECT * FROM Note WHERE folderId = :folderId OR folderId IS NULL")
     fun getNotesByFolderId(folderId: Int?): Flow<List<Note>>
+
+    @Transaction
+    @Query("SELECT * FROM Note")
+    fun getNotesWithFolders(): Flow<List<NoteWithFolder>>
 }

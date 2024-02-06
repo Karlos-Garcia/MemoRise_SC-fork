@@ -42,6 +42,7 @@ import com.example.memorise.feature_note.domain.model.NoteType
 import com.example.memorise.feature_note.presentation.ScreenNavigations.Screens
 import com.example.memorise.feature_note.presentation.add_edit_notes.AddEditNoteEvent
 import com.example.memorise.feature_note.presentation.add_edit_notes.AddEditNoteViewModel
+import com.example.memorise.ui.screens.Bottomappbar
 import com.example.memorise.ui.screens.Topappbar
 import kotlinx.coroutines.flow.collectLatest
 
@@ -77,6 +78,9 @@ fun outlineNote(
     viewModel: AddEditNoteViewModel,
     modifier: Modifier = Modifier
 ) {
+    val folder = rememberFoldersState(viewModel)
+    val selectedFolder by viewModel.selectedFolder.collectAsState()
+
     val titleState = viewModel.noteTitle.value
     val keyword1State = viewModel.noteKeyword1.value
     val keyword2State = viewModel.noteKeyword2.value
@@ -102,150 +106,126 @@ fun outlineNote(
         }
     }
 
-    Scaffold(
-        modifier = Modifier.fillMaxWidth(),
-        bottomBar = {
-            BottomAppBar(
-                actions = {
-                    IconButton(onClick = { viewModel.toggleBold() }) {
-                        Image(
-                            painter = painterResource (id = R.drawable.format_bold_fill0_wght400_grad0_opsz24),
-                            contentDescription = "Bold")
-                    }
-                    IconButton(onClick = { viewModel.toggleItalic() }) {
-                        Image(
-                            painter = painterResource (id = R.drawable.format_italic_fill0_wght400_grad0_opsz24),
-                            contentDescription = "Italic")
-                    }
-                    IconButton(onClick = { viewModel.toggleUnderline() }) {
-                        Image(
-                            painter = painterResource (id = R.drawable.format_underlined_fill0_wght400_grad0_opsz24),
-                            contentDescription = "Underline")
-                    }
-                },
-                floatingActionButton = {
-                    FloatingActionButton(onClick = { viewModel.onEvent(AddEditNoteEvent.SaveNote) }) {
-                        Icon(
-                            imageVector = Icons.Default.Done,
-                            contentDescription = "Save Note",
-                            modifier = Modifier
-                        )
-                    }
-                }
-            )
+    Bottomappbar(
+        navController = navController,
+        showFolderDropdown = true,
+        folders = folder.value,
+        selectedFolder = selectedFolder,
+        onFolderSelected = { folder ->
+            viewModel.onFolderSelected(folder)
         },
-        content = {values ->
-            Column(
-                modifier = Modifier
-                    .padding(
-                        top = 72.dp
+        content = {
+            paddingValues ->
+                Column(
+                    modifier = Modifier
+                        .padding(
+                            top = 72.dp
+                        )
+                        .padding(paddingValues)
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    TextField(
+                        textStyle = TextStyle(
+                            fontWeight = if (viewModel.isBold.value) FontWeight.Bold else null,
+                            fontStyle = if (viewModel.isItalic.value) FontStyle.Italic else null,
+                            textDecoration = if (viewModel.isUnderlined.value) TextDecoration.Underline else null
+                        ),
+                        label = {Text(text = "Title")},
+                        value = titleState.text,
+                        onValueChange = {
+                            viewModel.onEvent(AddEditNoteEvent.EnteredTitle(it))
+                        },
+                        singleLine = true,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(
+                                start = 8.dp,
+                                bottom = 8.dp,
+                                end = 8.dp
+                            )
                     )
-                    .padding(values)
-                    .verticalScroll(rememberScrollState())
-            ) {
-                TextField(
-                    textStyle = TextStyle(
-                        fontWeight = if (viewModel.isBold.value) FontWeight.Bold else null,
-                        fontStyle = if (viewModel.isItalic.value) FontStyle.Italic else null,
-                        textDecoration = if (viewModel.isUnderlined.value) TextDecoration.Underline else null
-                    ),
-                    label = {Text(text = "Title")},
-                    value = titleState.text,
-                    onValueChange = {
-                        viewModel.onEvent(AddEditNoteEvent.EnteredTitle(it))
-                    },
-                    singleLine = true,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(
-                            start = 8.dp,
-                            bottom = 8.dp,
-                            end = 8.dp
-                        )
-                )
-                TextField(
-                    textStyle = TextStyle(
-                        fontWeight = if (viewModel.isBold.value) FontWeight.Bold else null,
-                        fontStyle = if (viewModel.isItalic.value) FontStyle.Italic else null,
-                        textDecoration = if (viewModel.isUnderlined.value) TextDecoration.Underline else null
-                    ),
-                    label = {Text(text = "Keyword")},
-                    value = keyword1State.text,
-                    onValueChange = {
-                        viewModel.onEvent(AddEditNoteEvent.EnteredKeyword1(it))
-                    },
-                    singleLine = true,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(
-                            start = 8.dp,
-                            bottom = 8.dp,
-                            end = 8.dp
-                        )
-                )
-                TextField(
-                    textStyle = TextStyle(
-                        fontWeight = if (viewModel.isBold.value) FontWeight.Bold else null,
-                        fontStyle = if (viewModel.isItalic.value) FontStyle.Italic else null,
-                        textDecoration = if (viewModel.isUnderlined.value) TextDecoration.Underline else null
-                    ),
-                    label = {Text(text = "Content")},
-                    value = content1State.text,
-                    onValueChange = {
-                        viewModel.onEvent(AddEditNoteEvent.EnteredContent1(it))
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(340.dp)
-                        .padding(
-                            start = 8.dp,
-                            bottom = 8.dp,
-                            end = 8.dp
-                        )
-                )
+                    TextField(
+                        textStyle = TextStyle(
+                            fontWeight = if (viewModel.isBold.value) FontWeight.Bold else null,
+                            fontStyle = if (viewModel.isItalic.value) FontStyle.Italic else null,
+                            textDecoration = if (viewModel.isUnderlined.value) TextDecoration.Underline else null
+                        ),
+                        label = {Text(text = "Keyword")},
+                        value = keyword1State.text,
+                        onValueChange = {
+                            viewModel.onEvent(AddEditNoteEvent.EnteredKeyword1(it))
+                        },
+                        singleLine = true,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(
+                                start = 8.dp,
+                                bottom = 8.dp,
+                                end = 8.dp
+                            )
+                    )
+                    TextField(
+                        textStyle = TextStyle(
+                            fontWeight = if (viewModel.isBold.value) FontWeight.Bold else null,
+                            fontStyle = if (viewModel.isItalic.value) FontStyle.Italic else null,
+                            textDecoration = if (viewModel.isUnderlined.value) TextDecoration.Underline else null
+                        ),
+                        label = {Text(text = "Content")},
+                        value = content1State.text,
+                        onValueChange = {
+                            viewModel.onEvent(AddEditNoteEvent.EnteredContent1(it))
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(340.dp)
+                            .padding(
+                                start = 8.dp,
+                                bottom = 8.dp,
+                                end = 8.dp
+                            )
+                    )
+                    TextField(
+                        textStyle = TextStyle(
+                            fontWeight = if (viewModel.isBold.value) FontWeight.Bold else null,
+                            fontStyle = if (viewModel.isItalic.value) FontStyle.Italic else null,
+                            textDecoration = if (viewModel.isUnderlined.value) TextDecoration.Underline else null
+                        ),
+                        label = {Text(text = "Keyword")},
+                        value = keyword2State.text,
+                        onValueChange = {
+                            viewModel.onEvent(AddEditNoteEvent.EnteredKeyword2(it))
+                        },
+                        singleLine = true,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(
+                                start = 8.dp,
+                                bottom = 8.dp,
+                                end = 8.dp
+                            )
+                    )
 
-                TextField(
-                    textStyle = TextStyle(
-                        fontWeight = if (viewModel.isBold.value) FontWeight.Bold else null,
-                        fontStyle = if (viewModel.isItalic.value) FontStyle.Italic else null,
-                        textDecoration = if (viewModel.isUnderlined.value) TextDecoration.Underline else null
-                    ),
-                    label = {Text(text = "Keyword")},
-                    value = keyword2State.text,
-                    onValueChange = {
-                        viewModel.onEvent(AddEditNoteEvent.EnteredKeyword2(it))
-                    },
-                    singleLine = true,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(
-                            start = 8.dp,
-                            bottom = 8.dp,
-                            end = 8.dp
-                        )
-                )
-
-                TextField(
-                    textStyle = TextStyle(
-                        fontWeight = if (viewModel.isBold.value) FontWeight.Bold else null,
-                        fontStyle = if (viewModel.isItalic.value) FontStyle.Italic else null,
-                        textDecoration = if (viewModel.isUnderlined.value) TextDecoration.Underline else null
-                    ),
-                    label = {Text(text = "Content")},
-                    value = content2State.text,
-                    onValueChange = {
-                        viewModel.onEvent(AddEditNoteEvent.EnteredContent2(it))
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(340.dp)
-                        .padding(
-                            start = 8.dp,
-                            bottom = 8.dp,
-                            end = 8.dp
-                        )
-                )
+                    TextField(
+                        textStyle = TextStyle(
+                            fontWeight = if (viewModel.isBold.value) FontWeight.Bold else null,
+                            fontStyle = if (viewModel.isItalic.value) FontStyle.Italic else null,
+                            textDecoration = if (viewModel.isUnderlined.value) TextDecoration.Underline else null
+                        ),
+                        label = {Text(text = "Content")},
+                        value = content2State.text,
+                        onValueChange = {
+                            viewModel.onEvent(AddEditNoteEvent.EnteredContent2(it))
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(340.dp)
+                            .padding(
+                                start = 8.dp,
+                                bottom = 8.dp,
+                                end = 8.dp
+                            )
+                    )
+                }
             }
-        }
     )
 }

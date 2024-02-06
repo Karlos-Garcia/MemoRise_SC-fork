@@ -1,6 +1,7 @@
 package com.example.memorise.feature_note.data.repository
 
 import com.example.memorise.feature_note.data.NoteWithCategory
+import com.example.memorise.feature_note.data.NoteWithFolder
 import com.example.memorise.feature_note.data.data_source.CategoryDao
 import com.example.memorise.feature_note.data.data_source.FolderDao
 import com.example.memorise.feature_note.data.data_source.NoteDao
@@ -35,6 +36,9 @@ class NoteRepositoryImpl(
     }
     override fun getNotesByFolderId(folderId: Int?): Flow<List<Note>> {
         return noteDao.getNotesByFolderId(folderId)
+    }
+    override fun getNotesWithFolders(): Flow<List<NoteWithFolder>> {
+        return noteDao.getNotesWithFolders()
     }
     override fun getAllCategories(): Flow<List<Category>> {
         return categoryDao.getAllCategories()

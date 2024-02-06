@@ -8,11 +8,13 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.memorise.feature_note.domain.model.Category
+import com.example.memorise.feature_note.domain.model.Folder
 import com.example.memorise.feature_note.domain.model.FormattedSegment
 import com.example.memorise.feature_note.domain.model.InvalidNoteException
 import com.example.memorise.feature_note.domain.model.NoteType
 import com.example.memorise.feature_note.domain.model.Note
 import com.example.memorise.feature_note.domain.use_case.CategoryUseCase.CategoryUseCases
+import com.example.memorise.feature_note.domain.use_case.FolderUseCase.FolderUseCases
 import com.example.memorise.feature_note.domain.use_case.NotesUseCase.NoteUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -31,6 +33,7 @@ import javax.inject.Inject
 class AddEditNoteViewModel @Inject constructor(
     private val noteUseCases: NoteUseCases,
     private val categoryUseCase: CategoryUseCases,
+    private val folderUseCase: FolderUseCases,
     savedStateHandle: SavedStateHandle,
     private val context: Context
 ) : ViewModel() {
@@ -70,16 +73,29 @@ class AddEditNoteViewModel @Inject constructor(
     private val _decodedImageBytes = mutableStateOf<ByteArray?>(null)
     val decodedImageBytes: State<ByteArray?> = _decodedImageBytes
 
+    //category
     private val _selectedCategory = MutableStateFlow<Category?>(null)
     val selectedCategory: StateFlow<Category?> = _selectedCategory
 
     val categories: Flow<List<Category>> = categoryUseCase.getCategoryList()
 
-    fun onCategorySelected(category: Category) {
+    fun onCategorySelected(category: Category?) {
         _selectedCategory.value = category
     }
-     //this is now all belong to text formatting:
 
+    //folder
+    private val _selectedFolder = MutableStateFlow<Folder?>(null)
+    val selectedFolder: StateFlow<Folder?> = _selectedFolder
+
+    val folders: Flow<List<Folder>> = folderUseCase.getFolderList()
+
+    fun onFolderSelected(folder: Folder) {
+        if (folder.id != _selectedFolder.value?.id) {
+            _selectedFolder.value = folder
+        }
+    }
+
+     //this is now all belong to text formatting:
     private val _isBold = mutableStateOf(false)
     val isBold: State<Boolean> get() = _isBold
     private val _isItalic = mutableStateOf(false)
@@ -205,6 +221,12 @@ class AddEditNoteViewModel @Inject constructor(
                             text = note.summary ?: "",
                         )
                         _decodedImageBytes.value = note.imageBytes
+                        note.category_id?.let { categoryId ->
+                            _selectedCategory.value = categoryUseCase.getCategory(categoryId)
+                        }
+                        note.folderId?.let { folderId ->
+                            _selectedFolder.value = folderUseCase.getFolder(folderId)
+                        }
                     }
                 }
             }
@@ -309,6 +331,7 @@ class AddEditNoteViewModel @Inject constructor(
                 viewModelScope.launch {
                     try {
                         val selectedCategoryId = _selectedCategory.value?.id
+                        val selectedFolderId = _selectedFolder.value?.id
 
                         val formattedSegments = mutableListOf<FormattedSegment>()
                         for (textFieldId in _selectedTextRanges.keys) {
@@ -339,14 +362,17 @@ class AddEditNoteViewModel @Inject constructor(
                                 content5 = noteContent5.value.text,
                                 summary = noteSummary.value.text,
                                 category_id = selectedCategoryId ?: -1,
+                                folderId = selectedFolderId ?: -1,
                                 timestamp = System.currentTimeMillis(),
                                 noteType = currentNoteType ?: NoteType.BASIC,
                                 imageBytes = _decodedImageBytes.value,
                                 id = currentNoteId,
                                 segments = formattedSegments
                             ),
-                        selectedCategoryId ?: -1
-                        )
+                        selectedCategoryId ?: -1,
+                            selectedFolderId ?: -1,
+
+                            )
                         _eventFlow.emit(UiEvent.SaveNote)
                     } catch(e: InvalidNoteException) {
                         _eventFlow.emit(

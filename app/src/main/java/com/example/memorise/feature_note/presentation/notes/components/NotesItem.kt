@@ -1,5 +1,7 @@
 package com.example.memorise.feature_note.presentation.notes.components
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -18,6 +20,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,13 +36,18 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.example.memorise.feature_note.domain.model.Category
-import com.example.memorise.feature_note.domain.model.NoteType
 import com.example.memorise.feature_note.domain.model.Note
+import com.example.memorise.feature_note.domain.model.NoteType
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import androidx.compose.material3.MaterialTheme.colorScheme
+import androidx.compose.ui.graphics.isSpecified
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalWindowInfo
 
+
+@RequiresApi(Build.VERSION_CODES.R)
 @Composable
 fun NoteItem(
     note: Note,
@@ -87,12 +95,15 @@ fun NoteItem(
         )
     }
 
+
+
     Box(modifier = Modifier
         .fillMaxSize()
         .padding(8.dp)
         .clip(RoundedCornerShape(cornerRadius))
         .clickable { onItemClick.invoke() }
-        .background(color = Color(0xFF49454F.toInt()))
+        .background(getBackgroundColor())
+//        .background(color = Color(0xFF49454F.toInt()))
     ) {
 
         Column(
@@ -137,7 +148,8 @@ fun NoteItem(
                         )
                         Box(modifier = Modifier
                             .clip(RoundedCornerShape(12.dp))
-                            .background(color = Color(0xFF696372.toInt()))
+                            .background(getBackgroundColorForCategory())
+//                            .background(color = Color(0xFF696372.toInt()))
                             .align(Alignment.CenterVertically)
                         ) {
                             Text(
@@ -221,4 +233,28 @@ private fun formatTimestamp(timestamp: Long): String {
     val date = Date(timestamp)
     val format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
     return format.format(date)
+}
+
+@RequiresApi(Build.VERSION_CODES.R)
+@Composable
+fun getBackgroundColor(): Color {
+    val context = LocalContext.current
+    val isDarkMode = context.resources.configuration.isNightModeActive
+    return if (isDarkMode) {
+        Color(0xFF49454F.toInt())
+    } else {
+        Color(0xFFE6E0EC.toInt())
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.R)
+@Composable
+fun getBackgroundColorForCategory(): Color {
+    val context = LocalContext.current
+    val isDarkMode = context.resources.configuration.isNightModeActive
+    return if (isDarkMode) {
+        Color(0xFF696372.toInt())
+    } else {
+        Color(0xFFC5B4D5.toInt())
+    }
 }

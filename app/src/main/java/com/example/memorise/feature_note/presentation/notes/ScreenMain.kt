@@ -58,6 +58,7 @@ import com.example.memorise.feature_note.presentation.Folders.FolderItem
 import com.example.memorise.feature_note.presentation.Folders.FolderState
 import com.example.memorise.feature_note.presentation.Folders.FolderViewModel
 import com.example.memorise.feature_note.presentation.Folders.FoldersEvent
+import com.example.memorise.feature_note.presentation.Folders.ListBackStackItem
 import com.example.memorise.feature_note.presentation.ScreenNavigations.NavigationItem
 import com.example.memorise.feature_note.presentation.ScreenNavigations.getNavigationItems
 import com.example.memorise.feature_note.presentation.ScreenNavigations.Screens
@@ -101,6 +102,10 @@ fun MainScreen(
 
     LaunchedEffect(Unit) {
         foldersViewModel.onFolderEvent(FoldersEvent.ListFolder)
+    }
+
+    LaunchedEffect(Unit) {
+        notesViewModel.getNotesByFolderId(null)
     }
 
     Surface(
@@ -217,42 +222,41 @@ fun MainScreen(
                         .fillMaxSize()
                         .padding(values)
                 ) {
-
-                    items(folderStates.folder) {
-                        folder ->
-                        FolderItem(
-                            folder = folder,
-                            modifier = Modifier
-                                .fillMaxWidth(),
-                            onItemClick = {
-                                selectedFolderId = folder.id
-                                          },
-                            onDeleteClick = {
-                               foldersViewModel.onFolderEvent(FoldersEvent.DeleteFolder(folder))
-                            }
-                        )
+                    if (selectedFolderId != null) {
+                        item {
+                            ListBackStackItem(
+                                onItemClick = { selectedFolderId = null }
+                            )
+                        }
                     }
-//                    items(notesState.notes)
-//                    val notes = if (selectedFolderId != null) {
-//                        notesViewModel.getNotesByFolderId(selectedFolderId).collectAsState(initial = emptyList()).value
-//                    } else {
-//                        notesState.notes
-//                    }
 
-//                    val notes = remember {
-//                        derivedStateOf {
-//                            if (selectedFolderId != null) {
-//                                notesViewModel.getNotesByFolderId(selectedFolderId).collectAsState(initial = emptyList()).value
-//                            } else {
-//                                notesState.notes
-//                            }
-//                        }
-//                    }
+                    if (selectedFolderId == null) {
+                        items(folderStates.folder) { folder ->
+                            FolderItem(
+                                folder = folder,
+                                modifier = Modifier
+                                    .fillMaxWidth(),
+                                onItemClick = {
+                                    selectedFolderId = folder.id
+                                },
+                                onDeleteClick = {
+                                    foldersViewModel.onFolderEvent(FoldersEvent.DeleteFolder(folder))
+                                }
+                            )
+                        }
+                    }
 
+//this works on filtering notes:
+//                    items(notesState.notes.filter { it.folderId == selectedFolderId }) {
 
-                    items(notesState.notes) {
-                        note ->
-                        val categoryTitle by notesViewModel.getCategoryTitleForNoteAsync(note.id ?: 0).collectAsState("")
+                    items(if (selectedFolderId != null) {
+                        notesState.notes.filter { it.folderId == selectedFolderId }
+                    } else {
+                        notesState.notes.filter { it.folderId == -1 }
+                    }) { note ->
+                        val categoryTitle by notesViewModel.getCategoryTitleForNoteAsync(
+                            note.id ?: 0
+                        ).collectAsState("")
                         NoteItem(
                             note = note,
                             category = categoryTitle,
@@ -320,3 +324,4 @@ fun MainScreen(
         }
     }
 }
+

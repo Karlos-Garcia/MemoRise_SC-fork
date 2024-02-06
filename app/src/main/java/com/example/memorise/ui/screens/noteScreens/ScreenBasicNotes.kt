@@ -2,11 +2,15 @@ package com.example.memorise.ui.screens.noteScreens
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.rememberScaffoldState
@@ -43,10 +47,19 @@ import com.example.memorise.ui.screens.Topappbar
 import kotlinx.coroutines.flow.collectLatest
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
+import com.example.memorise.feature_note.domain.model.Folder
+import com.example.memorise.feature_note.presentation.add_edit_notes.components.CategoryDropdown
+import com.example.memorise.feature_note.presentation.add_edit_notes.components.FolderDropdown
+import com.example.memorise.ui.screens.Bottomappbar
 
 @Composable
 fun rememberCategoriesState(viewModel: AddEditNoteViewModel): State<List<Category>> {
     return viewModel.categories.collectAsState(initial = emptyList())
+}
+
+@Composable
+fun rememberFoldersState(viewModel: AddEditNoteViewModel): State<List<Folder>> {
+    return viewModel.folders.collectAsState(initial = emptyList())
 }
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -81,6 +94,9 @@ fun basicTextFields(
     viewModel: AddEditNoteViewModel,
     modifier: Modifier = Modifier,
 ) {
+    val folder = rememberFoldersState(viewModel)
+    val selectedFolder by viewModel.selectedFolder.collectAsState()
+
     val titleState = viewModel.noteTitle.value
     val content1State = viewModel.noteContent1.value
     val scaffoldState = rememberScaffoldState()
@@ -97,87 +113,61 @@ fun basicTextFields(
                 is AddEditNoteViewModel.UiEvent.SaveNote -> {
                     navController.navigate(Screens.MainScreen.route)
                 }
-
             }
         }
     }
 
-    Scaffold(
-        modifier = Modifier.fillMaxWidth(),
-        bottomBar = {
-            androidx.compose.material3.BottomAppBar(
-                actions = {
-                    IconButton(onClick = { viewModel.toggleBold() }) {
-                        Image(
-                            painter = painterResource (id = R.drawable.format_bold_fill0_wght400_grad0_opsz24),
-                            contentDescription = "Bold")
-                    }
-                    IconButton(onClick = { viewModel.toggleItalic() }) {
-                        Image(
-                            painter = painterResource (id = R.drawable.format_italic_fill0_wght400_grad0_opsz24),
-                            contentDescription = "Italic")
-                    }
-                    IconButton(onClick = { viewModel.toggleUnderline() }) {
-                        Image(
-                            painter = painterResource (id = R.drawable.format_underlined_fill0_wght400_grad0_opsz24),
-                            contentDescription = "Underline")
-                    }
-                },
-                floatingActionButton = {
-                    FloatingActionButton(onClick = { viewModel.onEvent(AddEditNoteEvent.SaveNote) }) {
-                        Icon(
-                            imageVector = Icons.Default.Done,
-                            contentDescription = "Save Note",
-                            modifier = Modifier
-                        )
-                    }
-                }
-            )
+    Bottomappbar(
+        navController = navController,
+        showFolderDropdown = true,
+        folders = folder.value,
+        selectedFolder = selectedFolder,
+        onFolderSelected = { folder ->
+            viewModel.onFolderSelected(folder)
         },
-        content = { values ->
+        content = {
+            paddingValues ->
             Column(
-            modifier = Modifier
-                .padding(
-                    top = 76.dp
-                )
-                .padding(values)
-                .fillMaxWidth()
-        ) {
-            TextField(
-                label = { Text(text = "Title") },
-                value = titleState.text,
-                onValueChange = {
-                    viewModel.onEvent(AddEditNoteEvent.EnteredTitle(it))
-                },
-                singleLine = true,
-                modifier = modifier
+                modifier = Modifier
+                    .padding(top = 72.dp)
+                    .padding(paddingValues)
                     .fillMaxWidth()
-                    .padding(
-                        start = 8.dp,
-                        end = 8.dp,
-                    )
-                    .clip(RoundedCornerShape(12.dp))
-            )
-            TextField(
-                label = { Text(text = "Content") },
-                value = content1State.text,
-                onValueChange = {
-                    viewModel.onEvent(AddEditNoteEvent.EnteredContent1(it))
-                },
-                textStyle = TextStyle(
-                    fontWeight = if (viewModel.isBold.value) FontWeight.Bold else null,
-                    fontStyle = if (viewModel.isItalic.value) FontStyle.Italic else null,
-                    textDecoration = if (viewModel.isUnderlined.value) TextDecoration.Underline else null
-                ),
-                modifier = modifier
-                    .fillMaxSize()
-                    .padding(
-                        top = 8.dp,
-                        start = 8.dp,
-                        end = 8.dp,
-                        bottom = 8.dp
-                    )
-                    .clip(RoundedCornerShape(12.dp))
+            ) {
+                TextField(
+                    label = { Text(text = "Title") },
+                    value = titleState.text,
+                    onValueChange = {
+                        viewModel.onEvent(AddEditNoteEvent.EnteredTitle(it))
+                    },
+                    singleLine = true,
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .padding(
+                            start = 8.dp,
+                            end = 8.dp,
+                        )
+                        .clip(RoundedCornerShape(12.dp))
+                )
+                TextField(
+                    label = { Text(text = "Content") },
+                    value = content1State.text,
+                    onValueChange = {
+                        viewModel.onEvent(AddEditNoteEvent.EnteredContent1(it))
+                    },
+                    textStyle = TextStyle(
+                        fontWeight = if (viewModel.isBold.value) FontWeight.Bold else null,
+                        fontStyle = if (viewModel.isItalic.value) FontStyle.Italic else null,
+                        textDecoration = if (viewModel.isUnderlined.value) TextDecoration.Underline else null
+                    ),
+                    modifier = modifier
+                        .fillMaxSize()
+                        .padding(
+                            top = 8.dp,
+                            start = 8.dp,
+                            end = 8.dp,
+                            bottom = 8.dp
+                        )
+                        .clip(RoundedCornerShape(12.dp))
                 )
             }
         }

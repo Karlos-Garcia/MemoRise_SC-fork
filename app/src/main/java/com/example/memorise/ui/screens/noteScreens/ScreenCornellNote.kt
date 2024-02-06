@@ -40,6 +40,7 @@ import com.example.memorise.feature_note.domain.model.NoteType
 import com.example.memorise.feature_note.presentation.ScreenNavigations.Screens
 import com.example.memorise.feature_note.presentation.add_edit_notes.AddEditNoteEvent
 import com.example.memorise.feature_note.presentation.add_edit_notes.AddEditNoteViewModel
+import com.example.memorise.ui.screens.Bottomappbar
 import com.example.memorise.ui.screens.Topappbar
 import kotlinx.coroutines.flow.collectLatest
 
@@ -75,6 +76,9 @@ fun cornellTextFields(
     viewModel: AddEditNoteViewModel,
     modifier: Modifier = Modifier,
 ) {
+    val folder = rememberFoldersState(viewModel)
+    val selectedFolder by viewModel.selectedFolder.collectAsState()
+    
     val titleState = viewModel.noteTitle.value
     val keyword1State = viewModel.noteKeyword1.value
     val keyword2State = viewModel.noteKeyword2.value
@@ -106,46 +110,22 @@ fun cornellTextFields(
         color = MaterialTheme.colorScheme.onSurface
     )
 
-    Scaffold(
-        modifier = Modifier
-            .fillMaxWidth(),
-        bottomBar = {
-            BottomAppBar(
-                actions = {
-                    IconButton(onClick = { viewModel.toggleBold() }) {
-                        Image(
-                            painter = painterResource (id = R.drawable.format_bold_fill0_wght400_grad0_opsz24),
-                            contentDescription = "Bold")
-                    }
-                    IconButton(onClick = { viewModel.toggleItalic() }) {
-                        Image(
-                            painter = painterResource (id = R.drawable.format_italic_fill0_wght400_grad0_opsz24),
-                            contentDescription = "Italic")
-                    }
-                    IconButton(onClick = { viewModel.toggleUnderline() }) {
-                        Image(
-                            painter = painterResource (id = R.drawable.format_underlined_fill0_wght400_grad0_opsz24),
-                            contentDescription = "Underline")
-                    }
-                },
-                floatingActionButton = {
-                    FloatingActionButton(onClick = { viewModel.onEvent(AddEditNoteEvent.SaveNote) }) {
-                        Icon(
-                            imageVector = Icons.Default.Done,
-                            contentDescription = "Save Note",
-                            modifier = Modifier
-                        )
-                    }
-                }
-            )
+    Bottomappbar(
+        navController = navController,
+        showFolderDropdown = true,
+        folders = folder.value,
+        selectedFolder = selectedFolder,
+        onFolderSelected = { folder ->
+            viewModel.onFolderSelected(folder)
         },
-        content = {values ->
-            Column(modifier = Modifier
-                .padding(
-                    top = 76.dp,
-                )
-                .padding(values)
-                .fillMaxSize()) {
+        content = {
+            paddingValues ->
+            Column(
+                modifier = Modifier
+                    .padding(top = 72.dp)
+                    .padding(paddingValues)
+                    .fillMaxSize()
+            ) {
                 TextField(
                     singleLine = true,
                     label = {Text(text = "Title", style = labelStyle)},
