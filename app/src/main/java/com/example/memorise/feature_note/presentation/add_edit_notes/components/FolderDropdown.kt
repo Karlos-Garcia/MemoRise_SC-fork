@@ -1,5 +1,7 @@
 package com.example.memorise.feature_note.presentation.add_edit_notes.components
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
@@ -22,9 +24,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.memorise.feature_note.domain.model.Folder
+import com.example.memorise.feature_note.presentation.notes.components.getBackgroundColor
 
+@RequiresApi(Build.VERSION_CODES.R)
 @Composable
 fun FolderDropdown(
+    modifier: Modifier = Modifier,
     folders: List<Folder>,
     selectedFolder: Folder?,
     onFolderSelected: (Folder) -> Unit
@@ -34,11 +39,13 @@ fun FolderDropdown(
     Row(
         modifier = Modifier
             .padding(
+                start = 8.dp,
                 top = 4.dp,
-                bottom = 4.dp)
+                bottom = 4.dp
+            )
             .clickable { expanded = !expanded }
             .clip(RoundedCornerShape(12.dp))
-            .background(color = Color(0xFF696372.toInt()))
+            .background(getBackgroundColor())
             .wrapContentHeight()
     ) {
         Icon(

@@ -46,7 +46,7 @@ fun aboutUsScreen(
                 item.route(navController)
             },
             navController = navController,
-            selectedItemIndex = 3,
+            selectedItemIndex = 2,
             title = "About Us",
         ) {
             aboutUs()

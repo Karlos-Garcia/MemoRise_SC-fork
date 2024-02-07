@@ -39,8 +39,12 @@ fun Bottomappbar(
     folders: List<Folder> = emptyList(),
     selectedFolder: Folder? = null,
     onFolderSelected: (Folder) -> Unit = {},
+    showTextFormattingButton: Boolean = false,
+    onToggleBold: () -> Unit,
+    onToggleItalic: () -> Unit,
+    onToggleUnderline: () -> Unit,
     content: @Composable (PaddingValues) -> Unit,
-    viewModel: AddEditNoteViewModel = hiltViewModel()
+    viewModel: AddEditNoteViewModel = hiltViewModel(),
 ) {
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -51,23 +55,31 @@ fun Bottomappbar(
             bottomBar = {
                 androidx.compose.material3.BottomAppBar(
                     actions = {
-                        IconButton(onClick = { viewModel.toggleBold() }) {
-                            Image(
-                                painter = painterResource(id = R.drawable.format_bold_fill0_wght400_grad0_opsz24),
-                                contentDescription = "Bold"
-                            )
-                        }
-                        IconButton(onClick = { viewModel.toggleItalic() }) {
-                            Image(
-                                painter = painterResource(id = R.drawable.format_italic_fill0_wght400_grad0_opsz24),
-                                contentDescription = "Italic"
-                            )
-                        }
-                        IconButton(onClick = { viewModel.toggleUnderline() }) {
-                            Image(
-                                painter = painterResource(id = R.drawable.format_underlined_fill0_wght400_grad0_opsz24),
-                                contentDescription = "Underline"
-                            )
+                        if (showTextFormattingButton) {
+                            IconButton(onClick = {
+                                onToggleBold
+                            }) {
+                                Image(
+                                    painter = painterResource(id = R.drawable.format_bold_fill0_wght400_grad0_opsz24),
+                                    contentDescription = "Bold"
+                                )
+                            }
+                            IconButton(onClick = {
+                                onToggleItalic
+                            }) {
+                                Image(
+                                    painter = painterResource(id = R.drawable.format_italic_fill0_wght400_grad0_opsz24),
+                                    contentDescription = "Italic"
+                                )
+                            }
+                            IconButton(onClick = {
+                                onToggleUnderline
+                            }) {
+                                Image(
+                                    painter = painterResource(id = R.drawable.format_underlined_fill0_wght400_grad0_opsz24),
+                                    contentDescription = "Underline"
+                                )
+                            }
                         }
                         FolderDropdown(
                             folders = folders,

@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -95,7 +96,6 @@ class AddEditNoteViewModel @Inject constructor(
         }
     }
 
-     //this is now all belong to text formatting:
     private val _isBold = mutableStateOf(false)
     val isBold: State<Boolean> get() = _isBold
     private val _isItalic = mutableStateOf(false)
@@ -116,35 +116,45 @@ class AddEditNoteViewModel @Inject constructor(
         updateFormatting()
     }
 
-    private fun updateSegments(existingSegments: List<FormattedSegment>, newSegment: FormattedSegment): List<FormattedSegment> {
-        val updatedSegments = mutableListOf<FormattedSegment>()
-        return updatedSegments
-    }
-
     private val _selectedTextRanges: MutableMap<Int, Pair<Int, Int>> = mutableMapOf()
 
-    fun onTextSelectionChange(textFieldId: Int, startIndex: Int, endIndex: Int) {
-        _selectedTextRanges[textFieldId] = startIndex to endIndex
-        updateFormatting()
+    fun updateSelectionRange(textFieldId: Int, start: Int, end: Int) {
+        _selectedTextRanges[textFieldId] = Pair(start, end)
     }
 
     private fun updateFormatting() {
         viewModelScope.launch {
-            for (textFieldId in _selectedTextRanges.keys) {
+            for ((textFieldId, selectedRange) in _selectedTextRanges) {
                 val selectedText = getSelectedText(textFieldId) ?: continue
-                val newSegment = FormattedSegment(
-                    text = selectedText,
-                    isBold = isBold.value,
-                    isItalic = isItalic.value,
-                    isUnderlined = isUnderlined.value,
-                    start = _selectedTextRanges[textFieldId]?.first ?: continue,
-                    end = _selectedTextRanges[textFieldId]?.second ?: continue,
-                    fieldId = textFieldId
-                )
+                val (start, end) = selectedRange
+                val newText = applyFormatting(selectedText, start, end)
+                updateTextField(textFieldId, newText)
             }
         }
     }
 
+    private fun applyFormatting(text: String, start: Int, end: Int): String {
+        var formattedText = text.substring(0, start)
+        formattedText += if (isBold.value) "<b>${text.substring(start, end)}</b>" else text.substring(start, end)
+        formattedText += text.substring(end)
+        return formattedText
+    }
+
+    private fun updateTextField(textFieldId: Int, newText: String) {
+        when (textFieldId) {
+            1 -> _noteTitle.value = _noteTitle.value.copy(text = newText)
+            2 -> _noteContent1.value = _noteContent1.value.copy(text = newText)
+            3 -> _noteContent2.value = _noteContent2.value.copy(text = newText)
+            4 -> _noteContent3.value = _noteContent3.value.copy(text = newText)
+            5 -> _noteContent4.value = _noteContent4.value.copy(text = newText)
+            6 -> _noteContent5.value = _noteContent5.value.copy(text = newText)
+            7 -> _noteKeyword1.value = _noteKeyword1.value.copy(text = newText)
+            8 -> _noteKeyword2.value = _noteKeyword2.value.copy(text = newText)
+            9 -> _noteKeyword3.value = _noteKeyword3.value.copy(text = newText)
+            10 -> _noteKeyword4.value = _noteKeyword4.value.copy(text = newText)
+            11 -> _noteSummary.value = _noteSummary.value.copy(text = newText)
+        }
+    }
 
     private fun getTextForTextField(textFieldId: Int): String? {
         return when (textFieldId) {
@@ -168,18 +178,6 @@ class AddEditNoteViewModel @Inject constructor(
         val (startIndex, endIndex) = _selectedTextRanges[textFieldId] ?: return ""
         return text.substring(startIndex, endIndex)
     }
-
-    private val _selectedStartTitle = mutableStateOf(-1)
-    val selectedStartTitle: State<Int> get() = _selectedStartTitle
-
-    private val _selectedEndTitle = mutableStateOf(-1)
-    val selectedEndTitle: State<Int> get() = _selectedEndTitle
-
-    private val _selectedStartContent = mutableStateOf(-1)
-    val selectedStartContent: State<Int> get() = _selectedStartContent
-
-    private val _selectedEndContent = mutableStateOf(-1)
-    val selectedEndContent: State<Int> get() = _selectedEndContent
 
     init {
         savedStateHandle.get<Int>("noteId")?.let { noteId ->
@@ -390,4 +388,57 @@ class AddEditNoteViewModel @Inject constructor(
         data class ShowSnackbar(val message: String): UiEvent()
         object SaveNote: UiEvent()
     }
+
+    private val _isBoldTitle = mutableStateOf(false)
+    val isBoldTitle: State<Boolean> get() = _isBoldTitle
+    private val _isItalicTitle = mutableStateOf(false)
+    val isItalicTitle: State<Boolean> get() = _isItalicTitle
+    private val _isUnderlinedTitle = mutableStateOf(false)
+    val isUnderlinedTitle: State<Boolean> get() = _isUnderlinedTitle
+
+    private val _isBoldContent1 = mutableStateOf(false)
+    val isBoldContent1: State<Boolean> get() = _isBoldContent1
+    private val _isItalicContent1 = mutableStateOf(false)
+    val isItalicContent1: State<Boolean> get() = _isItalicContent1
+    private val _isUnderlinedContent1 = mutableStateOf(false)
+    val isUnderlinedContent1: State<Boolean> get() = _isUnderlinedContent1
+
+    // Formatting properties for other text fields
+    private val _isBoldContent2 = mutableStateOf(false)
+    val isBoldContent2: State<Boolean> get() = _isBoldContent2
+    private val _isItalicContent2 = mutableStateOf(false)
+    val isItalicContent2: State<Boolean> get() = _isItalicContent2
+    private val _isUnderlinedContent2 = mutableStateOf(false)
+    val isUnderlinedContent2: State<Boolean> get() = _isUnderlinedContent2
+
+
+    private val _isBoldContent3 = mutableStateOf(false)
+    val isBoldContent3: State<Boolean> get() = _isBoldContent3
+    private val _isItalicContent3 = mutableStateOf(false)
+    val isItalicContent3: State<Boolean> get() = _isItalicContent3
+    private val _isUnderlinedContent3 = mutableStateOf(false)
+    val isUnderlinedContent3: State<Boolean> get() = _isUnderlinedContent3
+
+    private val _isBoldContent4 = mutableStateOf(false)
+    val isBoldContent4: State<Boolean> get() = _isBoldContent4
+    private val _isItalicContent4 = mutableStateOf(false)
+    val isItalicContent4: State<Boolean> get() = _isItalicContent4
+    private val _isUnderlinedContent4 = mutableStateOf(false)
+    val isUnderlinedContent4: State<Boolean> get() = _isUnderlinedContent4
+
+
+    private val _isBoldContent5 = mutableStateOf(false)
+    val isBoldContent5: State<Boolean> get() = _isBoldContent5
+    private val _isItalicContent5 = mutableStateOf(false)
+    val isItalicContent5: State<Boolean> get() = _isItalicContent5
+    private val _isUnderlinedContent5 = mutableStateOf(false)
+    val isUnderlinedContent5: State<Boolean> get() = _isUnderlinedContent5
+
+    private val _isBoldKeyword1 = mutableStateOf(false)
+    val isBoldKeyword1: State<Boolean> get() = _isBoldKeyword1
+    private val _isItalicKeyword1 = mutableStateOf(false)
+    val isItalicKeyword1: State<Boolean> get() = _isItalicKeyword1
+    private val _isUnderlinedKeyword1 = mutableStateOf(false)
+    val isUnderlinedKeyword1: State<Boolean> get() = _isUnderlinedKeyword1
+
 }

@@ -140,6 +140,10 @@ fun ImageEditFields(
         onFolderSelected = { folder ->
             viewModel.onFolderSelected(folder)
         },
+        showTextFormattingButton = false,
+        onToggleBold = {viewModel.toggleBold()},
+        onToggleItalic = {viewModel.toggleItalic()},
+        onToggleUnderline = { viewModel.toggleUnderline() },
         content = {
             paddingValues ->
             Column(

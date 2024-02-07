@@ -1,6 +1,8 @@
 package com.example.memorise.feature_note.presentation.notes
 
 import android.annotation.SuppressLint
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -67,6 +69,7 @@ import com.example.memorise.feature_note.presentation.notes.components.OrderSect
 import kotlinx.coroutines.launch
 
 
+@RequiresApi(Build.VERSION_CODES.R)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -233,6 +236,7 @@ fun MainScreen(
                     if (selectedFolderId == null) {
                         items(folderStates.folder) { folder ->
                             FolderItem(
+                                navController = navController,
                                 folder = folder,
                                 modifier = Modifier
                                     .fillMaxWidth(),

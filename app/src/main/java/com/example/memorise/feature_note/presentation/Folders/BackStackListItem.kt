@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.example.memorise.feature_note.presentation.notes.components.getBackgroundColor
 
 @Composable
 fun ListBackStackItem(
@@ -29,7 +30,7 @@ fun ListBackStackItem(
         .padding(8.dp)
         .clip(RoundedCornerShape(cornerRadius))
         .clickable { onItemClick.invoke() }
-        .background(color = Color(0xFF49454F.toInt()))
+        .background(getBackgroundColor())
     ) {
         Row(modifier = Modifier
             .fillMaxSize()

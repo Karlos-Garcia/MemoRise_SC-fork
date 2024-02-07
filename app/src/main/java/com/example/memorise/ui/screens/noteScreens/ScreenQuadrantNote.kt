@@ -119,6 +119,10 @@ modifier: Modifier = Modifier,
         showFolderDropdown = true,
         folders = folder.value,
         selectedFolder = selectedFolder,
+        showTextFormattingButton = false,
+        onToggleBold = {viewModel.toggleBold()},
+        onToggleItalic = {viewModel.toggleItalic()},
+        onToggleUnderline = { viewModel.toggleUnderline() },
         onFolderSelected = { folder ->
             viewModel.onFolderSelected(folder)
         },

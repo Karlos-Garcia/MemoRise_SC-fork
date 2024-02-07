@@ -37,14 +37,14 @@ fun getNavigationItems(
             route = {navController.popBackStack(route = Screens.CategoryScreen.route, inclusive = false)
             navController.navigate(Screens.CategoryScreen.route)}
         ),
-        NavigationItem(
-            title = "Settings",
-            selectedIcon = Icons.Filled.Settings,
-            unselectedIcon = Icons.Outlined.Settings,
-            route = {navController.popBackStack(route = Screens.SettingScreen.route, inclusive = false)
-            navController.navigate(Screens.SettingScreen.route)}
-
-        ),
+//        NavigationItem(
+//            title = "Settings",
+//            selectedIcon = Icons.Filled.Settings,
+//            unselectedIcon = Icons.Outlined.Settings,
+//            route = {navController.popBackStack(route = Screens.SettingScreen.route, inclusive = false)
+//            navController.navigate(Screens.SettingScreen.route)}
+//
+//        ),
         NavigationItem(
             title = "About Us",
             selectedIcon = Icons.Filled.Info,
