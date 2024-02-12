@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">MemoRise</string>
+    <string name="Basic_note_information">Basic note is blah blah blah</string>"
+    <string name="Cornell_note_information">Cornell note is blah blah blah</string>"
+    <string name="Image_note_information">Image note is blah blah blah</string>"
+    <string name="Ladder_note_information">Ladder note is blah blah blah</string>"
+    <string name="Outline_note_information">Outline note is blah blah blah</string>"
+    <string name="Quadrant_note_information">Quadrant note is blah blah blah</string>"
+
 </resources>

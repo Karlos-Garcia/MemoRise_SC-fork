@@ -18,8 +18,5 @@ sealed class AddEditNoteEvent{
     data class EnteredSummary(val value: String) : AddEditNoteEvent()
     data class EnteredNoteType(val noteType: NoteType): AddEditNoteEvent()
     data class ImageSelected(val uri: Uri) : AddEditNoteEvent()
-    object ToggleBold : AddEditNoteEvent()
-    object ToggleItalic : AddEditNoteEvent()
-    object ToggleUnderline : AddEditNoteEvent()
     object SaveNote : AddEditNoteEvent()
 }

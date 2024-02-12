@@ -2,8 +2,11 @@ package com.example.memorise.ui.screens
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Done
@@ -19,9 +22,11 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.memorise.R
+import com.example.memorise.feature_note.domain.model.Category
 import com.example.memorise.feature_note.domain.model.Folder
 import com.example.memorise.feature_note.presentation.add_edit_notes.AddEditNoteEvent
 import com.example.memorise.feature_note.presentation.add_edit_notes.AddEditNoteViewModel
@@ -39,10 +44,10 @@ fun Bottomappbar(
     folders: List<Folder> = emptyList(),
     selectedFolder: Folder? = null,
     onFolderSelected: (Folder) -> Unit = {},
-    showTextFormattingButton: Boolean = false,
-    onToggleBold: () -> Unit,
-    onToggleItalic: () -> Unit,
-    onToggleUnderline: () -> Unit,
+    showCategoryDropdown: Boolean = false,
+    categories: List<Category> = emptyList(),
+    selectedCategory: Category? = null,
+    onCategorySelected: (Category) -> Unit = {},
     content: @Composable (PaddingValues) -> Unit,
     viewModel: AddEditNoteViewModel = hiltViewModel(),
 ) {
@@ -55,37 +60,32 @@ fun Bottomappbar(
             bottomBar = {
                 androidx.compose.material3.BottomAppBar(
                     actions = {
-                        if (showTextFormattingButton) {
-                            IconButton(onClick = {
-                                onToggleBold
-                            }) {
-                                Image(
-                                    painter = painterResource(id = R.drawable.format_bold_fill0_wght400_grad0_opsz24),
-                                    contentDescription = "Bold"
-                                )
-                            }
-                            IconButton(onClick = {
-                                onToggleItalic
-                            }) {
-                                Image(
-                                    painter = painterResource(id = R.drawable.format_italic_fill0_wght400_grad0_opsz24),
-                                    contentDescription = "Italic"
-                                )
-                            }
-                            IconButton(onClick = {
-                                onToggleUnderline
-                            }) {
-                                Image(
-                                    painter = painterResource(id = R.drawable.format_underlined_fill0_wght400_grad0_opsz24),
-                                    contentDescription = "Underline"
-                                )
-                            }
+                        Column(
+                            modifier = Modifier
+                                .padding(start = 8.dp)
+                        ) {
+                            Text(
+                                text = "Folder"
+                            )
+                            FolderDropdown(
+                                folders = folders,
+                                selectedFolder = selectedFolder,
+                                onFolderSelected = onFolderSelected
+                            )
                         }
-                        FolderDropdown(
-                            folders = folders,
-                            selectedFolder = selectedFolder,
-                            onFolderSelected = onFolderSelected
+                        Spacer(
+                            modifier = Modifier.padding(8.dp)
                         )
+                        Column() {
+                            Text(
+                                text = "Category"
+                            )
+                            CategoryDropdown(
+                                categories = categories,
+                                selectedCategory = selectedCategory,
+                                onCategorySelected = onCategorySelected
+                            )
+                        }
                     },
                     floatingActionButton = {
                         FloatingActionButton(onClick = { viewModel.onEvent(AddEditNoteEvent.SaveNote) }) {

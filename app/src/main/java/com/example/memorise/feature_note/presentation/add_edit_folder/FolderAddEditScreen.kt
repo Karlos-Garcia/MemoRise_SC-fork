@@ -38,7 +38,9 @@ fun AddEditFolderScreen(
 ) {
     Topappbar (
         navController = navController,
-        name = "Folder"
+        name = "Name Folder",
+        onDismiss = {},
+        onBackClicked = {}
     ) {
         folderTextFields(navController, viewModel)
     }

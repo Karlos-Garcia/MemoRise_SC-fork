@@ -26,7 +26,6 @@ import androidx.compose.ui.unit.dp
 import com.example.memorise.feature_note.domain.model.Folder
 import com.example.memorise.feature_note.presentation.notes.components.getBackgroundColor
 
-@RequiresApi(Build.VERSION_CODES.R)
 @Composable
 fun FolderDropdown(
     modifier: Modifier = Modifier,
@@ -39,7 +38,6 @@ fun FolderDropdown(
     Row(
         modifier = Modifier
             .padding(
-                start = 8.dp,
                 top = 4.dp,
                 bottom = 4.dp
             )
@@ -55,7 +53,7 @@ fun FolderDropdown(
                 .padding(end = 16.dp)
         )
         Text(
-            text = selectedFolder?.name ?: "Folder",
+            text = selectedFolder?.name ?: "     ",
             modifier = Modifier.padding(end = 4.dp)
         )
         DropdownMenu(

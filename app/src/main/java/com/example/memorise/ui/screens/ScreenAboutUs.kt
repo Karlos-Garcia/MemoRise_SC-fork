@@ -71,7 +71,7 @@ fun aboutUs(
         horizontalAlignment = Alignment.Start,
 
     ) {
-        Text("MemoRise is a mobile application that implements different note-taking methods to improve students' note-taking",
+        Text("MemoRise is an android application that implements different note-taking methods to improve students' note-taking",
             fontSize= 20.sp,
             textAlign = TextAlign
                 .Start

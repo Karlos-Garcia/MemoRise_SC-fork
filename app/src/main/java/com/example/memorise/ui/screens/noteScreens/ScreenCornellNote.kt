@@ -1,32 +1,26 @@
 package com.example.memorise.ui.screens.noteScreens
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.rememberScaffoldState
-import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -35,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.example.memorise.R
 import com.example.memorise.feature_note.domain.model.NoteType
 import com.example.memorise.feature_note.presentation.ScreenNavigations.Screens
@@ -50,17 +45,20 @@ fun CornellNote(
     navController: NavController,
     viewModel: AddEditNoteViewModel = hiltViewModel()
 ) {
-    val categories = rememberCategoriesState(viewModel)
-    val selectedCategory by viewModel.selectedCategory.collectAsState()
+    val resources = LocalContext.current.resources
+    var showInformationDialog = remember { mutableStateOf(false) }
 
     Topappbar (
         navController = navController,
         name = "Cornell Note",
-        showCategoryDropdown = true,
-        categories = categories.value,
-        selectedCategory = selectedCategory,
-        onCategorySelected = { category ->
-            viewModel.onCategorySelected(category)
+        showInformationIcon = true,
+        showInformationDialog = showInformationDialog.value,
+        onInformationClick = {showInformationDialog.value = true},
+        dialogTitle = "Cornell note information",
+        dialogText = resources.getString(R.string.Cornell_note_information),
+        onDismiss = {showInformationDialog.value = false},
+        onBackClicked = {
+            navController.navigateUp()
         }
     ) {
         viewModel.onNoteTypeSelected(NoteType.CORNELL)
@@ -78,7 +76,10 @@ fun cornellTextFields(
 ) {
     val folder = rememberFoldersState(viewModel)
     val selectedFolder by viewModel.selectedFolder.collectAsState()
-    
+
+    val categories = rememberCategoriesState(viewModel)
+    val selectedCategory by viewModel.selectedCategory.collectAsState()
+
     val titleState = viewModel.noteTitle.value
     val keyword1State = viewModel.noteKeyword1.value
     val keyword2State = viewModel.noteKeyword2.value
@@ -98,6 +99,8 @@ fun cornellTextFields(
                     )
                 }
                 is AddEditNoteViewModel.UiEvent.SaveNote -> {
+                    val startDestination = navController.graph.findStartDestination()?.route ?: ""
+                    navController.popBackStack(startDestination, inclusive = true)
                     navController.navigate(Screens.MainScreen.route)
                 }
             }
@@ -118,10 +121,12 @@ fun cornellTextFields(
         onFolderSelected = { folder ->
             viewModel.onFolderSelected(folder)
         },
-        showTextFormattingButton = false,
-        onToggleBold = viewModel::toggleBold,
-        onToggleItalic = viewModel::toggleItalic,
-        onToggleUnderline = viewModel::toggleUnderline,
+        showCategoryDropdown = true,
+        categories = categories.value,
+        selectedCategory = selectedCategory,
+        onCategorySelected = { category ->
+            viewModel.onCategorySelected(category)
+        },
         content = {
             paddingValues ->
             Column(
@@ -133,11 +138,6 @@ fun cornellTextFields(
                 TextField(
                     singleLine = true,
                     label = {Text(text = "Title", style = labelStyle)},
-                    textStyle = TextStyle(
-                        fontWeight = if (viewModel.isBold.value) FontWeight.Bold else null,
-                        fontStyle = if (viewModel.isItalic.value) FontStyle.Italic else null,
-                        textDecoration = if (viewModel.isUnderlined.value) TextDecoration.Underline else null
-                    ),
                     modifier = modifier
                         .fillMaxWidth()
                         .padding(
@@ -153,11 +153,6 @@ fun cornellTextFields(
                 Row {
                     TextField(
                         label = {Text(text = "Keywords", style = labelStyle)},
-                        textStyle = TextStyle(
-                            fontWeight = if (viewModel.isBold.value) FontWeight.Bold else null,
-                            fontStyle = if (viewModel.isItalic.value) FontStyle.Italic else null,
-                            textDecoration = if (viewModel.isUnderlined.value) TextDecoration.Underline else null
-                        ),
                         modifier = modifier
                             .fillMaxWidth(0.25f)
                             .fillMaxHeight(0.25f)
@@ -173,11 +168,6 @@ fun cornellTextFields(
                     )
                     TextField(
                         label = {Text(text = "Content", style = labelStyle)},
-                        textStyle = TextStyle(
-                            fontWeight = if (viewModel.isBold.value) FontWeight.Bold else null,
-                            fontStyle = if (viewModel.isItalic.value) FontStyle.Italic else null,
-                            textDecoration = if (viewModel.isUnderlined.value) TextDecoration.Underline else null
-                        ),
                         modifier = modifier
                             .fillMaxWidth(1f)
                             .fillMaxHeight(0.25f)
@@ -194,11 +184,6 @@ fun cornellTextFields(
                 Row {
                     TextField(
                         label = {Text(text = "Keywords", style = labelStyle)},
-                        textStyle = TextStyle(
-                            fontWeight = if (viewModel.isBold.value) FontWeight.Bold else null,
-                            fontStyle = if (viewModel.isItalic.value) FontStyle.Italic else null,
-                            textDecoration = if (viewModel.isUnderlined.value) TextDecoration.Underline else null
-                        ),
                         modifier = modifier
                             .fillMaxWidth(0.25f)
                             .fillMaxHeight(0.35f)
@@ -214,11 +199,6 @@ fun cornellTextFields(
                     )
                     TextField(
                         label = {Text(text = "Content", style = labelStyle)},
-                        textStyle = TextStyle(
-                            fontWeight = if (viewModel.isBold.value) FontWeight.Bold else null,
-                            fontStyle = if (viewModel.isItalic.value) FontStyle.Italic else null,
-                            textDecoration = if (viewModel.isUnderlined.value) TextDecoration.Underline else null
-                        ),
                         modifier = modifier
                             .fillMaxWidth(1f)
                             .fillMaxHeight(0.35f)
@@ -234,11 +214,6 @@ fun cornellTextFields(
                 }
                 TextField(
                     label = {Text(text = "Summary", style = labelStyle)},
-                    textStyle = TextStyle(
-                        fontWeight = if (viewModel.isBold.value) FontWeight.Bold else null,
-                        fontStyle = if (viewModel.isItalic.value) FontStyle.Italic else null,
-                        textDecoration = if (viewModel.isUnderlined.value) TextDecoration.Underline else null
-                    ),
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(

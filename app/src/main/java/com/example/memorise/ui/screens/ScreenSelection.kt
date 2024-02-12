@@ -2,6 +2,7 @@ package com.example.memorise.ui.screens
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -85,7 +86,9 @@ fun selectionScreen(
             .fillMaxWidth()
     ) {
         Button(
-            modifier = modifier.fillMaxWidth(),
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp),
             onClick = {
                 selectedNoteType = NoteType.BASIC
                 navController.navigate(Screens.BasicNoteScreen.route)
@@ -93,41 +96,51 @@ fun selectionScreen(
             Text(text = "Basic Note",
                 textAlign = TextAlign.Left)
         }
+        Spacer(modifier = Modifier.padding(4.dp))
         Button(
-            modifier = modifier.fillMaxWidth(),
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp),
             onClick = {
                 selectedNoteType = NoteType.CORNELL
                 navController.navigate(Screens.CornellNoteScreen.route)
             }) {
-            Text(text = "Cornell Note Method",
+            Text(text = "Cornell Note",
                 textAlign = TextAlign.Left)
-
         }
+        Spacer(modifier = Modifier.padding(4.dp))
         Button(
-            modifier = modifier.fillMaxWidth(),
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp),
             onClick = {
                 selectedNoteType = NoteType.OUTLINE
                 navController.navigate(Screens.OutlineNoteScreen.route)
             }) {
-            Text(text = "Outline Note Method",
+            Text(text = "Outline Note",
                 textAlign = TextAlign.Left)
         }
+        Spacer(modifier = Modifier.padding(4.dp))
         Button(
-            modifier = modifier.fillMaxWidth(),
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp),
             onClick = {
                 selectedNoteType = NoteType.QUADRANT
                 navController.navigate(Screens.QuadrantNoteScreen.route)
             }) {
-            Text(text = "Quadrant Note Method",
+            Text(text = "Quadrant Note",
                 textAlign = TextAlign.Left)
         }
+        Spacer(modifier = Modifier.padding(4.dp))
         Button(
-            modifier = modifier.fillMaxWidth(),
+            modifier = modifier.fillMaxWidth()
+                .padding(horizontal = 8.dp),
             onClick = {
                 selectedNoteType = NoteType.LADDER
                 navController.navigate(Screens.LadderNoteScreen.route)
             }) {
-            Text(text = "Ladder",
+            Text(text = "Ladder Note",
                 textAlign = TextAlign.Left)
         }
 //        Button(

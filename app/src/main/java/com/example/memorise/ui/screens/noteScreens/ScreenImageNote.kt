@@ -3,70 +3,48 @@ package com.example.memorise.ui.screens.noteScreens
 
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
-import android.graphics.ImageDecoder
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import coil.compose.AsyncImage
-import coil.compose.AsyncImagePainter
 import com.example.memorise.feature_note.domain.model.NoteType
-import com.example.memorise.feature_note.presentation.ScreenNavigations.Screens
 import com.example.memorise.feature_note.presentation.add_edit_notes.AddEditNoteEvent
 import com.example.memorise.feature_note.presentation.add_edit_notes.AddEditNoteViewModel
 import com.example.memorise.ui.screens.Topappbar
 import kotlinx.coroutines.flow.collectLatest
 import android.graphics.BitmapFactory
-import androidx.compose.foundation.Image
-import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.example.memorise.R
 import com.example.memorise.feature_note.presentation.add_edit_notes.components.DisplayImage
 import com.example.memorise.ui.screens.Bottomappbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -75,19 +53,21 @@ fun ImageNoteScreen(
     navController: NavController,
     viewModel: AddEditNoteViewModel = hiltViewModel(),
 ) {
-    val categories = rememberCategoriesState(viewModel)
-    val selectedCategory by viewModel.selectedCategory.collectAsState()
+    val resources = LocalContext.current.resources
+    var showInformationDialog = remember { mutableStateOf(false) }
 
     Topappbar (
         navController = navController,
         name = "Image Note",
-        showCategoryDropdown = true,
-        categories = categories.value,
-        selectedCategory = selectedCategory,
-        onCategorySelected = { category ->
-            viewModel.onCategorySelected(category)
+        showInformationIcon = true,
+        showInformationDialog = showInformationDialog.value,
+        onInformationClick = {showInformationDialog.value = true},
+        dialogTitle = "Image note information",
+        dialogText = resources.getString(R.string.Image_note_information),
+        onDismiss = {showInformationDialog.value = false},
+        onBackClicked = {
+            navController.navigateUp()
         }
-
     ) {
         viewModel.onNoteTypeSelected(NoteType.IMAGE)
         ImageEditFields(navController, viewModel, viewModel.decodedImageBytes.value)
@@ -105,6 +85,9 @@ fun ImageEditFields(
 ) {
     val folder = rememberFoldersState(viewModel)
     val selectedFolder by viewModel.selectedFolder.collectAsState()
+
+    val categories = rememberCategoriesState(viewModel)
+    val selectedCategory by viewModel.selectedCategory.collectAsState()
 
     val titleState = viewModel.noteTitle.value
     val content1State = viewModel.noteContent1.value
@@ -126,6 +109,8 @@ fun ImageEditFields(
                     )
                 }
                 is AddEditNoteViewModel.UiEvent.SaveNote -> {
+                    val startDestination = navController.graph.findStartDestination()?.route ?: ""
+                    navController.popBackStack(startDestination, inclusive = true)
                     navController.navigateUp()
                 }
             }
@@ -140,10 +125,12 @@ fun ImageEditFields(
         onFolderSelected = { folder ->
             viewModel.onFolderSelected(folder)
         },
-        showTextFormattingButton = false,
-        onToggleBold = {viewModel.toggleBold()},
-        onToggleItalic = {viewModel.toggleItalic()},
-        onToggleUnderline = { viewModel.toggleUnderline() },
+        showCategoryDropdown = true,
+        categories = categories.value,
+        selectedCategory = selectedCategory,
+        onCategorySelected = { category ->
+            viewModel.onCategorySelected(category)
+        },
         content = {
             paddingValues ->
             Column(
@@ -184,11 +171,6 @@ fun ImageEditFields(
                 DisplayImage(imageBitmapState.value)
 
                 TextField(
-                    textStyle = TextStyle(
-                        fontWeight = if (viewModel.isBold.value) FontWeight.Bold else null,
-                        fontStyle = if (viewModel.isItalic.value) FontStyle.Italic else null,
-                        textDecoration = if (viewModel.isUnderlined.value) TextDecoration.Underline else null
-                    ),
                     label = { Text(text = "Title") },
                     value = titleState.text,
                     onValueChange = {
@@ -204,11 +186,6 @@ fun ImageEditFields(
                         .clip(RoundedCornerShape(12.dp))
                 )
                 TextField(
-                    textStyle = TextStyle(
-                        fontWeight = if (viewModel.isBold.value) FontWeight.Bold else null,
-                        fontStyle = if (viewModel.isItalic.value) FontStyle.Italic else null,
-                        textDecoration = if (viewModel.isUnderlined.value) TextDecoration.Underline else null
-                    ),
                     label = { Text(text = "Content") },
                     value = content1State.text,
                     onValueChange = {

@@ -42,7 +42,9 @@ fun AddEditCategoryScreen(
 ) {
     Topappbar (
         navController = navController,
-        name = "Category"
+        name = "Name Category",
+        onDismiss = {},
+        onBackClicked = {}
     ) {
         categoryTextFields(navController, viewModel)
     }
@@ -96,6 +98,7 @@ fun categoryTextFields(
             }
         }
     }
+
     Column(
         modifier = Modifier
             .padding(

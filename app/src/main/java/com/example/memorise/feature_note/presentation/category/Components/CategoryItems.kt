@@ -31,6 +31,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.memorise.feature_note.domain.model.Category
+import com.example.memorise.feature_note.presentation.notes.components.getBackgroundColor
 
 @Composable
 fun CategoryItem(
@@ -81,7 +82,7 @@ fun CategoryItem(
         .padding(8.dp)
         .clip(RoundedCornerShape(cornerRadius))
         .clickable { onItemClick.invoke() }
-        .background(color = Color(0xFF49454F.toInt()))
+        .background(getBackgroundColor())
     ) {
         Column(
             modifier = Modifier

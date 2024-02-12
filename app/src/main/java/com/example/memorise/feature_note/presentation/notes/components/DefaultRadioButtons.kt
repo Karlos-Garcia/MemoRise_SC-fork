@@ -31,10 +31,9 @@ fun DefaultRadioButton(
                 unselectedColor = Color.White
             )
         )
-        Spacer(
-            modifier = Modifier.width(8.dp)
-        )
         Text(text = text)
+        Spacer(
+            modifier = Modifier.width(16.dp))
     }
 
 }

@@ -1,6 +1,7 @@
 package com.example.memorise.feature_note.presentation.ScreenNavigations
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -35,10 +37,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.memorise.R
 import com.example.memorise.feature_note.presentation.notes.NotesEvent
 import com.example.memorise.feature_note.presentation.notes.components.OrderSection
 import kotlinx.coroutines.launch
@@ -66,15 +71,31 @@ fun AppDrawer(
         drawerContent = {
             ModalDrawerSheet {
                 Spacer(modifier = Modifier.height(20.dp))
-                Text(
-                    text = "MemoRise",
+                Row(
                     modifier = Modifier
                         .padding(
-                            start = 60.dp,
+                            start = 32.dp,
                             bottom = 20.dp
-                        ),
-                    fontSize = 20.sp
-                )
+                        )
+
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.download),
+                        contentDescription = stringResource(id = R.string.app_name),
+                        modifier = Modifier
+                            .size(48.dp)
+                            .clip(RoundedCornerShape(12.dp))
+                    )
+                    Text(
+                        text = "MemoRise",
+                        modifier = Modifier
+                            .padding(
+                                start = 24.dp,
+                            )
+                            .align(Alignment.CenterVertically),
+                        fontSize = 20.sp
+                    )
+                }
                 items.forEachIndexed { index, item ->
                     NavigationDrawerItem(
                         label = {

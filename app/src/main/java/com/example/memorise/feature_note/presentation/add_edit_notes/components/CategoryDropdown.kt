@@ -29,7 +29,6 @@ import androidx.compose.ui.unit.dp
 import com.example.memorise.feature_note.domain.model.Category
 import com.example.memorise.feature_note.presentation.notes.components.getBackgroundColor
 
-@RequiresApi(Build.VERSION_CODES.R)
 @Composable
 fun CategoryDropdown(
     categories: List<Category>,
@@ -56,7 +55,7 @@ fun CategoryDropdown(
                 .padding(end = 16.dp)
         )
         Text(
-            text = selectedCategory?.categoryTitle ?: "Select Category",
+            text = selectedCategory?.categoryTitle ?: "     ",
             modifier = Modifier.padding(end = 16.dp)
         )
         DropdownMenu(
@@ -64,6 +63,13 @@ fun CategoryDropdown(
             onDismissRequest = { expanded = false }
         ) {
             categories.forEach { category ->
+//                DropdownMenuItem(
+//                    text = { "     " },
+//                    onClick = {
+//                        onCategorySelected(null)
+//                        expanded = false
+//                    }
+//                )
                 DropdownMenuItem(
                     text = {Text(category.categoryTitle)},
                     onClick = {

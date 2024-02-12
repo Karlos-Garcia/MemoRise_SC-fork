@@ -23,8 +23,6 @@ import com.example.memorise.ui.screens.noteScreens.QuadrantNote
 import com.example.memorise.ui.screens.noteScreens.basicNote
 import com.example.memorise.ui.screens.settingScreen
 
-
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun Navigation() {
     val navController = rememberNavController()

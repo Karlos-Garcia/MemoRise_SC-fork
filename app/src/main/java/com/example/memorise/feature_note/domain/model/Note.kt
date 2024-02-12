@@ -24,7 +24,6 @@ data class Note(
     val folderId: Int? = null,
     val noteType: NoteType,
     val timestamp: Long = System.currentTimeMillis(),
-    val segments: List<FormattedSegment>
 )
 
 data class FormattedSegment(

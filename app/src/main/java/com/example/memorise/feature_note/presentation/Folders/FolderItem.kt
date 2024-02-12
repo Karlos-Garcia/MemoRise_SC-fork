@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
@@ -38,6 +39,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
 import androidx.navigation.NavController
 import com.example.memorise.R
 import com.example.memorise.feature_note.domain.model.Folder
@@ -46,7 +48,6 @@ import com.example.memorise.feature_note.presentation.notes.components.getBackgr
 
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
-@RequiresApi(Build.VERSION_CODES.R)
 @Composable
 fun FolderItem(
     navController: NavController,
@@ -146,7 +147,8 @@ fun FolderItem(
                         .align(Alignment.CenterVertically),
                     text = folder.name,
                     style = MaterialTheme.typography.titleLarge,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 1,
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 IconButton(
