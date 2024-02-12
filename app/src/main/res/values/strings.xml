@@ -1,10 +1,25 @@
 <resources>
     <string name="app_name">MemoRise</string>
-    <string name="Basic_note_information">Basic note is blah blah blah</string>"
-    <string name="Cornell_note_information">Cornell note is blah blah blah</string>"
-    <string name="Image_note_information">Image note is blah blah blah</string>"
-    <string name="Ladder_note_information">Ladder note is blah blah blah</string>"
-    <string name="Outline_note_information">Outline note is blah blah blah</string>"
-    <string name="Quadrant_note_information">Quadrant note is blah blah blah</string>"
-
+    <string name="Basic_note_information">
+        Description: A basic note is a basic form of note-taking where you jot down important information, thoughts, or reminders in a concise manner.\n\nWhen to Use: Use simple notes for capturing quick thoughts, making to-do lists, recording meeting minutes, or keeping track of important information in a straightforward manner.
+    </string>
+    <string name="Cornell_note_information">
+        Description: The Cornell Note-taking System is a structured method for organizing and reviewing lecture or reading notes. It divides each page into sections for main notes, cues, and a summary, facilitating active learning and retention.\n\nWhen to Use: Cornell notes are effective for students attending lectures or reading textbooks. They help organize information, identify key concepts, and create study aids for exams.
+    </string>
+    <string name="Image_note_information">
+        Description: An image note is similar to a basic note, but it allows you to incorporate visual elements such as drawings, diagrams, charts, or photographs alongside textual information. By attaching images to your notes, you can enhance understanding, reinforce key concepts, and stimulate visual memory retention.\n\nWhen to Use: Use image notes when studying subjects that benefit from visual representation, such as anatomy, geography, or complex processes. Incorporating images into your notes can help you visualize abstract concepts, make connections between ideas, and recall information more effectively during exams.
+    </string>
+    <string name="Ladder_note_information">
+        Description: A ladder note is a visual representation of steps or stages in a study process, task, or project. Each rung of the ladder represents a specific action or milestone, leading to the ultimate goal of mastering a subject or completing a project. By breaking down complex study materials into smaller, manageable steps, ladder notes facilitate gradual progress and reduce overwhelm.\n\nWhen to Use: Use ladder notes to plan study sessions, track progress, and maintain motivation during long-term academic pursuits. They provide a roadmap for achieving learning objectives, identifying areas of improvement, and celebrating milestones along the way.
+    </string>
+    <string name="Outline_note_information">
+        Description: An outline note is a hierarchical structure of points that represent the main topics and subtopics of a subject. It provides a structured framework for organizing and understanding complex information.\n\nWhen to Use: Use outline notes when studying for exams, preparing presentations, or organizing the structure of written documents. They are also helpful for brainstorming ideas and planning projects.
+    </string>
+    <string name="Quadrant_note_information">
+        Description: A quadrant note is a method of dividing a page into four sections to categorize study materials or tasks based on their importance and urgency. The four quadrants typically represent:\n\n
+        -Important and Urgent\n
+        -Important but Not Urgent\n
+        -Not Important but Urgent\n
+        -Not Important and Not Urgent\n\nWhen to Use: Use quadrant notes to prioritize study tasks, allocate time effectively, and focus on activities that contribute most to academic success. They help students identify critical tasks, manage deadlines, and avoid procrastination.
+    </string>
 </resources>

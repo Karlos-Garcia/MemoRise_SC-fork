@@ -33,7 +33,7 @@ import com.example.memorise.feature_note.presentation.notes.components.getBackgr
 fun CategoryDropdown(
     categories: List<Category>,
     selectedCategory: Category?,
-    onCategorySelected: (Category) -> Unit
+    onCategorySelected: (Category?) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -55,21 +55,21 @@ fun CategoryDropdown(
                 .padding(end = 16.dp)
         )
         Text(
-            text = selectedCategory?.categoryTitle ?: "     ",
+            text = selectedCategory?.categoryTitle ?: "No category",
             modifier = Modifier.padding(end = 16.dp)
         )
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false }
         ) {
+            DropdownMenuItem(
+                text = { "No category" },
+                onClick = {
+                    onCategorySelected(null)
+                    expanded = false
+                }
+            )
             categories.forEach { category ->
-//                DropdownMenuItem(
-//                    text = { "     " },
-//                    onClick = {
-//                        onCategorySelected(null)
-//                        expanded = false
-//                    }
-//                )
                 DropdownMenuItem(
                     text = {Text(category.categoryTitle)},
                     onClick = {

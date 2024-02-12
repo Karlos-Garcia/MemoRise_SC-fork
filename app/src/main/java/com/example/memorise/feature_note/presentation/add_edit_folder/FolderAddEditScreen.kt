@@ -40,7 +40,9 @@ fun AddEditFolderScreen(
         navController = navController,
         name = "Name Folder",
         onDismiss = {},
-        onBackClicked = {}
+        onBackClicked = {
+            navController.navigateUp()
+        }
     ) {
         folderTextFields(navController, viewModel)
     }

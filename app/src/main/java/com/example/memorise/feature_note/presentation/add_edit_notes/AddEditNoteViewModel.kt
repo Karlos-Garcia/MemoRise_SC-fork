@@ -85,16 +85,24 @@ class AddEditNoteViewModel @Inject constructor(
         _selectedCategory.value = category
     }
 
+//    fun onCategorySelected(category: Category?) {
+//        _selectedCategory.value = category
+//    }
+
     //folder
     private val _selectedFolder = MutableStateFlow<Folder?>(null)
     val selectedFolder: StateFlow<Folder?> = _selectedFolder
 
     val folders: Flow<List<Folder>> = folderUseCase.getFolderList()
 
-    fun onFolderSelected(folder: Folder) {
-        if (folder.id != _selectedFolder.value?.id) {
+//    fun onFolderSelected(folder: Folder) {
+//        if (folder.id != _selectedFolder.value?.id) {
+//            _selectedFolder.value = folder
+//        }
+//    }
+
+    fun onFolderSelected(folder: Folder?) {
             _selectedFolder.value = folder
-        }
     }
 
     init {

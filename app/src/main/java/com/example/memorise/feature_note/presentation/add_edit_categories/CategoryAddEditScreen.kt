@@ -44,7 +44,9 @@ fun AddEditCategoryScreen(
         navController = navController,
         name = "Name Category",
         onDismiss = {},
-        onBackClicked = {}
+        onBackClicked = {
+            navController.navigateUp()
+        }
     ) {
         categoryTextFields(navController, viewModel)
     }

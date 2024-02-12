@@ -43,11 +43,11 @@ fun Bottomappbar(
     showFolderDropdown: Boolean = false,
     folders: List<Folder> = emptyList(),
     selectedFolder: Folder? = null,
-    onFolderSelected: (Folder) -> Unit = {},
+    onFolderSelected: (Folder?) -> Unit = {},
     showCategoryDropdown: Boolean = false,
     categories: List<Category> = emptyList(),
     selectedCategory: Category? = null,
-    onCategorySelected: (Category) -> Unit = {},
+    onCategorySelected: (Category?) -> Unit = {},
     content: @Composable (PaddingValues) -> Unit,
     viewModel: AddEditNoteViewModel = hiltViewModel(),
 ) {

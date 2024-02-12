@@ -31,7 +31,7 @@ fun FolderDropdown(
     modifier: Modifier = Modifier,
     folders: List<Folder>,
     selectedFolder: Folder?,
-    onFolderSelected: (Folder) -> Unit
+    onFolderSelected: (Folder?) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -53,13 +53,20 @@ fun FolderDropdown(
                 .padding(end = 16.dp)
         )
         Text(
-            text = selectedFolder?.name ?: "     ",
+            text = selectedFolder?.name ?: "No folder",
             modifier = Modifier.padding(end = 4.dp)
         )
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false }
         ) {
+            DropdownMenuItem(
+                text = { "No folder" },
+                onClick = {
+                    onFolderSelected(null)
+                    expanded = false
+                }
+            )
             folders.forEach { folder ->
                 DropdownMenuItem(
                     text = { Text(folder.name) },
