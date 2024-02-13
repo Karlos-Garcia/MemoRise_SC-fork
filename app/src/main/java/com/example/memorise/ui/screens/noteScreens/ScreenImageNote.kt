@@ -66,6 +66,7 @@ fun ImageNoteScreen(
         dialogText = resources.getString(R.string.Image_note_information),
         onDismiss = {showInformationDialog.value = false},
         onBackClicked = {
+
             navController.navigateUp()
         }
     ) {
@@ -110,7 +111,6 @@ fun ImageEditFields(
                 }
                 is AddEditNoteViewModel.UiEvent.SaveNote -> {
                     val startDestination = navController.graph.findStartDestination()?.route ?: ""
-                    navController.popBackStack(startDestination, inclusive = true)
                     navController.navigateUp()
                 }
             }
